@@ -36,8 +36,7 @@ $( document ).ready(function() {
       var buffered = video.buffered.end(0);
       var percent = 100 * buffered / videoDuration;
       $("#download_bar").css('width', percent + '%');
-      //$("#download_bar").html(percent + '%');
-      //console.log("pourcentage : " + percent);
+      $("#download_bar_text").html(roundDecimal(percent, 2) + '%');
       if (buffered >= videoDuration) {
         clearInterval(this.watchBuffer);
       }
@@ -45,3 +44,9 @@ $( document ).ready(function() {
   };
   var watchBuffer = setInterval(updateProgressBar, 500);
 });
+
+function roundDecimal(nombre, precision) {
+  var precision = precision || 2;
+  var tmp = Math.pow(10, precision);
+  return Math.round(nombre * tmp) / tmp;
+}

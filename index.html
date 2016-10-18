@@ -30,12 +30,15 @@
     </div>-->
         <center>
             <video controls id="rush_hour">
-                <source src=./private/movie/rush_hour_2.mkv type=video/mp4>
+                <source src=./private/movie/rush_hour_2.mkv type='video/mp4'>
             </video>
             <div class="progress" style="width:1752px;margin-left:71px;">
-                <div class="progress-bar" id="download_bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                <span id="download_bar_text" style="color:black;font-weight:500;position:absolute;">
                     0%
+                </span>
+                <div class="progress-bar" id="download_bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;">
                 </div>
+
             </div>
         </center>
 
