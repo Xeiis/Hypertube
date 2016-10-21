@@ -1,10 +1,15 @@
 $( document ).ready(function() {
+  var icon = $('.play');
+  icon.click(function() {
+    icon.toggleClass('active');
+    return false;
+  });
   var i = 0;
   var video = document.getElementById("rush_hour");
 
   video.onloadeddata = function () {console.log("data loaded");};
   video.oncanplay = function () {console.log("on can play");};
-  video.oncanplaythrough = function () {console.log("can play through");video.play();};
+  video.oncanplaythrough = function () {console.log("can play through");video.play();$(".animation").css("display","none")};
   video.ondurationchange = function() {console.log("on duration change")};
   video.onloadedmetadata = function() {console.log("on load meta data");};
   video.onloadstart = function() {console.log("on load start");};
@@ -18,7 +23,13 @@ $( document ).ready(function() {
     console.log('téléchargement en cours');
   };
 
+  $("#pause").click(function(){
+    $(".animation").css("display","none");
+    video.paused ? video.play() : video.pause();
+  });
+
   $("video").click(function(){
+    this.paused ? $(".animation").css("display","none") : $(".animation").css("display","block");
     this.paused ? this.play() : this.pause();
   });
 

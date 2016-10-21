@@ -1,35 +1,31 @@
 extends layout
 
 block content
-  .row
-    //
-      <div class="border auto_size">
-      <center>
-      <video width="1280" height="790" controls id="video">
-      <source src="./private/movie/video.mp4" type="video/mp4">
-      </video>
-      </center>
-      </div>
-      <div class="border auto_size">
-      <center>
-      <video controls>
-      <!--<source src=http://techslides.com/demos/sample-videos/small.webm type=video/webm>
-      <source src=http://techslides.com/demos/sample-videos/small.ogv type=video/ogg>
-      <source src=http://techslides.com/demos/sample-videos/small.3gp type=video/3gp>
-    //
-      <source src=./private/movie/small.mp4 type=video/mp4>
-      </video>
-      </center>
-      </div>
-    .row
-      .col-lg-2
-      .col-lg-6
-        video#rush_hour(controls='')
-          source(src='/movie/rush_hour_2.mkv', type='video/mp4')
-        .row(id="div_download")
-          .col-lg-2
-            p Download-bar :
-          .col-lg-10
-            .progress(style='width:1752px;margin-left:-100px;color:black;font-weight:500;text-align:center;')
-              #download_bar.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width:0%;')
-              p(id="download_bar_text") 0%
+   .row
+
+    div(style="width:1920px;position:relative;height:auto;margin: 0 auto;")
+      div(class="animation")
+        a.play(href='#', id="pause" title='Play video' style="top: -100px;")
+        .sk-circle(style="display:none")
+          .sk-circle1.sk-child
+          .sk-circle2.sk-child
+          .sk-circle3.sk-child
+          .sk-circle4.sk-child
+          .sk-circle5.sk-child
+          .sk-circle6.sk-child
+          .sk-circle7.sk-child
+          .sk-circle8.sk-child
+          .sk-circle9.sk-child
+          .sk-circle10.sk-child
+          .sk-circle11.sk-child
+          .sk-circle12.sk-child
+      video#rush_hour(controls='')
+        source(src='/movie/rush_hour_2.mkv', type='video/mp4')
+      .row(id="div_download")
+        .col-lg-2
+          p Download-bar :
+        .col-lg-10
+          .progress(style='width:1752px;margin-left:-100px;text-align:center;')
+            span#download_bar_text(style='color:black;font-weight:500;position:absolute;')
+              | 0%
+            #download_bar.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width:0%;')
