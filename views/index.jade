@@ -1,12 +1,15 @@
 extends layout
+block script
+  link(href='//vjs.zencdn.net/5.4.6/video-js.min.css', rel='stylesheet')
+  script(src='//vjs.zencdn.net/5.4.6/video.min.js')
+  script(src='/js/video.js')
 
 block content
-   .row
-
+  div(class="row")
     div(style="width:1920px;position:relative;height:auto;margin: 0 auto;")
       div(class="animation")
         a.play(href='#', id="pause" title='Play video' style="top: -100px;")
-        .sk-circle(style="display:none")
+        .sk-circle
           .sk-circle1.sk-child
           .sk-circle2.sk-child
           .sk-circle3.sk-child
@@ -19,13 +22,18 @@ block content
           .sk-circle10.sk-child
           .sk-circle11.sk-child
           .sk-circle12.sk-child
-      video#rush_hour(controls='')
+      video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='img/html_5_poster.png', data-setup='{"autoplay": false}')
         source(src='/movie/rush_hour_2.mkv', type='video/mp4')
+        // subtitle caption :
+         track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
+        p.vjs-no-js
+          | To view this video please enable JavaScript, and consider upgrading to a web browser that
+          a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
       .row(id="div_download")
         .col-lg-2
           p Download-bar :
         .col-lg-10
           .progress(style='width:1752px;margin-left:-100px;text-align:center;')
-            span#download_bar_text(style='color:black;font-weight:500;position:absolute;')
+            span#download_bar_text
               | 0%
             #download_bar.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width:0%;')

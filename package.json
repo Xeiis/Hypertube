@@ -12,6 +12,7 @@
     "ent": "^2.2.0",
     "express": "~4.13.1",
     "express-session": "^1.14.0",
+    "handbrake-js": "^2.1.0",
     "jade": "~1.11.0",
     "mongodb": "^2.1.18",
     "morgan": "~1.6.1",
@@ -19,6 +20,7 @@
     "password-hash": "^1.2.2",
     "serve-favicon": "~2.3.0",
     "session-file-store": "^0.2.0",
-    "socket.io": "^1.4.8"
+    "socket.io": "^1.4.8",
+    "video.js": "^5.11.8"
   }
 }

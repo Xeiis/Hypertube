@@ -15,5 +15,14 @@
     position: absolute;
     top: 235px;
     left: 960px;
-    display:none
+}
+
+#pause{
+    display:none;
+}
+
+#download_bar_text {
+    color: black;
+    font-weight: 500;
+    position: absolute;
 }
