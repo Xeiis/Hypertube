@@ -5,25 +5,9 @@ div(id="header")
                 a(class="navbar-brand" href="/") Hypertube
             div(class="collapse navbar-collapse" id="bs-example-navbar-collapse-1")
                 ul(class="nav navbar-nav")
-                    li(style="display:none" id="profile")
-                        a(href="/profile").
-                            <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
-                    li(style="display:none" id="visites")
-                        a(href="/visites").
-                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                        span(style="display:none" id="visite_notif" class="notification")
-                    li(style="display:none" id="chat")
-                        a(href="/chat").
-                            <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
-                        span(style="display:none" id="chat_notif" class="notification")
-                    li(style="display:none" id="match")
-                        a(href="/match").
-                            <span class="glyphicon glyphicon-heart" aria-hiddent="true"></span>
-                        span(style="display:none" id="match_notif" class="notification")
-                    li(style="display:none" id="like")
-                        a(href="/like").
-                            <span class="glyphicon glyphicon-thumbs-up" aria-hiddent="true"></span>
-                        span(style="display:none" id="like_notif" class="notification")
+                    li(style="" id="video")
+                        a(href="/video").
+                            <span class="glyphicon glyphicon-facetime-video" aria-hidden="true"></span>
                 button(type="button" class="btn btn-default navbar-btn" style='display:none;margin-right:15px'  id="sign_in") Sign in
                 button(type="button" class="btn btn-default navbar-btn" style='display:none' id="sign_up") Sign up
                 div(class="form-group navbar-form navbar-left" style="display:none" id="connection")
@@ -31,9 +15,9 @@ div(id="header")
                     input(type="password" class="form-control" id="password_in" placeholder="password" style="margin-right:15px")
                     button(type="submit" class="btn btn-default" id="submit_connection") Connection
                 div(class="alert alert-danger form-group navbar-left" role="alert" id="connection_erreur" style="display:none;margin-right:15px;margin-bottom:0px")
-                div(class="alert alert-danger form-group navbar-left" role="alert" id="unlike_notif" style="display:none;margin-right:15px;margin-bottom:0px")
                 ul(class="nav navbar-nav navbar-right")
                     li
                         a(id="login_value")
                     li
-                        button(class="btn btn-default navbar-btn" style="display:none;" id="submit_deconnection") Logout
+                        a(href="/logout")
+                            span.glyphicon.glyphicon-off(aria-hidden="true")

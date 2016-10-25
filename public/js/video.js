@@ -9,7 +9,6 @@ $( document ).ready(function() {
             icon.toggleClass('active');
             return false;
         });
-
         video.onprogress = function() {console.log('téléchargement en cours');};
         video.ondurationchange = function() {console.log("on duration change")};
         video.onloadedmetadata = function() {console.log("on load meta data");};
