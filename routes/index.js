@@ -8,23 +8,33 @@ var test = require('../private/test.js');
 /* GET */
 
 router.get('/', function(req, res) {
-    console.log("/");
     index.renderIndex(req, res);
 });
 
 router.get('/video', function(req, res){
-    console.log('/video');
     video.renderVideo(req, res);
 });
 
 router.get('/torrent', function(req, res){
-    console.log('/torrent');
     torrent.getTorrent(req, res);
 });
 
 router.get('/test', function(req, res) {
-    console.log("/test");
     test.renderTest(req, res);
+});
+
+/* POST */
+
+router.get('/Top100PirateBay', function(req, res){
+    torrent.Top100PirateBay(req, res);
+});
+
+router.get('/recentTorrent', function(req, res){
+    torrent.recentTorrent(req, res);
+});
+
+router.get('/getCateroy', function(req, res){
+    torrent.getCateroy(req, res);
 });
 
 module.exports = router;

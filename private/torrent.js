@@ -32,19 +32,49 @@ exports.getTorrentPirateBay = function(req, res) {
         orderBy: 'date', // default - name, date, size, seeds, leeches
         sortBy: 'desc'      // default - desc, asc
     })
+    .then(results => {
+        console.log(results)
+    })
+    .catch(err => {
+        console.log(err)
+    })
 };
 
 exports.Top100PirateBay = function(req, res) {
-    PirateBay.topTorrents(/*category*/);
+    PirateBay.topTorrents(/*category*/)
+    .then(results => {
+        console.log(results)
+    })
+    .catch(err => {
+        console.log(err)
+    })
+    res.end();
 };
 
 
 exports.recentTorrent = function(req, res) {
-    PirateBay.recentTorrents();
+    PirateBay.recentTorrents()
+    .then(results => {
+        console.log(results)
+    })
+    .catch(err => {
+        console.log(err)
+    })
+    res.end();
 };
 
 exports.getCateroy = function (req, res){
-    PirateBay.getCategories();
+    PirateBay.getCategories()
+    .then(results => {
+        console.info(results)
+        res.send(results);
+        res.end();
+    })
+    .catch(err => {
+        console.log(err);
+        res.end();
+    })
+
 };
 
 exports.getTorrentz = function (req, res){
