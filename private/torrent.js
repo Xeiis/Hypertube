@@ -1,19 +1,35 @@
 const PirateBay = require('thepiratebay');
 var torrentz = require('node-torrentz');
 var Client = require('node-torrent');
+var torrentStream = require('torrent-stream');
+var magnet = "magnet:?xt=urn:btih:56DFB8D531C7DC04CCCFADE877B859534B03B08E&dn=lost-wilderness-2015&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969"
+//var magnet_end = "magnet:?xt=urn:btih:"+ HASH + "&dn=" + TITLE_WITH_+_FOR_SPACE + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969"
+//magnet:?xt=urn:btih:d0b604933f95a92c3171e9c79954cd5e56538d9a&dn=The+Wrong+Girl+-+S01E05&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
 
-exports.downloadTorrent = function(req, res) {
-    var client = new Client({logLevel: 'DEBUG'});
-    var torrent = client.addTorrent('https:\/\/yts.ag\/torrent\/download\/BDC7DD18E04DC2DDC48C63742AFAF83942B7FA26.torrent');
-    // when the torrent completes, move it's files to another area
-    torrent.on('complete', function() {
-        console.log('complete!');
-        torrent.files.forEach(function(file) {
-            var newPath = '/movie/torrent/' + file.path;
-            fs.rename(file.path, newPath);
-            // while still seeding need to make sure file.path points to the right place
-            file.path = newPath;
-            res.end();
+/*
+ pirate bay
+ $("#searchResult tbody tr").map(function(index, torrent) {
+$(torrent).attr('id');
+var elem = $(torrent);
+console.log(elem.find('a[title="Download this torrent using magnet"]').attr('href'));
+});
+*/
+
+exports.downloadTorrent2 = function() {
+    var engine = torrentStream(magnet, {path: 'public/movie/'});
+    engine.on('ready', function () {
+        engine.files.forEach(function (file) {
+            console.log('filename:', file.name);
+            console.log(file.name.match(/.*(\..+?)$/));
+            var extension = file.name.match(/.*(\..+?)$/);
+ 			if (extension !== null && extension.length === 2) {
+ 				console.log('Downloading item');
+ 				file.select(); // downloads without attaching filestream
+ 			} else {
+ 				console.log('Skipping item');
+ 			}
+            //var stream = file.createReadStream();
+            // stream is readable stream to containing the file content
         });
     });
 };
@@ -66,7 +82,7 @@ exports.recentTorrent = function(req, res) {
 exports.getCateroy = function (req, res){
     PirateBay.getCategories()
     .then(results => {
-        console.info(results)
+        console.info(results);
         res.send(results);
         res.end();
     })
