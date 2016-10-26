@@ -7,6 +7,7 @@ var test = require('../private/test.js');
 
 /* GET */
 
+
 router.get('/', function(req, res) {
     index.renderIndex(req, res);
 });
