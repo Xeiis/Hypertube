@@ -1,10 +1,14 @@
+const PirateBay = require('thepiratebay');
 
 exports.renderIndex = function(req, res)
 {
-    res.render('index');
+    PirateBay.topTorrents(/*category*/)
+        .then(results => {
+        res.render('index', {top100 : results});
+    })
+    .catch(err => {
+        console.log(err);
+        res.end();
+    })
 };
 
-exports.renderTest = function(req, res)
-{
-    res.render('test');
-};

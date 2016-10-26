@@ -2,25 +2,25 @@ const PirateBay = require('thepiratebay');
 var torrentz = require('node-torrentz');
 var Client = require('node-torrent');
 
-
 exports.downloadTorrent = function(req, res) {
     var client = new Client({logLevel: 'DEBUG'});
-    var torrent = client.addTorrent('a.torrent');
+    var torrent = client.addTorrent('https:\/\/yts.ag\/torrent\/download\/BDC7DD18E04DC2DDC48C63742AFAF83942B7FA26.torrent');
     // when the torrent completes, move it's files to another area
     torrent.on('complete', function() {
         console.log('complete!');
         torrent.files.forEach(function(file) {
-            var newPath = '/new/path/' + file.path;
+            var newPath = '/movie/torrent/' + file.path;
             fs.rename(file.path, newPath);
             // while still seeding need to make sure file.path points to the right place
             file.path = newPath;
+            res.end();
         });
     });
 };
 
 exports.getTorrentPirateBay = function(req, res) {
     PirateBay.search('Game of Thrones', {
-        category: 'video',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
+        category: 'video',  // default - 'all' | 'all', 'audio', 'video', 'xxx',
                             //                   'applications', 'games', 'other'
                             //
                             // You can also use the category number:

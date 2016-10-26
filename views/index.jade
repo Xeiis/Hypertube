@@ -3,6 +3,16 @@ extends layout
 block content
     div.container
       div.row
-          div.col-lg-12
-            div.jumbotron
-             h2 Welcome to Hypertube
+        div.col-lg-12
+          div.jumbotron
+            h2 Welcome to Hypertube
+      div.row
+        div.col-lg-12
+          each val in top100
+            div.vignette.col-lg-3
+                p #{val.name}
+                p #{val.category.name}
+                p #{val.subcategory.name}
+                p #{val.size}
+                p download now
+                //#{val.magnetLink}

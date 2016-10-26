@@ -37,4 +37,8 @@ router.get('/getCateroy', function(req, res){
     torrent.getCateroy(req, res);
 });
 
+router.get("/download_torrent", function(req, res){
+    torrent.downloadTorrent(req, res);
+});
+
 module.exports = router;
