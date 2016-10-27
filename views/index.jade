@@ -1,13 +1,28 @@
 extends layout
-
+block script
+    script(src='/js/login.js')
 block content
     div.container
       div.row
         div.col-lg-12
           div.jumbotron
             h2 Welcome to Hypertube
+      div(class="alert text-center" role="alert" id="signup_erreur" style="display:none;margin-right:15px;margin-bottom:0px")
       div.row
         div.col-lg-12
+            form
+             div(class="form-group" id="sign_up_form" style="display: none;")
+                h2(class="text-center") Sign Up
+                input(type="text" class="form-control" id="user_name" placeholder="Username" style="margin-right:15px")
+                input(type="text" class="form-control" id="fname" placeholder="First name" style="margin-right:15px")
+                input(type="text" class="form-control" id="lname" placeholder="Last name" style="margin-right:15px")
+                input(type="text" class="form-control" id="email" placeholder="E-mail" style="margin-right:15px")
+                input(type="password" class="form-control" id="pass" placeholder="Password" style="margin-right:15px")
+                input(type="password" class="form-control" id="cpass" placeholder="Password confirmation" style="margin-right:15px")
+                input(type="submit" class="btn btn-default"  id="sign_up" value="Inscription")
+        div.row
+        div.col-lg-12
+
           if top100
               each val in top100
                 div.vignette.col-lg-3

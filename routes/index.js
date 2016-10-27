@@ -4,9 +4,10 @@ var index = require('../private/index.js');
 var video = require('../private/video.js');
 var torrent = require('../private/torrent.js');
 var test = require('../private/test.js');
+var sign_up = require('../private/sign_up.js');
+var sign_in = require('../private/sign_in.js');
 
 /* GET */
-
 
 router.get('/', function(req, res) {
     index.renderIndex(req, res);
@@ -25,6 +26,14 @@ router.get('/test', function(req, res) {
 });
 
 /* POST */
+
+router.post('/sign_in', function(req, res){
+    sign_in.connect(req, res);
+});
+
+router.post('/sign_up', function(req, res){
+    sign_up.inscription(req, res);
+});
 
 router.get('/Top100PirateBay', function(req, res){
     torrent.Top100PirateBay(req, res);
