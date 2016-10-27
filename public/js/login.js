@@ -42,9 +42,9 @@ $(document).ready(function(){
     $('#submit_connection').on('click', (function(event){
         event.preventDefault();
         var data = {
-            u_name  : $('#login_in').val();
-            u_pass  : $('#password_in').val();
-        }
+            u_name  : $('#login_in').val(),
+            u_pass  : $('#password_in').val()
+        };
         $.ajax({
             url     : '/sign_in',
             method  : 'POST',
@@ -53,5 +53,5 @@ $(document).ready(function(){
                 console.log(html);
             }
         })
-    });
+    }));
 });
