@@ -1,0 +1,21 @@
+extends layout
+block script
+    script(src='/js/bibliotheque.js')
+block content
+    div.container
+      div.row
+        div.col-lg-12
+          if data
+            each val in data
+                div.vignette.col-lg-3(style="background: url(#{val.medium_cover_image}) center")
+                    p #{val.title}
+                    p #{val.year}
+                    p #{val.rating}
+                    // download qualité
+                    if val.torrent_3D_id
+                        button.film_3D(movie=#{val.id}) 3D
+                    button.film_720p(movie=#{val.id}) 720p
+                    button.film_1080p(movie=#{val.id}) 1080p
+          else
+            div.jumbotron
+              h2 Oups we find nothing here
