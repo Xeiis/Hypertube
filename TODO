@@ -1,0 +1,80 @@
+Inscription : en demandant au minimum                                                                        --__ ✓ __--
+ une adresse email,
+ un nom d’utilisateur,
+ une photo de profil,
+ un nom,
+ un prénom
+ et un mot de passe un tant soit peu sécurisé.
+
+Omniauth
+ La stratégie 42,
+ et une stratégieau choix.
+
+Connection avec
+ son nom d’utilisateur
+ et son mot de passe.
+ Il doit également pouvoir recevoir un mail de réinitialisation de son mot de passe en cas d’oubli.
+
+Logout
+ L’utilisateur doit pouvoir se déconnecter en un seul clic depuis n’importe quelle
+ page du site.
+
+Langue
+ L’utilisateur doit pouvoir sélectionner une langue préférée, qui sera par défaut
+ l’anglais.
+
+Modifier son adresse email, sa photo de profil et ses informations
+
+Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,
+ses informations. L’email, en revanche, doit rester privé.
+
+Partie bibliotèque
+
+    Cette partie doit présenter au minimum :
+    • Un champ de recherche.
+    • Une liste de miniatures
+
+    Le moteur de recherche devra interroger au moins deux sources externes de votre
+    choix 1
+    , et retourner l’ensemble des résultats sous la forme de miniatures.
+    Vous devez limiter les résultats aux vidéos uniquement
+
+    Si une recherche a été faite, les résultats doivent s’afficher sous la forme d’une liste de
+    miniatures, triées par nom.
+
+    Si aucune recherche n’a été faite, vous devrez afficher les médias les plus populaires de
+    vos sources externes, triés selon le critère de votre choix (téléchargements, peers, seeders,
+    etc...).
+
+    si disponible, de son
+    année de production, de sa note IMDb et d’une image de couverture.
+
+    Vous devrez différencier les vidéos vues des vidéos non-vues, de la manière de votre
+    choix
+
+    La liste devra être paginée, à chaque fin de page, la suivante doit être automatiquement
+    chargée de manière asynchrone. Autrement dit, il ne doit pas y avoir de lien pour
+    chaque page.
+
+    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un
+    intervalle de note IMDb, un intervalle d’année de production, etc...
+
+Partie Video
+
+    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,
+    acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
+    couverture
+
+    laisser un commentaire
+    sur la vidéo, et afficher la liste des commentaires précédents.
+
+    Si un film n’est pas visionné pendant
+    un mois, il devra être supprimé.
+
+    Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés
+    et sélectionnables sur le player vidéo
+
+    Si la vidéo n’est pas nativement lisible pour le navigateur, vous devrez la convertir
+    à la volée dans un format acceptable. Le support du format mkv est un minimum.
+
+    icone pour la page de recherche glyphicon glyphicon-search
