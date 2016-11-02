@@ -4,23 +4,35 @@
 
 var db = require('./dbconn.js');
 var conn = db.connexion();
+var nodemailer = require('nodemailer');
+var urlencode = require('urlencode');
+var shortid = require('shortid');
 
 exports.connect = function(req, res) {
-    user_name = req.body.u_name;
-    user_mail = req.body.u_mail;
-    conn.query("SELECT * FROM users WHERE u_name= ? AND u_mail= ?", [user_name, user_mail], function(err, rows){
-        var result;
-        if(err) throw err;
-        if(typeof rows[0] !== 'undefined') {
-            if (rows[0].u_name == user_name && rows[0].u_mail == user_mail) {
-                result = 'OK';
+var  user_name = req.body.u_name;
+var user_mail = req.body.u_mail;
+var cle = shortid.generate();
+conn.query("UPDATE users SET u_restore_key = ? WHERE u_name = ? AND u_mail = ?", [cle, user_name, user_mail], function(err, rows){
+    var result;
+    var num = rows.affectedRows;
+    if(err) throw err;
+    if(num > 0) {
+        var transporter = nodemailer.createTransport();
+        var mailOptions = {
+            from: "Hypertube@hypertube.fr",
+            to: user_mail,
+            subject: "Reset your hypertube password",
+            html: "<b>Hello! <b> To reset you're password, please follow this link : <a  href='http://localhost:3000/?log=" + urlencode(user_name)+ "&cle=" + urlencode(cle) +"'>Recuperation du mot de passe</a><br><br></b>"
+        };
+        transporter.sendMail(mailOptions, function(error, info){
+            if(error){
+                return console.log(error);
             }
-            else
-                result = 'Wrong details';
-        }
-        else
-            result = 'Wrong details';
-        res.send(result);
-        res.end();
-    });
-}
+        });
+        result = 'OK';
+    }
+    else
+        result = 'Wrong details';
+res.send(result);
+res.end();
+});}
