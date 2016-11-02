@@ -15,7 +15,7 @@ console.log(elem.find('a[title="Download this torrent using magnet"]').attr('hre
 });
 */
 
-exports.downloadTorrent2 = function() {
+exports.downloadTorrent = function() {
     var engine = torrentStream(magnet, {path: 'public/movie/'});
     engine.on('ready', function () {
         engine.files.forEach(function (file) {

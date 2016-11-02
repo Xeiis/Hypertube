@@ -17,7 +17,7 @@ $(document).ready(function(){
         err += "Please enter a valide email</br>";
     }
     if (err != ""){
-        $("#signup_erreur").addClass('alert-danger').html(err).show();
+        $("#signup_erreur").addClass('alert-danger').html(err).fadeIn("slow");
     }
     else {
             var data = {
@@ -33,7 +33,7 @@ $(document).ready(function(){
                 data   : data,
                 success: function (html) {
                     $("#signup_erreur").addClass('alert-success').html("Great ! You are register on Hypertube").show();
-                    $('#sign_up_form').hide();
+                    $('#sign_up_form').fadeOut("slow");
                 }
             });
         }

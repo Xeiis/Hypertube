@@ -12,8 +12,3 @@ exports.renderIndex = function(req, res)
     })
 };
 
-function login(req, res)
-{
-    res.render('login');
-}
-

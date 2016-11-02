@@ -1,14 +1,13 @@
 var mysql = require('mysql');
 
 
-
 exports.connexion = function(){
     var conn = mysql.createConnection({
-        host     : 'sql7.freemysqlhosting.net',
-        user     : 'sql7141783',
-        password : 'NUIGWmWkXM',
-        port     : '3306',
-        database : 'sql7141783'
+        host     : 'localhost',
+        user     : 'root',
+        password : 'root02',
+        port     : '3307',
+        database : 'Hypertube'
     });
 
     conn.connect(function (err) {
