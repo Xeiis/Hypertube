@@ -8,6 +8,8 @@ var parse_torrent = require('../private/parse_torrent.js');
 var bibliotheque = require('../private/bibliotheque.js');
 var sign_up = require('../private/sign_up.js');
 var sign_in = require('../private/sign_in.js');
+var reset_pass = require('../private/reset_pass.js');
+var check_user = require('../private/check_user.js');
 
 /* GET */
 
@@ -36,6 +38,13 @@ router.get('/get_list_torrent', function(req, res){
 });
 
 /* POST */
+router.post('/check_user', function(req, res){
+    check_user.connect(req, res);
+});
+
+router.post('/reset_pass', function(req, res){
+    reset_pass.connect(req, res);
+});
 
 router.post('/load_more_bibliotheque', function(req, res){
     bibliotheque.load_more(req, res);

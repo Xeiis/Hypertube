@@ -25,6 +25,7 @@ conn.query('CREATE TABLE users(u_id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
 });
 conn.query('CREATE TABLE torrent(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                                  path VARCHAR(255),\
+                                 cle  VARCHAR(255),\
                                  url VARCHAR(255),\
                                  hash VARCHAR(255),\
                                  quality VARCHAR(255),\
@@ -38,7 +39,6 @@ conn.query('CREATE TABLE torrent(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
 conn.query('CREATE TABLE movies(m_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                                 id INT(11) NOT NULL,\
                                 url VARCHAR(255) NOT NULL,\
-                                path VARCHAR(255),\
                                 imdb_code VARCHAR (255) NOT NULL,\
                                 title VARCHAR(255) NOT NULL,\
                                 year INT(11) NOT NULL,\
@@ -63,7 +63,7 @@ conn.query('CREATE TABLE seen(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                                u_id INT(11),\
                                m_id INT(11),\
                                FOREIGN KEY (u_id) REFERENCES users(u_id) ON DELETE SET NULL ON UPDATE CASCADE,\
-                               FOREIGN KEY (m_id) REFERENCES movies(m_id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
+                               FOREIGN KEY (m_id) REFERENCES movies(id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
     if(err) throw err;
     console.log('seen table created\n');
 });
@@ -72,7 +72,7 @@ conn.query('CREATE TABLE comm(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                               m_id INT(11),\
                               content VARCHAR(255),\
                               FOREIGN KEY (u_id) REFERENCES users(u_id) ON DELETE SET NULL ON UPDATE CASCADE,\
-                              FOREIGN KEY (m_id) REFERENCES movies(m_id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
+                              FOREIGN KEY (m_id) REFERENCES movies(id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
     if(err) throw err;
     console.log('comm table created\n');
 });

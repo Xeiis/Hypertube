@@ -1,13 +1,14 @@
 var mysql = require('mysql');
 
 
+
 exports.connexion = function(){
     var conn = mysql.createConnection({
         host     : 'localhost',
         user     : 'root',
         password : 'root02',
         port     : '3307',
-        database : 'Hypertube'
+        database : 'hypertube'
     });
 
     conn.connect(function (err) {
