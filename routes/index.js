@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
+var test = require('../private/test.js');
 var index = require('../private/index.js');
 var video = require('../private/video.js');
 var torrent = require('../private/torrent.js');
-var test = require('../private/test.js');
+var parse_torrent = require('../private/parse_torrent.js');
+var bibliotheque = require('../private/bibliotheque.js');
 var sign_up = require('../private/sign_up.js');
 var sign_in = require('../private/sign_in.js');
 var reset_pass = require('../private/reset_pass.js');
@@ -25,6 +27,14 @@ router.get('/torrent', function(req, res){
 
 router.get('/test', function(req, res) {
     test.renderTest(req, res);
+});
+
+router.get('/bibliotheque', function(req, res){
+   bibliotheque.renderBibliotheque(req, res);
+});
+
+router.get('/get_list_torrent', function(req, res){
+    parse_torrent.parseTorrentYts(req, res);
 });
 
 /* POST */
