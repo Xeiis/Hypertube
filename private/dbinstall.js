@@ -24,6 +24,7 @@ conn.query('CREATE TABLE users(u_id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
     console.log('users table created\n');
 });
 conn.query('CREATE TABLE torrent(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+                                 path VARCHAR(255),\
                                  url VARCHAR(255),\
                                  hash VARCHAR(255),\
                                  quality VARCHAR(255),\
@@ -35,12 +36,14 @@ conn.query('CREATE TABLE torrent(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
     console.log('torrent table created\n');
 });
 conn.query('CREATE TABLE movies(m_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+                                id INT(11) NOT NULL,\
                                 url VARCHAR(255) NOT NULL,\
                                 path VARCHAR(255),\
                                 imdb_code VARCHAR (255) NOT NULL,\
                                 title VARCHAR(255) NOT NULL,\
                                 year INT(11) NOT NULL,\
                                 rating DECIMAL,\
+                                trailer VARCHAR(255),\
                                 summary TEXT,\
                                 language VARCHAR(25),\
                                 mpa_rating VARCHAR(255),\
@@ -49,9 +52,10 @@ conn.query('CREATE TABLE movies(m_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
                                 medium_cover_image VARCHAR(255),\
                                 torrent_720_id INT(11),\
                                 torrent_1080_id INT(11),\
+                                torrent_3D_id INT(11),\
                                 FOREIGN KEY (torrent_720_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE,\
-                                FOREIGN KEY (torrent_720_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE,\
-                                FOREIGN KEY (torrent_1080_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE)' ,function(err){
+                                FOREIGN KEY (torrent_1080_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE,\
+                                FOREIGN KEY (torrent_3D_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE)' ,function(err){
     if(err) throw err;
     console.log('users movies created\n');
 });

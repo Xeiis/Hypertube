@@ -37,6 +37,10 @@ router.get('/get_list_torrent', function(req, res){
 
 /* POST */
 
+router.post('/load_more_bibliotheque', function(req, res){
+    bibliotheque.load_more(req, res);
+});
+
 router.post('/sign_in', function(req, res){
     sign_in.connect(req, res);
 });
@@ -57,7 +61,7 @@ router.get('/getCateroy', function(req, res){
     torrent.getCateroy(req, res);
 });
 
-router.get("/download_torrent", function(req, res){
+router.post("/download_torrent", function(req, res){
     torrent.downloadTorrent(req, res);
 });
 

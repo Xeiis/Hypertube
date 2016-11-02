@@ -143,7 +143,7 @@ exports.parseTorrentYts = function(req, res) {
                         if (err) throw err;
                         torrent_1080_id = ressss.insertId;
                         var movies = {
-                            m_id: copy.data.movies[j].id,
+                            id: copy.data.movies[j].id,
                             url: copy.data.movies[j].url,
                             imdb_code: copy.data.movies[j].imdb_code,
                             title: copy.data.movies[j].title,
@@ -176,7 +176,7 @@ exports.parseTorrentYts = function(req, res) {
                 if (err) throw err;
                 torrent_1080_id = ressss.insertId;
                 var movies = {
-                    m_id: copy.data.movies[j].id,
+                    id: copy.data.movies[j].id,
                     url: copy.data.movies[j].url,
                     imdb_code: copy.data.movies[j].imdb_code,
                     title: copy.data.movies[j].title,
