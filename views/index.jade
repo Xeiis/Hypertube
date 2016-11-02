@@ -20,6 +20,16 @@ block content
                 input(type="password" class="form-control" id="pass" placeholder="Password" style="margin-right:15px")
                 input(type="password" class="form-control" id="cpass" placeholder="Password confirmation" style="margin-right:15px")
                 input(type="submit" class="btn btn-default"  id="sign_up" value="Inscription")
+      div.row
+        div.col-lg-12
+            form
+             div(class="form-group" id="reset-pass-form" style="display: none;")
+                h2(class="text-center") Reset Password
+                input(type="text" class="form-control" id="reset_uname" placeholder="Username" style="margin-right:15px;")
+                input(type="text" class="form-control" id="reset_umail" placeholder="E-mail" style="margin-right:15px;")
+                input(type="password" class="form-control" id="reset_pass" placeholder="Password" style="margin-right:15px; display:none;")
+                input(type="password" class="form-control" id="reset_cpass" placeholder="Password confirmation" style="margin-right:15px; display:none;")
+                input(type="submit" class="btn btn-default"  id="reset" value="Envoyer")
         div.row
         div.col-lg-12
 

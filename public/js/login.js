@@ -7,15 +7,15 @@ $(document).ready(function(){
     var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
     var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
     var err            = "";
-    if (!password_regex.test($('#pass'))){
-       err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-    }
-    if (!($('#pass').val() === $('#cpass').val())) {
-        err += "Password must match</br>";
-    }
-    if (!email_regex.test(email)) {
-        err += "Please enter a valide email</br>";
-    }
+    // if (!password_regex.test($('#pass'))){
+    //    err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+    // }
+    // if (!($('#pass').val() === $('#cpass').val())) {
+    //     err += "Password must match</br>";
+    // }
+    // if (!email_regex.test(email)) {
+    //     err += "Please enter a valide email</br>";
+    // }
     if (err != ""){
         $("#signup_erreur").addClass('alert-danger').html(err).show();
     }
@@ -33,7 +33,7 @@ $(document).ready(function(){
                 data   : data,
                 success: function (html) {
                     $("#signup_erreur").addClass('alert-success').html("Great ! You are register on Hypertube").show();
-                    $('#sign_up_form').hide();
+                    $("#sign_up_form").hide();
                 }
             });
         }
@@ -50,8 +50,74 @@ $(document).ready(function(){
             method  : 'POST',
             data    : data,
             success : function (html) {
-                console.log(html);
+                    if (html === "OK"){
+                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show();
+                        $(".login-bloc").hide();
+                    }
+                    else if (html === "Wrong password")
+                        $('#pass-reset').show();
+                    $("#signup_erreur").addClass('alert-danger').html(html).show();
             }
         })
     }));
+
+    $('#reset').on('click', (function(event){
+        event.preventDefault();
+        if ($('#reset_uname').val() !== "" && $('#reset_umail').val() !== ""){
+            var data = {
+                    u_name : $('#reset_uname').val(),
+                    u_mail : $('#reset_umail').val()
+            };
+            $.ajax({
+                url     : '/check_user',
+                method  : 'POST',
+                data    : data,
+                success : function(html){
+                    if(html === "OK"){
+                        $('#reset_uname').hide();
+                        $('#reset_umail').hide();
+                        $('#reset_pass').show();
+                        $('#reset_cpass').show();
+                    }
+                    else
+                        $("#signup_erreur").addClass('alert-danger').html(html).show();
+                }
+            })
+        }
+
+    }));
+    $('#reset').on('click', function(event){
+        if ($('#reset_pass').val() !== "" && $('#reset_cpass').val() !== "" && $('#reset_uname').val() !== "") {
+            var err            = "";
+            var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
+            // if (!password_regex.test($('#reset_pass'))){
+            //     err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+            // }
+            if ($('#reset_pass').val() !== $('#reset_cpass').val()) {
+                err += "Password must match</br>";
+            }
+            if (err != "")
+                $("#signup_erreur").addClass('alert-danger').html(err).show();
+            else {
+                    var data = {
+                        u_pass   : $('#reset_pass').val(),
+                        u_name : $('#reset_uname').val()
+                    };
+                    $.ajax({
+                        url: '/reset_pass',
+                        method: 'POST',
+                        data: data,
+                        success: function (html) {
+                            if (html === "OK") {
+                                $("#signup_erreur").addClass('alert-success').html("Password successfully updated. Check you're email.").show();
+                                $("#reset-form").hide();
+                            }
+                            else{
+                                $("#signup_erreur").addClass('alert-danger').html(html).show();
+                            }
+                        }
+                    })
+                }
+            }
+    });
 });

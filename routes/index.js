@@ -6,6 +6,8 @@ var torrent = require('../private/torrent.js');
 var test = require('../private/test.js');
 var sign_up = require('../private/sign_up.js');
 var sign_in = require('../private/sign_in.js');
+var reset_pass = require('../private/reset_pass.js');
+var check_user = require('../private/check_user.js');
 
 /* GET */
 
@@ -26,6 +28,13 @@ router.get('/test', function(req, res) {
 });
 
 /* POST */
+router.post('/check_user', function(req, res){
+    check_user.connect(req, res);
+});
+
+router.post('/reset_pass', function(req, res){
+    reset_pass.connect(req, res);
+});
 
 router.post('/sign_in', function(req, res){
     sign_in.connect(req, res);
