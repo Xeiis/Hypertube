@@ -7,17 +7,17 @@ var passwordHash = require('password-hash');
 var conn = db.connexion();
 
 exports.connect = function(req, res) {
-    var user_name = req.body.u_name;
+    var  user_name = req.body.u_name;
     var  user_pass = passwordHash.generate(req.body.u_pass);
-    conn.query("UPDATE users SET u_pass = ? WHERE u_name= ?", [user_pass, user_name], function(err, rows){
+    var  user_cle  = req.body.u_cle;
+    conn.query("UPDATE users SET u_pass = ?, u_restore_key = NULL WHERE u_name= ? AND u_restore_key = ?", [user_pass, user_name, user_cle], function(err, rows){
         var result;
         if(err) throw err;
         if(rows.changedRows !== 0) {
             result = 'OK';
         }
         else
-            result = 'KO';
-        console.log(rows.changedRows);
+            result = 'Your key is no longer valid. Enter you \'re informations and check you \'re mail again.';
         res.send(result);
         res.end();
     });

@@ -14,7 +14,7 @@ exports.connect = function(req, res) {
         if(typeof rows[0] !== 'undefined') {
             if (rows[0].u_name == user_name) {
                 if (passwordHash.verify(req.body.u_pass, rows[0].u_pass)) {
-                    req.session.login = data.login;
+                    req.session.login = req.body.u_name;
                     result = 'OK';
                 }
                 else
