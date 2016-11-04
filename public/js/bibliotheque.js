@@ -52,44 +52,40 @@ $(document).scroll(function() {
 
 });
 
-$(".film_3D").on("click", function(){
-    $.ajax({
-        url: '/download_torrent',
-        method : 'POST',
-        data: {id: $(this).attr("movie"), quality: "3D"} // l'id du film en db
-    })
-        .done(function(res) {
-            if(res == "done") // le téléchargement est fini
-                $( this ).addClass( "done" );
-            else
-                alert("Oups something went wrong");
-        });
-});
-
-$(".film_720p").on("click", function(){
-    $.ajax({
-        url: '/download_torrent',
-        method : 'POST',
-        data: {id: $(this).attr("movie"), quality: "720p"} // l'id du film en db
-    })
-        .done(function(res) {
-            if(res == "done") // le téléchargement est fini
-                $( this ).addClass( "done" );
-            else
-                alert("Oups something went wrong");
+$(document).ready(function() {
+    $(".film_3D").on("click", function () {
+        $.ajax({
+            url: '/video',
+            method: 'GET',
+            data: {id: $(this).attr("movie"), quality: "3D"} // l'id du film en db
+        })
+            .done(function (res) {
+                if (res == "fail") // la page a eu un problème
+                    alert("Oups something went wrong");
+            });
     });
-});
 
-$(".film_1080p").on("click", function(){
-    $.ajax({
-        url: '/download_torrent',
-        method : 'POST',
-        data: {id: $(this).attr("movie"), quality: "1080p"} // l'id du film en db et la qualité demander
-    })
-        .done(function(res) {
-            if(res == "done") // le téléchargement est fini
-                $( this ).addClass( "done" );
-            else
-                alert("Oups something went wrong");
-        });
+    $(".film_720p").on("click", function () {
+        $.ajax({
+            url: '/video',
+            method: 'GET',
+            data: {id: $(this).attr("movie"), quality: "720p"} // l'id du film en db
+        })
+            .done(function (res) {
+                if (res == "fail") // la page a eu un problème
+                    alert("Oups something went wrong");
+            });
+    });
+
+    $(".film_1080p").on("click", function () {
+        $.ajax({
+            url: '/video',
+            method: 'GET',
+            data: {id: $(this).attr("movie"), quality: "1080p"} // l'id du film en db et la qualité demander
+        })
+            .done(function (res) {
+                if (res == "fail") // la page a eu un problème
+                    alert("Oups something went wrong");
+            });
+    });
 });

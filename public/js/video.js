@@ -2,6 +2,10 @@
  * Created by dchristo on 10/24/16.
  */
 $( document ).ready(function() {
+    $("video").play();
+    if ($("video").duration == $("video").currentTime){
+        //afficher le film;
+    }
     videojs("rush_hour").ready(function () {
         var video = this;
         var icon = $('.play');

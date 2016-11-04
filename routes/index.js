@@ -71,6 +71,7 @@ router.get('/getCateroy', function(req, res){
 });
 
 router.post("/download_torrent", function(req, res){
+    console.log("download_torrent");
     torrent.downloadTorrent(req, res);
 });
 

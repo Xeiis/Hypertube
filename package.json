@@ -20,6 +20,7 @@
     "mysql": "^2.11.1",
     "node-torrent": "^0.2.1",
     "node-torrentz": "^1.1.0",
+    "nodemailer": "^2.6.4",
     "password-hash": "^1.2.2",
     "serve-favicon": "~2.3.0",
     "session-file-store": "^0.2.0",
