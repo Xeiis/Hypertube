@@ -74,8 +74,7 @@ $(document).ready(function(){
                 data    : data,
                 success : function(html){
                     if(html === "OK"){
-                        $('#reset_uname').hide();
-                        $('#reset_umail').hide();
+                        $("#reset-pass-form").hide();
                         $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Check you\'re mail !").show();
                     }
                     else
@@ -86,37 +85,54 @@ $(document).ready(function(){
 
     }));
 
-    if ()
-    if ($('#reset_pass').val() !== "" && $('#reset_cpass').val() !== "" && $('#reset_uname').val() !== "") {
-        var err            = "";
-        var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
-        // if (!password_regex.test($('#reset_pass'))){
-        //     err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-        // }
-        if ($('#reset_pass').val() !== $('#reset_cpass').val()) {
-            err += "Password must match</br>";
-        }
-        if (err != "")
-            $("#signup_erreur").addClass('alert-danger').html(err).show();
-        else {
-            var data = {
-                u_pass   : $('#reset_pass').val(),
-                u_name : $('#reset_uname').val()
-            };
-            $.ajax({
-                url: '/reset_pass',
-                method: 'POST',
-                data: data,
-                success: function (html) {
-                    if (html === "OK") {
-                        $("#signup_erreur").addClass('alert-success').html("Password successfully updated. Check you're email.").show();
-                        $("#reset-form").hide();
-                    }
-                    else{
-                        $("#signup_erreur").addClass('alert-danger').html(html).show();
-                    }
-                }
-            })
-        }
+
+    if (window.location.search.includes("log") && window.location.search.includes("cle"))
+    {
+        $('#reset_pass').show();
+        $('#reset_cpass').show();
+        $('#reset-pass-form').show();
     }
+
+    $('#reset').on('click', function(event){
+        if ($('#reset_pass').val() !== "" && $('#reset_cpass').val() !== "") {
+            var err            = "";
+            var u_name_start_index = window.location.search.indexOf("=") + 1;
+            var u_name_end_index   = window.location.search.indexOf("&");
+            var u_name             = window.location.search.slice(u_name_start_index, u_name_end_index);
+            var u_cle              = window.location.search.split("=")[2];
+
+            // var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
+            // if (!password_regex.test($('#reset_pass'))){
+            //     err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+            // }
+            // if ($('#reset_pass').val() !== $('#reset_cpass').val()) {
+            //     err += "Password must match</br>";
+            // }
+            if (err !== "")
+                $("#signup_erreur").addClass('alert-danger').html(err).show();
+            else {
+                var data = {
+                    u_pass   : $('#reset_pass').val(),
+                    u_name   : u_name,
+                    u_cle    : u_cle
+                };
+                console.log(data);
+                $.ajax({
+                    url: '/reset_pass',
+                    method: 'POST',
+                    data: data,
+                    success: function (html) {
+                        if (html === "OK") {
+                            $("#signup_erreur").addClass('alert-success').html("Password successfully updated.").show();
+                            $("#reset-pass-form").hide();
+                        }
+                        else{
+                            $("#signup_erreur").addClass('alert-danger').html(html).show();
+                        }
+                    }
+                })
+            }
+        }
+    });
+});
 
