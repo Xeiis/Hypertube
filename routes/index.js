@@ -38,6 +38,15 @@ router.get('/get_list_torrent', function(req, res){
 });
 
 /* POST */
+
+router.post('/download_end', function(req, res){
+   video.download_end(req, res);
+});
+
+router.post('/video_exist', function(req, res){
+    video.exist(req, res);
+});
+
 router.post('/check_user', function(req, res){
     check_user.connect(req, res);
 });

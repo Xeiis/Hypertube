@@ -3,7 +3,6 @@ block script
   link(href='//vjs.zencdn.net/5.4.6/video-js.min.css', rel='stylesheet')
   script(src='//vjs.zencdn.net/5.4.6/video.min.js')
   script(src='/js/video.js')
-
 block content
   div(class="row")
     div(style="width:1920px;position:relative;height:auto;margin: 0 auto;")
@@ -22,8 +21,14 @@ block content
           .sk-circle11.sk-child
           .sk-circle12.sk-child
       if trailer
+        div.jumbotron(style="padding:48px;text-align:center;")
+          h3 Votre film est entrain de download veuillez patienter, vous pouvez regarder le trailer pendant ce temps juste en dessous.
+          div#voir_la_video
         iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
       if path
+        p Langue du film #{language}
+        div.jumbotron(style="padding:48px")
+          p #{summary}
         video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{bk}', data-setup='{"autoplay": false}')
           source(src='/movie/#{path}', type='video/mp4')
           // subtitle caption :
