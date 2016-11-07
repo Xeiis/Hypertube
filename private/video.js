@@ -1,6 +1,56 @@
 var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
+var http = require('http');
 var db = require('./dbconn.js');
+const OS = require('opensubtitles-api');
+const OpenSubtitles = new OS({
+    useragent:'OSTestUserAgentTemp',
+    username: 'Hypertube',
+    password: 'dotef',
+    ssl: true
+});
+
+var buff = '';
+
+http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
+    ress.on('data', function (data) {
+        buff += data;
+    });
+    ress.on('end', function () {
+        var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
+
+        var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
+        end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
+        var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
+        end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
+        var stars = end;
+        var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
+
+        var matches = director.match(reg);
+        director = clean_match(matches);
+        console.log(director);
+        matches = writers.match(reg);
+        writers = clean_match(matches);
+        console.log(writers);
+        matches = stars.match(reg);
+        stars = clean_match(matches);
+        console.log(stars);
+    });
+});
+
+function clean_match(matches){
+    var i = 0;
+    if (matches) {
+        while (matches[i]) {
+            matches[i] = matches[i].substring(39, matches[i].length - 13);
+            i++;
+            if (i > 3)
+                break;
+        }
+    }
+    return matches;
+}
+
 var conn = db.connexion();
 
 var magnet = '';
@@ -10,10 +60,22 @@ exports.renderVideo = function(req, res)
     if (req.query.cle) {
         conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = '+quality+' where cle = ?', [req.query.cle], function (err, rows) {
             console.log(rows);
-            // parse le site imdb pour récupérer des infos :
-            // http://www.imdb.com/title/imdb_code
-            // $(".plot_summary").text(); avec un petit parse ça devrais le faire
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language})
+            OpenSubtitles.search({
+                sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
+                hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
+                path: rows[0].path,        // Complete path to the video file, it allows
+                    //   to automatically calculate 'hash'.
+                filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
+                extensions: ['srt', 'vtt'], // Accepted extensions, defaults to 'srt'.
+                limit: '3',                 // Can be 'best', 'all' or an
+                                            // arbitrary nb. Defaults to 'best'
+                imdbid: rows[0].imdb_code   // Text-based query, this is not recommended.
+                }).then(subtitles => {
+                    // parse le site imdb pour récupérer des infos :
+                    // http://www.imdb.com/title/imdb_code
+                    // $(".plot_summary").text(); avec un petit parse ça devrais le faire
+                    res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language, subtitles: subtitles});
+            });
         });
     }
     else if (req.query.id) {
@@ -122,3 +184,4 @@ var which_quality = function(input){
         quality = 'm.torrent_3D_id';
     return quality;
 };
+

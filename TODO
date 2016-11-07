@@ -10,7 +10,7 @@ Omniauth
  La stratégie 42,
  et une stratégieau choix.
 
-Connection avec
+Connection avec                                                                                              --__ ✓ __--
  son nom d’utilisateur
  et son mot de passe.
  Il doit également pouvoir recevoir un mail de réinitialisation de son mot de passe en cas d’oubli.
@@ -28,7 +28,7 @@ Modifier son adresse email, sa photo de profil et ses informations
 Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,
 ses informations. L’email, en revanche, doit rester privé.
 
-Partie bibliotèque
+Partie bibliotèque                                                                                           --__ ✓ __--
 
     Cette partie doit présenter au minimum :
     • Un champ de recherche.

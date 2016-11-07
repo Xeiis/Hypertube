@@ -12,7 +12,8 @@ block content
                     p(style="text-align:center;font-weight:700") #{val.year}
                     p(style="text-align:center;font-weight:700") #{val.rating} / 10
                     img.vignette(src='#{val.medium_cover_image}', width='210', height='315')
-
+                    if val.vision
+                        div.vision #{val.vision}
                     // download qualité
                     div.button(style="text-align:center")
                         if val.torrent_3D_id
@@ -21,4 +22,4 @@ block content
                         button.film_1080p.bouton(movie="#{val.id}" style="margin:5px;") 1080p
           else
             div.jumbotron
-              h2 Oups we find nothing here
+              h2 Oups we found nothing here
