@@ -1,4 +1,7 @@
-Partie user :                                                                                         --__ 4✓ | 4x  __--
+                                                                                           TOTAL : --__ 12✓ | 8.5x  __--
+
+
+Partie user :                                                                                         --__ 4✓ | 3x  __--
 
     Inscription : en demandant au minimum                                                                    --__ ✓ __--
      une adresse email,
@@ -8,7 +11,7 @@ Partie user :                                                                   
      un prénom
      et un mot de passe un tant soit peu sécurisé.
 
-    Omniauth                                                                                               --__ ✓|x __--
+    Omniauth                                                                                                 --__ ✓ __--
      La stratégie 42,
      et une stratégieau choix.
 
@@ -30,9 +33,9 @@ Partie user :                                                                   
     Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,                    --__ x __--
     ses informations. L’email, en revanche, doit rester privé.
 
-Partie bibliotèque                                                                                    --__ 5✓ | 2x  __--
+Partie bibliotèque                                                                                   --__ 7✓ | 0.5x __--
 
-    Cette partie doit présenter au minimum :                                                                --__ x __--
+    Cette partie doit présenter au minimum :                                                                --__ ✓ __--
     • Un champ de recherche.
     • Une liste de miniatures
 
@@ -41,7 +44,7 @@ Partie bibliotèque                                                             
     , et retourner l’ensemble des résultats sous la forme de miniatures.
     Vous devez limiter les résultats aux vidéos uniquement
 
-    Si une recherche a été faite, les résultats doivent s’afficher sous la forme d’une liste de              --__ x __--
+    Si une recherche a été faite, les résultats doivent s’afficher sous la forme d’une liste de              --__ ✓ __--
     miniatures, triées par nom.
 
     Si aucune recherche n’a été faite, vous devrez afficher les médias les plus populaires de                --__ ✓ __--
@@ -58,12 +61,12 @@ Partie bibliotèque                                                             
     chargée de manière asynchrone. Autrement dit, il ne doit pas y avoir de lien pour
     chaque page.
 
-    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ x __--
+    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un             --__ 0.5x __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
 Partie Video                                                                                           --__ 1✓ | 5x __--
 
-    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                           --__ ✓|x __--
+    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                         --__ ✓|x __--
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
     couverture
 
