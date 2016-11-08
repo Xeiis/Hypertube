@@ -17,7 +17,7 @@ $(document).ready(function(){
         //     err += "Please enter a valide email</br>";
         // }
         if (err != ""){
-            $("#signup_erreur").addClass('alert-danger').html(err).show();
+            $("#signup_erreur").addClass('alert-danger').html(err).show().delay(2000).hide('slow');
         }
         else {
             var data = {
@@ -32,8 +32,8 @@ $(document).ready(function(){
                 method : 'POST',
                 data   : data,
                 success: function (html) {
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Great ! You are register on Hypertube").show();
-                    $("#sign_up_form").hide();
+                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Great ! You are register on Hypertube").show().delay(2000).hide('slow');
+                    $("#sign_up_form").hide('fast');
                 }
             });
         }
@@ -51,15 +51,15 @@ $(document).ready(function(){
             data    : data,
             success : function (html) {
                 if (html === "OK"){
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show();
-                    $(".login-bloc").hide();
+                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show('slow').delay(2000).hide('slow');
+                    $(".login-bloc").hide('fast');
                 }
                 else if (html === "Wrong password") {
-                    $('#pass-reset').show();
-                    $("#signup_erreur").addClass('alert-danger').html(html).show();
+                    $('#pass-reset').show('slow');
+                    $("#signup_erreur").addClass('alert-danger').html(html).show('slow').delay(2000).hide('slow');
                 }
                 else
-                    alert(html);
+                    $("#signup_erreur").addClass('alert-danger').html('Wrong Login / Password').show('slow').delay(2000).hide('slow');
             }
         })
     }));
@@ -77,11 +77,11 @@ $(document).ready(function(){
                 data    : data,
                 success : function(html){
                     if(html === "OK"){
-                        $("#reset-pass-form").hide();
-                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Check you\'re mail !").show();
+                        $("#reset-pass-form").hide('fast');
+                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Check you\'re mail !").show('slow').delay(2000).hide('slow');
                     }
                     else
-                        $("#signup_erreur").addClass('alert-danger').html(html).show();
+                        $("#signup_erreur").addClass('alert-danger').html(html).show('slow').delay(2000).hide('slow');
                 }
             })
         }
@@ -89,14 +89,11 @@ $(document).ready(function(){
     }));
 
 
-    if (window.location.search.includes("log") && window.location.search.includes("cle"))
-    {
-        $('#reset_pass').show();
-        $('#reset_cpass').show();
-        $('#reset-pass-form').show();
+    if (window.location.search.includes("log") && window.location.search.includes("cle")) {
+        $("#reset-pass-form").show('slow');
     }
 
-    $('#reset').on('click', function(event){
+    $('#reset').on('click', function(event) {
         if ($('#reset_pass').val() !== "" && $('#reset_cpass').val() !== "") {
             var err            = "";
             var u_name_start_index = window.location.search.indexOf("=") + 1;
@@ -112,25 +109,25 @@ $(document).ready(function(){
             //     err += "Password must match</br>";
             // }
             if (err !== "")
-                $("#signup_erreur").addClass('alert-danger').html(err).show();
+                $("#signup_erreur").addClass('alert-danger').html(err).show('slow');
             else {
                 var data = {
                     u_pass   : $('#reset_pass').val(),
                     u_name   : u_name,
                     u_cle    : u_cle
                 };
-                console.log(data);
                 $.ajax({
                     url: '/reset_pass',
                     method: 'POST',
                     data: data,
                     success: function (html) {
                         if (html === "OK") {
-                            $("#signup_erreur").addClass('alert-success').html("Password successfully updated.").show();
-                            $("#reset-pass-form").hide();
+                            $("#signup_erreur").addClass('alert-success').html("Password successfully updated.").show('slow').delay(2000).hide('slow');
+                            $("#reset-pass-form").hide('fast');
+                            $("#forgot_pass").hide('fast');
                         }
                         else{
-                            $("#signup_erreur").addClass('alert-danger').html(html).show();
+                            $("#signup_erreur").addClass('alert-danger').html(html).show('slow').delay(2000).hide('slow');
                         }
                     }
                 })

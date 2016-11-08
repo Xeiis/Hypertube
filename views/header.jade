@@ -14,10 +14,10 @@ div(id="header")
                             input(type="text" class="form-control" id="login_in" placeholder="login" style="margin-right:15px")
                             input(type="password" class="form-control" id="password_in" placeholder="password" style="margin-right:15px")
                             button(class="btn btn-default" id="submit_connection" ) Connection
-                button(type="button" class="btn btn-default navbar-btn navbar-left" style='margin-right:15px' onclick="$('#sign_in_form').show(); $('#sign_up_form').hide();"  id="sign_in") Sign in
-                button(type="submit" class="btn btn-default navbar-btn navbar-left"  id="sign_up_toggle" onclick="$('#sign_up_form').show();") Sign up
+                button(type="button" class="btn btn-default navbar-btn navbar-left" style='margin-right:15px' id="sign_in") Sign in
+                button(type="submit" class="btn btn-default navbar-btn navbar-left" id="sign_up_toggle") Sign up
                 li(class="navbar-left" id="pass-reset" style="display: none;")
-                    a(onclick="$('#reset_uname').show(); $('#reset_umail').show(); $('#reset-pass-form').show();") Forgot Password ?
+                    a#forgot_pass Forgot Password ?
                 div(class="alert alert-danger form-group navbar-left" role="alert" id="connection_erreur" style="display:none;margin-right:15px;margin-bottom:0px")
                 ul(class="nav navbar-nav navbar-right")
                     li

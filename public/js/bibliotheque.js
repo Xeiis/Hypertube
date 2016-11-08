@@ -22,6 +22,10 @@ $(document).scroll(function() {
                 data.note_min = $("#lower_note").val();
                 data.note_max = $("#higher_note").val();
             }
+            if ($(".custom__select").val() == 'note')
+                data.order = 'note';
+            else if ($(".custom__select").val() == 'year')
+                data.order = 'year';
             finish = 1;
             $.ajax({
                 url: '/load_more_bibliotheque',
@@ -43,6 +47,9 @@ $(document).scroll(function() {
 });
 var enter = 0;
 $(document).ready(function() {
+    $("body").on('click', function(){
+        $("#autocompletion").hide("slow");
+    });
     $("#search").on('keyup', function () {
         var zis = $(this);
         if (enter == 1) {
@@ -55,7 +62,6 @@ $(document).ready(function() {
                     $("#autocompletion").hide("slow");
                 }
                 else if (zis.val().length >= 3) {
-                    $("#autocompletion").html('');
                     $.ajax({
                         url: '/find_movie_autocompletion',
                         method: 'POST',
@@ -108,7 +114,10 @@ $(document).ready(function() {
             data.note_min = $("#lower_note").val();
             data.note_max = $("#higher_note").val();
         }
-        console.log(data);
+        if ($(".custom__select").val() == 'note')
+            data.order = 'note';
+        else if ($(".custom__select").val() == 'year')
+            data.order = 'year';
         $.ajax({
             url: '/find_movie',
             method: 'POST',
@@ -139,6 +148,7 @@ $(document).ready(function() {
     $("input[type='checkbox']").on('change', function(){
         if ($(this)[0].checked)
             find_movie();
+
     });
 
     $('#lower_year').on("change mousemove", function() {
@@ -168,7 +178,7 @@ function return_bibliotheque(res){
     var html = '';
     while(res[i]) {
         html += "<div class='col-lg-3 col-md-4 col-sm-6 col-xs-6' style='margin-top:20px'><div class='big_vignette'>";
-        html += "<p style='text-align:center;font-weight:700;font-size:medium;min-height:44px;'>"+res[i].title+"</p>";
+        html += "<p style='text-align:center;font-weight:700;font-size:medium;overflow-y: auto;max-height: 20px;'>"+res[i].title+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].year+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].rating+"</p>";
         html += "<img class='vignette' src="+res[i].medium_cover_image+" width='210' height='315'></img>";

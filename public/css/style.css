@@ -33,7 +33,20 @@
     display: block;
     margin: 0 auto;
 }
+
 #sign_up_form
+{
+    padding: 10px;
+    margin: 50px auto;
+    width: 340px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
+    border-radius : 5px;
+}
+
+#reset-pass-form
 {
     padding: 10px;
     margin: 50px auto;
@@ -124,4 +137,12 @@
 
 .text_result_autocompletion{
 
+}
+
+.form_stack{
+    margin-top:15px;
+}
+
+input[type='submit']{
+    width:100%;
 }
