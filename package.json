@@ -18,6 +18,7 @@
     "morgan": "~1.6.1",
     "multer": "^1.1.0",
     "mysql": "^2.11.1",
+    "node-libcurl": "^1.0.0",
     "node-torrent": "^0.2.1",
     "node-torrentz": "^1.1.0",
     "password-hash": "^1.2.2",

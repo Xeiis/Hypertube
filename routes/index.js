@@ -53,7 +53,12 @@ router.post('/load_more_bibliotheque', function(req, res){
 router.post('/sign_in', function(req, res){
     sign_in.connect(req, res);
 });
-
+router.post('/sign_in_ft', function(req, res){
+    sign_in.ft_connect(req, res);
+});
+router.post('/sign_in_fb', function(req, res){
+    sign_in.fb_connect(req, res);
+});
 router.post('/sign_up', function(req, res){
     sign_up.inscription(req, res);
 });
@@ -73,5 +78,6 @@ router.get('/getCateroy', function(req, res){
 router.post("/download_torrent", function(req, res){
     torrent.downloadTorrent(req, res);
 });
+
 
 module.exports = router;

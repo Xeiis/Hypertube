@@ -1,7 +1,7 @@
 /**
  * Created by aliandie on 10/27/16.
  */
-$(document).ready(function(){
+$(document).ready(function() {
     $('#sign_up').on('click', (function(event){
         event.preventDefault();
         var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
@@ -21,11 +21,11 @@ $(document).ready(function(){
         }
         else {
             var data = {
-                u_name :  $('#user_name').val(),
-                u_fname: $('#fname').val(),
-                u_lname: $('#lname').val(),
-                u_mail :  $('#email').val(),
-                u_pass :  $('#pass').val()
+                u_name  :  $('#user_name').val(),
+                u_fname :  $('#fname').val(),
+                u_lname :  $('#lname').val(),
+                u_mail  :  $('#email').val(),
+                u_pass  :  $('#pass').val()
             };
             $.ajax({
                 url    : '/sign_up',
@@ -116,7 +116,6 @@ $(document).ready(function(){
                     u_name   : u_name,
                     u_cle    : u_cle
                 };
-                console.log(data);
                 $.ajax({
                     url: '/reset_pass',
                     method: 'POST',
@@ -134,5 +133,86 @@ $(document).ready(function(){
             }
         }
     });
+
+    if (window.location.search.includes("code"))
+    {
+        var code = "code=" + window.location.search.split("=")[1];
+        $.ajax({
+            url     : '/sign_in_ft',
+            method  : 'POST',
+            data    : code,
+            success : function (html) {
+                if (html === "OK"){
+                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show();
+                    $(".login-bloc").hide();
+                }
+                else if (html === "Connection error")
+                    $("#signup_erreur").addClass('alert-danger').html(html).show();
+            }
+        })
+    }
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '1491425387550978',
+            xfbml      : true,
+            version    : 'v2.8'
+        });
+        // FB.getLoginStatus(function(response) {
+        //     // statusChangeCallbackresponse);
+        //     console.log(response);
+        // });
+
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
 });
+
+function fbLogout(){
+    FB.logout(function(response) {
+        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are disconnected").show();
+    });
+}
+function checkLoginState() {
+    FB.getLoginStatus(function(response) {
+        if (response.status == 'connected') {
+            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are connected with facebook").show();
+            getCurrentUserInfo(response)
+        } else {
+            FB.login(function(response) {
+                if (response.authResponse){
+                    getCurrentUserInfo(response)
+                } else {
+
+                    console.log('Auth cancelled.')
+                }
+            }, { scope: 'email' });
+        }
+    });
+}
+
+function getCurrentUserInfo() {
+    FB.api('/me', {fields: 'name,email'}, function(userInfo) {
+        data = {
+            u_name  : userInfo.name,
+            u_mail : userInfo.email,
+            u_fname : userInfo.name.split(" ")[0],
+            u_lname : userInfo.name.split(" ")[1]
+        };
+        $.ajax({
+            url: '/sign_in_fb',
+            method: 'POST',
+            data: data,
+            success: function (html) {
+            }
+        });
+    })
+}
+
 

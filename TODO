@@ -10,7 +10,7 @@ Omniauth
  La stratégie 42,
  et une stratégieau choix.
 
-Connection avec
+Connection avec                                                                                              --__ ✓ __--
  son nom d’utilisateur
  et son mot de passe.
  Il doit également pouvoir recevoir un mail de réinitialisation de son mot de passe en cas d’oubli.
