@@ -1,80 +1,80 @@
-Inscription : en demandant au minimum                                                                        --__ ✓ __--
- une adresse email,
- un nom d’utilisateur,
- une photo de profil,
- un nom,
- un prénom
- et un mot de passe un tant soit peu sécurisé.
+Partie user :                                                                                         --__ 4✓ | 4x  __--
 
-Omniauth
- La stratégie 42,
- et une stratégieau choix.
+    Inscription : en demandant au minimum                                                                    --__ ✓ __--
+     une adresse email,
+     un nom d’utilisateur,
+     une photo de profil,
+     un nom,
+     un prénom
+     et un mot de passe un tant soit peu sécurisé.
 
-Connection avec                                                                                              --__ ✓ __--
- son nom d’utilisateur
- et son mot de passe.
- Il doit également pouvoir recevoir un mail de réinitialisation de son mot de passe en cas d’oubli.
+    Omniauth                                                                                               --__ ✓|x __--
+     La stratégie 42,
+     et une stratégieau choix.
 
-Logout
- L’utilisateur doit pouvoir se déconnecter en un seul clic depuis n’importe quelle
- page du site.
+    Connection avec                                                                                          --__ ✓ __--
+     son nom d’utilisateur
+     et son mot de passe.
+     Il doit également pouvoir recevoir un mail de réinitialisation de son mot de passe en cas d’oubli.
 
-Langue
- L’utilisateur doit pouvoir sélectionner une langue préférée, qui sera par défaut
- l’anglais.
+    Logout                                                                                                   --__ ✓ __--
+     L’utilisateur doit pouvoir se déconnecter en un seul clic depuis n’importe quelle
+     page du site.
 
-Modifier son adresse email, sa photo de profil et ses informations
+    Langue                                                                                                   --__ x __--
+     L’utilisateur doit pouvoir sélectionner une langue préférée, qui sera par défaut
+     l’anglais.
 
-Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,
-ses informations. L’email, en revanche, doit rester privé.
+    Modifier son adresse email, sa photo de profil et ses informations                                       --__ x __--
 
-Partie bibliotèque                                                                                           --__ ✓ __--
+    Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,                    --__ x __--
+    ses informations. L’email, en revanche, doit rester privé.
 
-    Cette partie doit présenter au minimum :
+Partie bibliotèque                                                                                    --__ 5✓ | 2x  __--
+
+    Cette partie doit présenter au minimum :                                                                --__ x __--
     • Un champ de recherche.
     • Une liste de miniatures
 
-    Le moteur de recherche devra interroger au moins deux sources externes de votre
+    Le moteur de recherche devra interroger au moins deux sources externes de votre                          --__ ✓ __--
     choix 1
     , et retourner l’ensemble des résultats sous la forme de miniatures.
     Vous devez limiter les résultats aux vidéos uniquement
 
-    Si une recherche a été faite, les résultats doivent s’afficher sous la forme d’une liste de
+    Si une recherche a été faite, les résultats doivent s’afficher sous la forme d’une liste de              --__ x __--
     miniatures, triées par nom.
 
-    Si aucune recherche n’a été faite, vous devrez afficher les médias les plus populaires de
+    Si aucune recherche n’a été faite, vous devrez afficher les médias les plus populaires de                --__ ✓ __--
     vos sources externes, triés selon le critère de votre choix (téléchargements, peers, seeders,
     etc...).
 
-    si disponible, de son
+    si disponible, de son                                                                                    --__ ✓ __--
     année de production, de sa note IMDb et d’une image de couverture.
 
-    Vous devrez différencier les vidéos vues des vidéos non-vues, de la manière de votre
+    Vous devrez différencier les vidéos vues des vidéos non-vues, de la manière de votre                     --__ ✓ __--
     choix
 
-    La liste devra être paginée, à chaque fin de page, la suivante doit être automatiquement
+    La liste devra être paginée, à chaque fin de page, la suivante doit être automatiquement                 --__ ✓ __--
     chargée de manière asynchrone. Autrement dit, il ne doit pas y avoir de lien pour
     chaque page.
 
-    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un
+    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ x __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
-Partie Video
+Partie Video                                                                                           --__ 1✓ | 5x __--
 
-    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,
+    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                           --__ ✓|x __--
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
     couverture
 
-    laisser un commentaire
+    laisser un commentaire                                                                                   --__ x __--
     sur la vidéo, et afficher la liste des commentaires précédents.
 
-    Si un film n’est pas visionné pendant
+    Si un film n’est pas visionné pendant                                                                    --__ x __--
     un mois, il devra être supprimé.
 
-    Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés
+    Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés               --__ x __--
     et sélectionnables sur le player vidéo
 
-    Si la vidéo n’est pas nativement lisible pour le navigateur, vous devrez la convertir
+    Si la vidéo n’est pas nativement lisible pour le navigateur, vous devrez la convertir                    --__ x __--
     à la volée dans un format acceptable. Le support du format mkv est un minimum.
-
-    icone pour la page de recherche glyphicon glyphicon-search

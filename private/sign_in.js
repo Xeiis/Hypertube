@@ -28,4 +28,4 @@ exports.connect = function(req, res) {
     res.send(result);
     res.end();
     });
-}
+};

@@ -89,3 +89,39 @@
     transform: rotate(-47deg);
     float: left;
 }
+
+#autocompletion {
+    width:100%;
+    padding:0;
+    display: none;
+    max-height: 380px;
+    position: absolute;
+    top: 50px;
+    border: 1px solid #E4E4E4;
+    z-index: 5;
+    border-radius: 5px;
+    background-color: #f3f3f3;
+    overflow-x: auto;
+}
+
+.result_autocompletion{
+    height:190px;
+    padding:15px;
+    background-color: #ccc;
+    border-bottom: 1px solid #999;
+}
+
+.result_autocompletion:hover{
+    background-color: #aaa;
+    cursor:pointer;
+}
+
+
+.img_autocompletion{
+    float:left;
+    padding-right:15px;
+}
+
+.text_result_autocompletion{
+
+}

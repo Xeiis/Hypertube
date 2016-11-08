@@ -19,7 +19,7 @@ exports.renderBibliotheque = function(req, res)
         });
     }
     else
-        res.render('no_acess');
+        res.render('no_access');
 };
 
 exports.load_more = function(req, res){
@@ -36,4 +36,14 @@ exports.load_more = function(req, res){
         res.send(rows);
         res.end();
     });
+};
+
+exports.find_movie_autocompletion = function(req, res){
+    console.log(req.body.search);
+  conn.query('select m.title, m.year, m.medium_cover_image from movies as m where m.title like '+ conn.escape('%'+req.body.search+'%'), function(err, rows, fields){
+      if (err) throw err;
+      console.log(rows);
+      res.send({content: rows});
+      res.end();
+  })
 };

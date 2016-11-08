@@ -54,9 +54,12 @@ $(document).ready(function(){
                     $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show();
                     $(".login-bloc").hide();
                 }
-                else if (html === "Wrong password")
+                else if (html === "Wrong password") {
                     $('#pass-reset').show();
-                $("#signup_erreur").addClass('alert-danger').html(html).show();
+                    $("#signup_erreur").addClass('alert-danger').html(html).show();
+                }
+                else
+                    alert(html);
             }
         })
     }));

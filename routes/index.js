@@ -44,6 +44,10 @@ router.get('/no_access', function(req, res){
 
 /* POST */
 
+router.post('/find_movie_autocompletion', function(req, res){
+    bibliotheque.find_movie_autocompletion(req, res);
+});
+
 router.post('/download_end', function(req, res){
    video.download_end(req, res);
 });

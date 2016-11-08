@@ -22,7 +22,7 @@ $(document).scroll(function() {
                         var i = 0;
                         var html = '';
                         while(res[i]) {
-                             html += "<div class='big_vignette col-lg-3 col-sm-4 col-xs-4' style='margin:15px'>";
+                             html += "<div class='col-lg-3 col-md-4 col-sm-6 col-xs-6' style='margin-top:20px'><div class='big_vignette'>";
                              html += "<p style='text-align:center;font-weight:700;font-size:medium;min-height:44px;'>"+res[i].title+"</p>";
                              html += "<p style='text-align:center;font-weight:700'>"+res[i].year+"</p>";
                              html += "<p style='text-align:center;font-weight:700'>"+res[i].rating+"</p>";
@@ -31,7 +31,7 @@ $(document).scroll(function() {
                              if (res[i].torrent_3D_id)
                                 html += "<button class='film_3D bouton' movie='"+res[i].id+"' style='margin:5px;'>3D</button>";
                              html += "<button class='film_720p bouton' movie='"+res[i].id+"' style='margin:5px;'>720p</button>";
-                             html += "<button class='film_1080p bouton' movie='"+res[i].id+"' style='margin:5px;'>1080p</button></div></div>";
+                             html += "<button class='film_1080p bouton' movie='"+res[i].id+"' style='margin:5px;'>1080p</button></div></div></div>";
                             i++;
                         }
                         bibliotheque += html;
@@ -43,10 +43,56 @@ $(document).scroll(function() {
                 });
         }
     }
-
 });
 
 $(document).ready(function() {
+    $("#search").on('keyup', function(){
+        if ($(this).val().length < 3) {
+            $("#autocompletion").hide("slow");
+        }
+        else if ($(this).val().length >= 3) {
+            $("#autocompletion").html('');
+            $.ajax({
+             url: '/find_movie_autocompletion',
+             method: 'POST',
+             data: {search: $(this).val()}
+             })
+             .done(function (res) {
+                 console.log(res.content);
+                 var i = 0;
+                 html = "";
+                 while (res.content[i]) {
+                     html += '<div class="result_autocompletion">';
+                     html += '<div class="img_autocompletion"><img src='+res.content[i].medium_cover_image+' width="105" height="162"></div>';
+                     html += '<div class="text_result_autocompletion"><h2>' + res.content[i].title + '</h2>';
+                     html += '<h4>' + res.content[i].year + '</h4></div>';
+                     html += "</div>";
+                     i++;
+                 }
+                 $("#autocompletion").html(html);
+                 $("#autocompletion").show("slow");
+                 $(".result_autocompletion").on('click', function(){
+                     $("#search").val(($(this).find("h2").text()));
+                     $("#autocompletion").hide("slow");
+                 });
+             });
+        }
+    });
+
+    $('input[name="range"]').on("change mousemove", function() {
+        $(this).attr('value', $(this).val());
+        $(this).next().html($(this).val());
+        $(this).prev().html($(this).val());
+    });
+
+    $('#lower_year').on("change mousemove", function() {
+        $("#higher_year").attr("min", parseInt($(this).val()));
+    });
+
+    $('#lower_note').on("change mousemove", function() {
+        $("#higher_note").attr("min", parseInt($(this).val()));
+    });
+
     $(".film_3D").on("click", function () {
         video_exist($(this).attr('movie'), '3D', go_to_video);
     });
@@ -81,3 +127,4 @@ function go_to_video(res) {
         alert("error");
     window.location.href = 'http://localhost:3000/video'+data;
 }
+
