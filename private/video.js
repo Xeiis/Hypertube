@@ -83,6 +83,14 @@ exports.renderVideo = function(req, res)
     }
     else if (req.query.id) {
         conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
+                    // $(".plot_summary").text(); avec un petit parse ça devrais le faire
+            });
+        res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language /*,subtitles: subtitles*/});
+    };
+};
+/*
+else if (req.query.id) {
+    conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
             if (rows[0].trailer !== null) {
                 downloadTorrent(req);
                 res.render('video', {trailer: rows[0].trailer})
@@ -91,7 +99,7 @@ exports.renderVideo = function(req, res)
                 res.render('video', {res: 'Video not found'});
         });
     }
-};
+};*/
 
 exports.exist = function(req, res) {
     /*if (!req.session.login) {

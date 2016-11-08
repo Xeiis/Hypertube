@@ -5,6 +5,7 @@
 var db = require('./dbconn.js');
 var passwordHash = require('password-hash');
 var conn = db.connexion();
+var axios = require('axios');
 
 exports.connect = function(req, res) {
     user_name = req.body.u_name;
@@ -28,4 +29,48 @@ exports.connect = function(req, res) {
     res.send(result);
     res.end();
     });
-};
+}
+
+exports.ft_connect = function(req, res) {
+    var user_code = req.query.code;
+    console.log(req.query.code);
+
+    axios.post('https://api.intra.42.fr/oauth/token', {
+        grant_type: 'authorization_code',
+        client_id: 'ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53',
+        client_secret: 'e50a5d4c329067eb74be150be69de04136631af5f6a0b4d164a10db0d6886a58',
+        code: user_code,
+        redirect_uri: 'http://localhost:3000/sign_in_ft'
+    }).then(function (response) {
+        axios.get('https://api.intra.42.fr/v2/me', {
+            headers: {'Authorization': response.data.token_type + ' ' + response.data.access_token}
+        }).then(function (user) {
+            var user_data = {
+                u_name: user.data.login,
+                u_fname: user.data.first_name,
+                u_lname: user.data.last_name,
+                u_mail: user.data.email
+            };
+            console.log(user_data);
+            console.log(user.data.login);
+            conn.query("INSERT IGNORE INTO users SET ?", [user_data], function(err, rows){
+                 if(err) throw err;
+                  req.session.login = user.data.login;
+                    res.redirect('http://localhost:3000/bibliotheque');
+             });
+            })
+        });
+    }
+
+
+exports.fb_connect = function(req, res){
+    console.log(req.body);
+    conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
+        if(err) throw err;
+        req.session.login = req.body.u_name;
+        result = 'OK';
+        console.log(req.session.login);
+        res.send(result);
+        res.end();
+    });
+}

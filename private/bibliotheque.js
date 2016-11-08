@@ -2,6 +2,8 @@ var db = require('./dbconn.js');
 // connexion a la db
 var conn = db.connexion();
 
+
+
 exports.renderBibliotheque = function(req, res)
 {
     if (req.session.login) {
