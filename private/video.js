@@ -2,14 +2,14 @@ var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
 var http = require('http');
 var db = require('./dbconn.js');
-const OS = require('opensubtitles-api');
+/*const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS({
     useragent:'OSTestUserAgentTemp',
     username: 'Hypertube',
     password: 'dotef',
     ssl: true
 });
-
+*/ /*
 var buff = '';
 
 http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
@@ -37,6 +37,8 @@ http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
         console.log(stars);
     });
 });
+*/
+// A utiliser pour récupérer les infos imdb a intégré en dessous
 
 function clean_match(matches){
     var i = 0;
@@ -73,6 +75,14 @@ exports.renderVideo = function(req, res)
                 }).then(subtitles => {
                     // parse le site imdb pour récupérer des infos :
                     // http://www.imdb.com/title/imdb_code
+                    // voir au dessus
+                    r
+            });*/
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/});
+        });
+    }
+    else if (req.query.id) {
+        conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
                     // $(".plot_summary").text(); avec un petit parse ça devrais le faire
             });*/
         res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language /*,subtitles: subtitles*/});
