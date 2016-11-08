@@ -26,10 +26,6 @@ router.get('/torrent', function(req, res){
     torrent.getTorrent(req, res);
 });
 
-router.get('/test', function(req, res) {
-    test.renderTest(req, res);
-});
-
 router.get('/bibliotheque', function(req, res){
     bibliotheque.renderBibliotheque(req, res);
 });
@@ -43,6 +39,10 @@ router.get('/no_access', function(req, res){
 });
 
 /* POST */
+
+router.post('/find_movie', function(req, res){
+    bibliotheque.find_movie(req, res);
+});
 
 router.post('/find_movie_autocompletion', function(req, res){
     bibliotheque.find_movie_autocompletion(req, res);
@@ -76,6 +76,10 @@ router.post('/sign_up', function(req, res){
     sign_up.inscription(req, res);
 });
 
+/**
+ * NOT USED
+**/
+
 router.get('/Top100PirateBay', function(req, res){
     torrent.Top100PirateBay(req, res);
 });
@@ -89,8 +93,12 @@ router.get('/getCateroy', function(req, res){
 });
 
 router.post("/download_torrent", function(req, res){
-    console.log("download_torrent");
     torrent.downloadTorrent(req, res);
 });
+
+router.get('/test', function(req, res) {
+    test.renderTest(req, res);
+});
+
 
 module.exports = router;

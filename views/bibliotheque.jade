@@ -16,7 +16,7 @@ block content
                 .input-group(style="height:54px;")
                     span.input-group-addon.custom__addon.blue__addon
                         span.glyphicon.glyphicon-cog
-                        |   Trier par
+                        |   Sort by
                     select.form-control.custom__select(style="height:54px;")
                         option(value='') --__ Nothing __--
                         option(value='name') Name
@@ -29,23 +29,31 @@ block content
                     span.input-group-addon.custom__addon.blue__addon
                         span.glyphicon.glyphicon-cog
                         |   Choose year
-                .range.range-primary(style="float:left;width:50%;")
+                .range.range-primary
                     output#rangePrimary.rangeLower 2000
-                    input(type='range', id="lower_year" name='range', min='1900', max='2016', value='2000')
-                .range.range-primary(style="float:left;width:50%;")
-                    input(type='range', id="higher_year" name='range', min='1900', max='2016', value='2000')
+                    input(type='range', id="lower_year" name='range', min='1900', max='2016', value='2000', search='year')
+                .range.range-primary
+                    input(type='range', id="higher_year" name='range', min='2000', max='2016', value='2000', search='year')
                     output#rangePrimary.rangeHigher 2000
+                .btn-group.checkbox_btn(data-toggle='buttons')
+                    label.btn.btn-primary(style="width:100%")
+                        input(type='checkbox', autocomplete='off')
+                        span.glyphicon.glyphicon-ok
             .col-md-6
                 .input-group
                     span.input-group-addon.custom__addon.blue__addon
                         span.glyphicon.glyphicon-cog
                         |   Choose note
-                .range.range-primary(style="float:left;width:50%;")
+                .range.range-primary
                     output#rangePrimary.rangeLower 5
-                    input(type='range', id="lower_note" name='range', min='0', max='10', value='5')
-                .range.range-primary(style="float:left;width:50%;")
-                    input(type='range', id="higher_note" name='range', min='0', max='10', value='10')
+                    input(type='range', id="lower_note" name='range', min='0', max='10', value='5', search='note')
+                .range.range-primary
+                    input(type='range', id="higher_note" name='range', min='5', max='10', value='10', search='note')
                     output#rangePrimary.rangeHigher 10
+                .btn-group.checkbox_btn(data-toggle='buttons')
+                    label.btn.btn-primary(style="width:100%")
+                        input(type='checkbox', autocomplete='off')
+                        span.glyphicon.glyphicon-ok
         .row#bibliotheque
               if data
                 each val in data

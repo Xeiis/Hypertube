@@ -34,6 +34,8 @@
 }
 
 .custom__addon {
+    border-top-left-radius: 3px !important;
+    border-top-right-radius: 3px !important;
     color: #fff;
     border: none;
     font-size: 12px;
@@ -131,6 +133,23 @@
     -o-user-select: none;
     user-select: none;
 }
+.range-primary{
+    float:left;
+    width:46%;
+
+}
+
+label.btn.btn-primary{
+    height:25px;
+    padding: 2px;
+    border-top-left-radius:0;
+    border-top-right-radius:0;
+    border-bottom-left-radius:0;
+}
+
+.checkbox_btn{
+    width:8%;
+}
 
 .rangeLower{
     border-bottom-right-radius: 0 !important;
@@ -139,9 +158,7 @@
 }
 
 .rangeHigher{
-    border-bottom-left-radius: 0 !important;
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
+    border-radius: 0 !important;
 }
 
 .range input[type="range"] {
@@ -162,4 +179,11 @@
 }
 .range.range-primary input[type="range"] {
     outline-color: rgb(66, 139, 202);
+}
+
+.btn span.glyphicon {
+    opacity: 0;
+}
+.btn.active span.glyphicon {
+    opacity: 1;
 }

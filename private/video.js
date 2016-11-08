@@ -2,14 +2,14 @@ var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
 var http = require('http');
 var db = require('./dbconn.js');
-const OS = require('opensubtitles-api');
+/*const OS = require('opensubtitles-api');
 const OpenSubtitles = new OS({
     useragent:'OSTestUserAgentTemp',
     username: 'Hypertube',
     password: 'dotef',
     ssl: true
 });
-/*
+*/ /*
 var buff = '';
 
 http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
@@ -62,7 +62,7 @@ exports.renderVideo = function(req, res)
     if (req.query.cle) {
         conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = '+quality+' where cle = ?', [req.query.cle], function (err, rows) {
             console.log(rows);
-            OpenSubtitles.search({
+            /*OpenSubtitles.search({
                 sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
                 hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
                 path: rows[0].path,        // Complete path to the video file, it allows
@@ -76,8 +76,9 @@ exports.renderVideo = function(req, res)
                     // parse le site imdb pour récupérer des infos :
                     // http://www.imdb.com/title/imdb_code
                     // voir au dessus
-                    res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language, subtitles: subtitles});
-            });
+                    r
+            });*/
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/});
         });
     }
     else if (req.query.id) {
