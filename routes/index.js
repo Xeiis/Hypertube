@@ -11,6 +11,7 @@ var sign_in = require('../private/sign_in.js');
 var reset_pass = require('../private/reset_pass.js');
 var check_user = require('../private/check_user.js');
 var no_access = require('../private/no_access.js');
+var logout = require('../private/logout.js');
 
 /* GET */
 
@@ -42,6 +43,10 @@ router.get('/no_access', function(req, res){
     no_access.renderNoaccess(req, res);
 });
 
+router.post('/logout', function(req, res){
+   logout.logout(req, res);
+});
+
 /* POST */
 
 router.post('/download_end', function(req, res){
@@ -67,7 +72,7 @@ router.post('/load_more_bibliotheque', function(req, res){
 router.post('/sign_in', function(req, res){
     sign_in.connect(req, res);
 });
-router.post('/sign_in_ft', function(req, res){
+router.get('/sign_in_ft', function(req, res){
     sign_in.ft_connect(req, res);
 });
 router.post('/sign_in_fb', function(req, res){

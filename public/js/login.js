@@ -122,7 +122,7 @@ $(document).ready(function() {
                     data: data,
                     success: function (html) {
                         if (html === "OK") {
-                            $("#signup_erreur").addClass('alert-success').html("Password successfully updated.").show();
+                            $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("Password successfully updated.").show();
                             $("#reset-pass-form").hide();
                         }
                         else{
@@ -134,34 +134,33 @@ $(document).ready(function() {
         }
     });
 
-    if (window.location.search.includes("code"))
-    {
-        var code = "code=" + window.location.search.split("=")[1];
+    $('#logout').on('click', function(event){
+        event.preventDefault();
         $.ajax({
-            url     : '/sign_in_ft',
+            url     : '/logout',
             method  : 'POST',
-            data    : code,
             success : function (html) {
+                console.log(html);
+
                 if (html === "OK"){
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show();
-                    $(".login-bloc").hide();
+                    FB.getLoginStatus(function(response){
+                        if (response.status == 'connected')
+                            fbLogout();
+                    });
+                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("You are disconnected").show();
                 }
-                else if (html === "Connection error")
-                    $("#signup_erreur").addClass('alert-danger').html(html).show();
+                else
+                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(html).show('slow');
             }
         })
-    }
+    });
+
     window.fbAsyncInit = function() {
         FB.init({
             appId      : '1491425387550978',
             xfbml      : true,
             version    : 'v2.8'
         });
-        // FB.getLoginStatus(function(response) {
-        //     // statusChangeCallbackresponse);
-        //     console.log(response);
-        // });
-
     };
 
     (function(d, s, id){
@@ -176,7 +175,6 @@ $(document).ready(function() {
 
 function fbLogout(){
     FB.logout(function(response) {
-        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are disconnected").show();
     });
 }
 function checkLoginState() {
@@ -201,7 +199,7 @@ function getCurrentUserInfo() {
     FB.api('/me', {fields: 'name,email'}, function(userInfo) {
         data = {
             u_name  : userInfo.name,
-            u_mail : userInfo.email,
+            u_mail  : userInfo.email,
             u_fname : userInfo.name.split(" ")[0],
             u_lname : userInfo.name.split(" ")[1]
         };
@@ -210,6 +208,7 @@ function getCurrentUserInfo() {
             method: 'POST',
             data: data,
             success: function (html) {
+
             }
         });
     })

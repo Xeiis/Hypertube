@@ -2,6 +2,8 @@ var db = require('./dbconn.js');
 // connexion a la db
 var conn = db.connexion();
 
+
+
 exports.renderBibliotheque = function(req, res)
 {
     if (req.session.login) {
@@ -19,7 +21,7 @@ exports.renderBibliotheque = function(req, res)
         });
     }
     else
-        res.render('no_acess');
+        res.render('no_access');
 };
 
 exports.load_more = function(req, res){
