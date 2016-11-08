@@ -10,6 +10,7 @@ var sign_up = require('../private/sign_up.js');
 var sign_in = require('../private/sign_in.js');
 var reset_pass = require('../private/reset_pass.js');
 var check_user = require('../private/check_user.js');
+var no_access = require('../private/no_access.js');
 
 /* GET */
 
@@ -30,14 +31,27 @@ router.get('/test', function(req, res) {
 });
 
 router.get('/bibliotheque', function(req, res){
-   bibliotheque.renderBibliotheque(req, res);
+    bibliotheque.renderBibliotheque(req, res);
 });
 
 router.get('/get_list_torrent', function(req, res){
     parse_torrent.parseTorrentYts(req, res);
 });
 
+router.get('/no_access', function(req, res){
+    no_access.renderNoaccess(req, res);
+});
+
 /* POST */
+
+router.post('/download_end', function(req, res){
+   video.download_end(req, res);
+});
+
+router.post('/video_exist', function(req, res){
+    video.exist(req, res);
+});
+
 router.post('/check_user', function(req, res){
     check_user.connect(req, res);
 });
@@ -76,6 +90,7 @@ router.get('/getCateroy', function(req, res){
 });
 
 router.post("/download_torrent", function(req, res){
+    console.log("download_torrent");
     torrent.downloadTorrent(req, res);
 });
 

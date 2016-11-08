@@ -1,9 +1,11 @@
 extends layout
 block script
-  link(href='//vjs.zencdn.net/5.4.6/video-js.min.css', rel='stylesheet')
-  script(src='//vjs.zencdn.net/5.4.6/video.min.js')
-  script(src='/js/video.js')
-
+  if path
+    link(href='//vjs.zencdn.net/5.4.6/video-js.min.css', rel='stylesheet')
+    script(src='//vjs.zencdn.net/5.4.6/video.min.js')
+    script(src='/js/video.js')
+  else
+    script(src='/js/video2.js')
 block content
   div(class="row")
     div(style="width:1920px;position:relative;height:auto;margin: 0 auto;")
@@ -21,19 +23,27 @@ block content
           .sk-circle10.sk-child
           .sk-circle11.sk-child
           .sk-circle12.sk-child
-      iframe(type="text/html" src="https://www.youtube.com/v/I0qDA6O2BVg" width="1920" height="1080")
-      video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='img/html_5_poster.png', data-setup='{"autoplay": false}')
-        source(src='/movie/rush_hour_2.mkv', type='video/mp4')
-        // subtitle caption :
-         track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
-        p.vjs-no-js
-          | To view this video please enable JavaScript, and consider upgrading to a web browser that
-          a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
-      .row(id="div_download")
-        .col-lg-2
-          p Download-bar :
-        .col-lg-10
-          .progress(style='width:1752px;margin-left:-100px;text-align:center;')
-            span#download_bar_text
-              | 0%
-            #download_bar.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width:0%;')
+      if trailer
+        div.jumbotron(style="padding:48px;text-align:center;")
+          h3 Votre film est entrain de download veuillez patienter, vous pouvez regarder le trailer pendant ce temps juste en dessous.
+          div#voir_la_video
+        iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
+      if path
+        p Langue du film #{language}
+        div.jumbotron(style="padding:48px")
+          p #{summary}
+        video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{bk}', data-setup='{"autoplay": false}')
+          source(src='/movie/#{path}', type='video/mp4')
+          // subtitle caption :
+           track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
+          p.vjs-no-js
+            | To view this video please enable JavaScript, and consider upgrading to a web browser that
+            a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
+        //.row(id="div_download")
+          .col-lg-2
+            p Download-bar :
+          .col-lg-10
+            .progress(style='width:1752px;margin-left:-100px;text-align:center;')
+              span#download_bar_text
+                | 0%
+              #download_bar.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width:0%;')

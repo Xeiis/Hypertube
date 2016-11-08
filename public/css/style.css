@@ -28,9 +28,10 @@
 }
 
 .vignette{
-    color:white;
-    background-size: cover;
-    margin: 0;
+    height: auto;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
 }
 #sign_up_form
 {
@@ -45,10 +46,46 @@
 }
 
 .big_vignette{
-    background-color: #fff;
+    background-color: #9cc9f9;
+    padding:15px;
     -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
     -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
-    min-height:510px;
+    height:auto;
+}
+
+.bouton {
+    border-radius:12px 0 12px 0;
+    background: #478bf9;
+    border:none;
+    color:#fff;
+    font:bold 12px Verdana;
+    padding:6px;
+}
+
+.bouton:hover{
+    background: #166cf9;
+}
+
+.vision{
+    position: absolute;
+    padding: 0;
+    top: 129px;
+    left: 38px;
+    font-size: 48px;
+    font-weight: 700;
+    color: #ffffff;
+    height: 315px;
+    width: 210px;
+    background-color: #2f2f2f;
+    opacity: 0.5;
+    line-height: 315px;
+    text-align: center;
+}
+
+.arrow{
+    -webkit-transform: rotate(-47deg);
+    transform: rotate(-47deg);
+    float: left;
 }

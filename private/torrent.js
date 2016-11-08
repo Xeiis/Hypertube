@@ -1,49 +1,49 @@
 const PirateBay = require('thepiratebay');
 var torrentz = require('node-torrentz');
 var Client = require('node-torrent');
-var torrentStream = require('torrent-stream');
-var shortid = require('shortid');
-/*
- pirate bay
- $("#searchResult tbody tr").map(function(index, torrent) {
-$(torrent).attr('id');
-var elem = $(torrent);
-console.log(elem.find('a[title="Download this torrent using magnet"]').attr('href'));
-});
-*/
-var magnet = '';
 
 exports.downloadTorrent = function(req, res) {
+    console.log("in");
     var sql = '';
     if (req.body.quality == '720p')
-        sql = 'select * from movies as m where m.id = ' + req.body.id + ' left join torrent as t on m.torrent_720_id = t.id';
+        sql = 'select * from movies as m left join torrent as t on m.torrent_720_id = t.id where m.id = ' + req.body.id;
     else if (req.body.quality == '1080p')
-        sql = 'select * from movies as m where m.id = ' + req.body.id + ' left join torrent as t on m.torrent_1080_id = t.id';
+        sql = 'select * from movies as m left join torrent as t on m.torrent_1080_id = t.id where m.id = ' + req.body.id;
     else if (req.body.quality == '3D')
-        sql = 'select * from movies as m where m.id = ' + req.body.id + ' left join torrent as t on m.torrent_3D_id = t.id';
+        sql = 'select * from movies as m left join torrent as t on m.torrent_3D_id = t.id where m.id = ' + req.body.id;
     conn.query(sql, function (err, rows) {
         if (err) throw err;
-        if (rows.path !== null)
+        //console.log(rows);
+        if (rows[0].path !== null)
         {
-            res.redirect('localhost:3000/video?clef='+rows.cle);
+            console.log("redirect");
+            res.send('http://localhost:3000/video?clef='+rows[0].cle);
+            res.end();
         }
         else {
-            magnet = "magnet:?xt=urn:btih:" + rows.hash + "&dn=" + escape_space(rows.title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
+            magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
             download(rows);
         }
     });
     var download = function(rows) {
+        console.log("download");
+        var i = 0;
         var engine = torrentStream(magnet, {path: 'public/movie/'});
         engine.on('ready', function () {
             engine.files.forEach(function (file) {
-                var cle_create = shortid.generate();
-                connection.query('UPDATE torrent SET path = :path, cle = :clef WHERE id = :id', {id: rows.id, path: filename, clef: cle_create});
-                console.log('filename:', file.name);
+                if (i == 0) {
+                    var cle_create = shortid.generate();
+                    console.log('filename:', file.path);
+                    conn.query('UPDATE torrent SET path = ?, cle = ? WHERE id = ?', [file.path, cle_create, rows[0].id]);
+                    i++;
+                }
                 console.log(file.name.match(/.*(\..+?)$/));
                 var extension = file.name.match(/.*(\..+?)$/);
                 if (extension !== null && extension.length === 2) {
                     console.log('Downloading item');
                     file.select(); // downloads without attaching filestream
+                    res.send("http://localhost:3000/video?clef="+cle_create);
+                    res.end();
                 } else {
                     console.log('Skipping item');
                 }
@@ -53,6 +53,16 @@ exports.downloadTorrent = function(req, res) {
         });
     }
 };
+
+
+/*
+ pirate bay
+ $("#searchResult tbody tr").map(function(index, torrent) {
+ $(torrent).attr('id');
+ var elem = $(torrent);
+ console.log(elem.find('a[title="Download this torrent using magnet"]').attr('href'));
+ });
+ */
 
 exports.getTorrentPirateBay = function(req, res) {
     PirateBay.search('Game of Thrones', {
@@ -186,8 +196,4 @@ exports.getMoreDetailFromTorrent = function(req, res) {
             console.log(info.files);
         })
         .catch(console.error);
-};
-
-var escape_space = function(string){
-    return (string.replace(" ", "+"));
 };

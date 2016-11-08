@@ -7,17 +7,19 @@ block content
         div.col-lg-12.col-sm-12.col-xs-12#bibliotheque
           if data
             each val in data
-                div.big_vignette.col-lg-3.col-sm-4.col-xs-4(style="margin:15px")
-                    p(style="text-align: center;font-weight:700") #{val.title}
-                    p(style="text-align: center;font-weight:700") #{val.year}
-                    p(style="text-align: center;font-weight:700") #{val.rating} / 10
-                    div.vignette(style="background: url(#{val.medium_cover_image}) center no-repeat; height:340px; margin:15px")
-                        // download qualité
+                div.big_vignette.col-lg-3.col-sm-3.col-xs-5(style="margin:15px")
+                    p(style="text-align:center;font-weight:700;font-size:medium;min-height:44px;") #{val.title}
+                    p(style="text-align:center;font-weight:700") #{val.year}
+                    p(style="text-align:center;font-weight:700") #{val.rating} / 10
+                    img.vignette(src='#{val.medium_cover_image}', width='210', height='315')
+                    if val.vision
+                        div.vision #{val.vision}
+                    // download qualité
                     div.button(style="text-align:center")
                         if val.torrent_3D_id
-                            button.film_3D(movie="#{val.id}" style="margin:5px;") 3D
-                        button.film_720p(movie="#{val.id}" style="margin:5px;") 720p
-                        button.film_1080p(movie="#{val.id}" style="margin:5px;") 1080p
+                            button.film_3D.bouton(movie="#{val.id}" style="margin:5px;") 3D
+                        button.film_720p.bouton(movie="#{val.id}" style="margin:5px;") 720p
+                        button.film_1080p.bouton(movie="#{val.id}" style="margin:5px;") 1080p
           else
             div.jumbotron
-              h2 Oups we find nothing here
+              h2 Oups we found nothing here
