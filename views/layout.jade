@@ -9,6 +9,7 @@ head
   link(rel='stylesheet', type='text/css', href='/css/sk-circle.css')
   link(rel='stylesheet', type='text/css', href='/css/play-pause.css')
   link(rel='stylesheet', type='text/css', href='/css/bootsnipp.css')
+  link(rel='stylesheet', type='text/css', href='/css/test.css')
   meta(name="MobileOptimized" content="320")
   script(src='/js/application.js')
   script(src='/js/login.js')
@@ -16,7 +17,10 @@ head
 
   body
     include ./header.jade
+    include ./profil.jade
+
     block content
     include ./footer.jade
     script(type="text/javascript", src="https://cdn.socket.io/socket.io-1.4.5.js")
     block scripts
+
