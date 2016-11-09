@@ -41,7 +41,11 @@ exports.load_more = function(req, res) {
         sql += ' and m.year >= ' + conn.escape(req.body.year_min) + ' and m.year <= ' + conn.escape(req.body.year_max);
     if (req.body.note_min)
         sql += ' and m.rating >= ' + conn.escape(req.body.note_min) + ' and m.rating <= ' + conn.escape(req.body.note_max);
-    if (req.body.search || req.body.year_min || req.body.note_min)
+    if (req.body.order == 'note')
+        sql += ' order by m.rating desc';
+    else if (req.body.order == 'year')
+        sql += ' order by m.year desc';
+    else if (req.body.search || req.body.year_min || req.body.note_min)
         sql += ' order by m.title';
     else
         sql +=' order by m.rating desc ,t2.seeds desc ,t.seeds desc';
@@ -71,7 +75,12 @@ exports.find_movie = function(req, res){
         sql += ' and m.year >= ' + conn.escape(req.body.year_min) + ' and m.year <= ' + conn.escape(req.body.year_max);
     if (req.body.note_min)
         sql += ' and m.rating >= ' + conn.escape(req.body.note_min) + ' and m.rating <= ' + conn.escape(req.body.note_max);
-    sql += ' order by m.title';
+    if (req.body.order == 'note')
+        sql += ' order by m.rating desc';
+    else if (req.body.order == 'year')
+        sql += ' order by m.year desc';
+    else
+        sql += ' order by m.title';
     sql += ' limit 0, 21';
     conn.query(sql, function(err, rows, fields){
         if (err) throw err;
