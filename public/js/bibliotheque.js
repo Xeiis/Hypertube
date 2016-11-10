@@ -26,6 +26,8 @@ $(document).scroll(function() {
                 data.order = 'note';
             else if ($(".custom__select").val() == 'year')
                 data.order = 'year';
+            else if ($(".custom__select").val() == 'name')
+                data.order = 'name';
             finish = 1;
             $.ajax({
                 url: '/load_more_bibliotheque',
@@ -102,6 +104,10 @@ $(document).ready(function() {
         find_movie();
     });
 
+    $(".custom__select").on('change', function(){
+       find_movie();
+    });
+
     function find_movie() {
         var checkbox = $("input[type='checkbox']");
         var data = {};
@@ -118,6 +124,8 @@ $(document).ready(function() {
             data.order = 'note';
         else if ($(".custom__select").val() == 'year')
             data.order = 'year';
+        else if ($(".custom__select").val() == 'name')
+            data.order = 'name';
         $.ajax({
             url: '/find_movie',
             method: 'POST',
@@ -146,9 +154,7 @@ $(document).ready(function() {
     });
 
     $("input[type='checkbox']").on('change', function(){
-        if ($(this)[0].checked)
-            find_movie();
-
+       find_movie();
     });
 
     $('#lower_year').on("change mousemove", function() {

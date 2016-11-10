@@ -45,6 +45,8 @@ exports.load_more = function(req, res) {
         sql += ' order by m.rating desc';
     else if (req.body.order == 'year')
         sql += ' order by m.year desc';
+    else if (req.body.order == 'name')
+        sql += ' order by m.title';
     else if (req.body.search || req.body.year_min || req.body.note_min)
         sql += ' order by m.title';
     else
@@ -74,11 +76,13 @@ exports.find_movie = function(req, res){
     if (req.body.year_min)
         sql += ' and m.year >= ' + conn.escape(req.body.year_min) + ' and m.year <= ' + conn.escape(req.body.year_max);
     if (req.body.note_min)
-        sql += ' and m.rating >= ' + conn.escape(req.body.note_min) + ' and m.rating <= ' + conn.escape(req.body.note_max);
+        sql += ' and m.rating >= ' + conn.escape(parseInt(req.body.note_min)) + ' and m.rating <= ' + conn.escape(parseInt(req.body.note_max));
     if (req.body.order == 'note')
         sql += ' order by m.rating desc';
     else if (req.body.order == 'year')
         sql += ' order by m.year desc';
+    else if (req.body.order == 'name')
+        sql += ' order by m.title';
     else
         sql += ' order by m.title';
     sql += ' limit 0, 21';

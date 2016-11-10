@@ -25,10 +25,11 @@ conn.query('CREATE TABLE users(u_id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
 });
 conn.query('CREATE TABLE torrent(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                                  path VARCHAR(255),\
-                                 cle  VARCHAR(255),\
+                                 cle VARCHAR(255),\
                                  url VARCHAR(255),\
                                  hash VARCHAR(255),\
                                  download_end BOOLEAN DEFAULT FALSE,\
+                                 download_started BOOLEAN DEFAULT FALSE,\
                                  quality VARCHAR(255),\
                                  seeds INT(11),\
                                  peers INT(11),\
@@ -43,7 +44,7 @@ conn.query('CREATE TABLE movies(m_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
                                 imdb_code VARCHAR (255) NOT NULL,\
                                 title VARCHAR(255) NOT NULL,\
                                 year INT(11) NOT NULL,\
-                                rating DECIMAL,\
+                                rating varchar(3),\
                                 trailer VARCHAR(255),\
                                 summary TEXT,\
                                 language VARCHAR(25),\
