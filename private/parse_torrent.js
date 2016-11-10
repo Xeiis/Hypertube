@@ -16,6 +16,7 @@ var torrent_1080_id = null;
 exports.parseTorrentYts = function(req, res) {
     var con = db.connexion();
     var getData = function(i) {
+        console.log('getting data from page : '+ i);
         https.get('https://yts.ag/api/v2/list_movies.json?limit=50&page=' + i, function (ress) {
             ress.on('data', function (data) {
                 buff += data;
@@ -31,9 +32,8 @@ exports.parseTorrentYts = function(req, res) {
         });
     };
     var insert_into_db = function(copy, j, i) {
-        if (copy.data.movies[j])
+        if (copy.data.movies && copy.data.movies[j])
         {
-            console.log(copy.data.movies[j]);
             if (copy.data.movies[j].torrents) {
                 torrent_3D = {};
                 torrent_720 = {};
@@ -106,7 +106,6 @@ exports.parseTorrentYts = function(req, res) {
                 }
                 torrent_3D_id = null;
                 if (torrent_3D.url) {
-                    console.log(torrent_3D);
                     con.query('INSERT INTO torrent SET ?', torrent_3D, function (err, resss) {
                         if (err) throw err;
                         torrent_3D_id = resss.insertId;
@@ -130,8 +129,6 @@ exports.parseTorrentYts = function(req, res) {
         }
     };
     var insert_other = function(copy, j, i){
-        console.log(torrent_720);
-        console.log(torrent_1080);
         torrent_720_id = null;
         torrent_1080_id = null;
         if (torrent_720.url) {
@@ -160,7 +157,6 @@ exports.parseTorrentYts = function(req, res) {
                             torrent_1080_id: torrent_1080_id || null,
                             torrent_3D_id: torrent_3D_id || null
                         };
-                        console.log(movies);
                         con.query('INSERT INTO movies SET ?', movies, function (err) {
                             if (err) throw err;
                             insert_into_db(copy, j + 1, i);
@@ -193,7 +189,6 @@ exports.parseTorrentYts = function(req, res) {
                     torrent_1080_id: torrent_1080_id || null,
                     torrent_3D_id: torrent_3D_id || null
                 };
-                console.log(movies);
                 con.query('INSERT INTO movies SET ?', movies, function (err) {
                     if (err) throw err;
                     insert_into_db(copy, j + 1, i);

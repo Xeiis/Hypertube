@@ -7,7 +7,7 @@ var conn = db.connexion();
 exports.renderBibliotheque = function(req, res)
 {
     if (req.session.login) {
-        conn.query('select m.title, m.year, m.rating, m.medium_cover_image, m.id,\ ' +
+        conn.query('select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, \ ' +
             'CASE WHEN s.u_id is not null\ ' +
             'THEN \'Visionné\' \ ' +
             'END as vision\ ' +
@@ -26,7 +26,7 @@ exports.renderBibliotheque = function(req, res)
 
 exports.load_more = function(req, res) {
 
-    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id,';
+    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, ';
     sql += ' CASE WHEN s.u_id is not null';
     sql +=' THEN \'Visionné\'';
     sql +=' END as vision';
@@ -45,6 +45,8 @@ exports.load_more = function(req, res) {
         sql += ' order by m.rating desc';
     else if (req.body.order == 'year')
         sql += ' order by m.year desc';
+    else if (req.body.order == 'name')
+        sql += ' order by m.title';
     else if (req.body.search || req.body.year_min || req.body.note_min)
         sql += ' order by m.title';
     else
@@ -66,7 +68,7 @@ exports.find_movie_autocompletion = function(req, res){
 };
 
 exports.find_movie = function(req, res){
-    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id';
+    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id ';
     sql += ' from movies as m';
     sql +=' where 1 = 1';
     if (req.body.search)
@@ -74,11 +76,13 @@ exports.find_movie = function(req, res){
     if (req.body.year_min)
         sql += ' and m.year >= ' + conn.escape(req.body.year_min) + ' and m.year <= ' + conn.escape(req.body.year_max);
     if (req.body.note_min)
-        sql += ' and m.rating >= ' + conn.escape(req.body.note_min) + ' and m.rating <= ' + conn.escape(req.body.note_max);
+        sql += ' and m.rating >= ' + conn.escape(parseInt(req.body.note_min)) + ' and m.rating <= ' + conn.escape(parseInt(req.body.note_max));
     if (req.body.order == 'note')
         sql += ' order by m.rating desc';
     else if (req.body.order == 'year')
         sql += ' order by m.year desc';
+    else if (req.body.order == 'name')
+        sql += ' order by m.title';
     else
         sql += ' order by m.title';
     sql += ' limit 0, 21';

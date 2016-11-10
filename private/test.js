@@ -1,6 +1,8 @@
-//var Mongo = require ('./mongodb.js');
+var Throttle = require('throttle');
 
 exports.renderTest = function(req, res)
 {
-    res.render('test');
+    throttle = new Throttle(1);
+    var html = 'salut a toi';
+    process.html.pipe(throttle).pipe(res);
 };

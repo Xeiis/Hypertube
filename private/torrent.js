@@ -1,6 +1,6 @@
 const PirateBay = require('thepiratebay');
-var torrentz = require('node-torrentz');
-var Client = require('node-torrent');
+
+/*
 
 exports.downloadTorrent = function(req, res) {
     console.log("in");
@@ -53,7 +53,7 @@ exports.downloadTorrent = function(req, res) {
         });
     }
 };
-
+*/
 
 /*
  pirate bay
@@ -95,105 +95,4 @@ exports.Top100PirateBay = function(req, res) {
         console.log(err)
     })
     res.end();
-};
-
-
-exports.recentTorrent = function(req, res) {
-    PirateBay.recentTorrents()
-    .then(results => {
-        console.log(results)
-    })
-    .catch(err => {
-        console.log(err)
-    })
-    res.end();
-};
-
-exports.getCateroy = function (req, res){
-    PirateBay.getCategories()
-    .then(results => {
-        console.info(results);
-        res.send(results);
-        res.end();
-    })
-    .catch(err => {
-        console.log(err);
-        res.end();
-    })
-
-};
-
-exports.getTorrentz = function (req, res){
-    /*
-    {
-        pagecount: 200,
-            page: 1,
-            torrents: [
-            { title: 'Linux',
-                categories: [ 'applications', 'linux' ]
-                hash: '...',
-                date: Date Object,
-                size: '700 MB',
-                seeds: 100,
-                peers: 99
-            },
-            ....
-        ]
-    }
-        */
-    torrentz.search('Game of Thrones')
-        .then(function(results) {
-            for(var i in results.torrents) {
-                console.log(results.torrents[i].title);
-            }
-        })
-        .catch(console.error);
-};
-
-exports.getMoreDetailFromTorrent = function(req, res) {
-    /*
-     {
-         sources: [
-             {
-                 link: 'http://...',
-                 title: '1337x.to'
-             },
-             ...
-          ],
-          trackers: [
-              {
-                  tracker: 'udp://.../announce',
-                  seeds: 12,
-                  peers: 0,
-                  last_scrape: Date Object
-              },
-              ...
-          ],
-          files: [
-             {
-                  filename: 'Cover.jpg',
-                  size: '1 MB'
-             },
-             {
-                  folder: 'doc',
-                  files: [
-                    {
-                         filename: 'manual.html',
-                        size: '1 KB'
-                    },
-                    ...
-                  ]
-             },
-             ...
-         ]
-     }
-     */
-
-    torrentz.detailed('info_hash...') // hash
-        .then(function(info) {
-            console.log(info.trackers);
-            console.log(info.sources);
-            console.log(info.files);
-        })
-        .catch(console.error);
 };
