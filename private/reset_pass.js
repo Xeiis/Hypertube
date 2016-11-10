@@ -22,3 +22,21 @@ exports.connect = function(req, res) {
         res.end();
     });
 }
+
+exports.edit_infos = function(req, res){
+    var cur_user = session.login;
+
+    if (req.body.pass)
+        req.body.pass = passwordHash.generate(req.body.u_pass);
+    conn.query("UPDATE users SET ? WHERE user_name = ?", [cur_user], function(err, rows) {
+        var result;
+        if(err) throw err;
+        if(rows.changedRows !== 0) {
+            result = 'OK';
+        }
+        else
+            result = 'Your key is no longer valid. Enter you \'re informations and check you \'re mail again.';
+        res.send(result);
+        res.end();
+    });
+}

@@ -84,8 +84,8 @@ exports.renderVideo = function(req, res)
     else if (req.query.id) {
         conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
                     // $(".plot_summary").text(); avec un petit parse ça devrais le faire
-            });
-        res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language /*,subtitles: subtitles*/});
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language /*,subtitles: subtitles*/});
+        });
     };
 };
 /*
@@ -171,13 +171,17 @@ var downloadTorrent = function(req) {
 exports.download_end = function(req, res) {
     var quality = which_quality(req.body.quality);
     conn.query('select t.cle, t.quality, t.download_end from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.body.id], function (err, rows) {
-        if (rows[0].download_end == 1) {
-            res.send({res: "yes", cle: rows[0].cle, quality: rows[0].quality});
-        }
-        else
+        if (rows !== undefined)
         {
-            res.send({res: "no"});
+            if (rows[0].download_end == 1) {
+                res.send({res: "yes", cle: rows[0].cle, quality: rows[0].quality});
+            }
+            else
+            {
+                res.send({res: "no"});
+            }
         }
+
     });
 };
 

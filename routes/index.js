@@ -48,7 +48,9 @@ router.post('/logout', function(req, res){
 });
 
 /* POST */
-
+router.post('/edit_info', function(req, res){
+   reset_pass.edit_info(req, res);
+});
 router.post('/find_movie', function(req, res){
     bibliotheque.find_movie(req, res);
 });
@@ -89,6 +91,7 @@ router.post('/sign_in_fb', function(req, res){
 router.post('/sign_up', function(req, res){
     sign_up.inscription(req, res);
 });
+
 
 /**
  * NOT USED
