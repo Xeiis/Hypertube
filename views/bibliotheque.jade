@@ -68,8 +68,10 @@ block content
                             div.button(style="text-align:center")
                                 if val.torrent_3D_id
                                     button.film_3D.bouton(movie="#{val.id}" style="margin:5px;") 3D
-                                button.film_720p.bouton(movie="#{val.id}" style="margin:5px;") 720p
-                                button.film_1080p.bouton(movie="#{val.id}" style="margin:5px;") 1080p
+                                if val.torrent_720_id
+                                    button.film_720p.bouton(movie="#{val.id}" style="margin:5px;") 720p
+                                if val.torrent_1080_id
+                                    button.film_1080p.bouton(movie="#{val.id}" style="margin:5px;") 1080p
               else
                 div.jumbotron
                   h2 Oups we found nothing here

@@ -131,11 +131,13 @@ var downloadTorrent = function(req, res) {
     conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.query.id], function (err, rows) {
         if (err) throw err;
         magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
+        console.log(quality, req.query.id);
         download(rows);
     });
     var download = function(rows) {
         conn.query('UPDATE torrent SET download_end = ? WHERE id = ?', [false, rows[0].id]);
         var i = 0;
+        var verified = 0;
         var engine = torrentStream(magnet, {path: 'public/movie/'});
         engine.on('ready', function () {
             engine.files.forEach(function (file) {

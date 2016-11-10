@@ -191,8 +191,10 @@ function return_bibliotheque(res){
         html += "<div class='button' style='text-align:center'>";
         if (res[i].torrent_3D_id)
             html += "<button class='film_3D bouton' movie='"+res[i].id+"' style='margin:5px;'>3D</button>";
-        html += "<button class='film_720p bouton' movie='"+res[i].id+"' style='margin:5px;'>720p</button>";
-        html += "<button class='film_1080p bouton' movie='"+res[i].id+"' style='margin:5px;'>1080p</button></div></div></div>";
+        if (res[i].torrent_720_id)
+            html += "<button class='film_720p bouton' movie='"+res[i].id+"' style='margin:5px;'>720p</button>";
+        if (res[i].torrent_1080_id)
+            html += "<button class='film_1080p bouton' movie='"+res[i].id+"' style='margin:5px;'>1080p</button></div></div></div>";
         i++;
     }
     return html;

@@ -7,7 +7,7 @@ var conn = db.connexion();
 exports.renderBibliotheque = function(req, res)
 {
     if (req.session.login) {
-        conn.query('select m.title, m.year, m.rating, m.medium_cover_image, m.id,\ ' +
+        conn.query('select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, \ ' +
             'CASE WHEN s.u_id is not null\ ' +
             'THEN \'Visionné\' \ ' +
             'END as vision\ ' +
@@ -26,7 +26,7 @@ exports.renderBibliotheque = function(req, res)
 
 exports.load_more = function(req, res) {
 
-    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id,';
+    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, ';
     sql += ' CASE WHEN s.u_id is not null';
     sql +=' THEN \'Visionné\'';
     sql +=' END as vision';
@@ -68,7 +68,7 @@ exports.find_movie_autocompletion = function(req, res){
 };
 
 exports.find_movie = function(req, res){
-    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id';
+    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id ';
     sql += ' from movies as m';
     sql +=' where 1 = 1';
     if (req.body.search)
