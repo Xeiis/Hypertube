@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var debug = require('debug')('matcha:server');
+var debug = require('debug')('hypertube:server');
 var http = require('http');
 var ent = require('ent');
 var rss = require('./private/socket.js');
@@ -36,7 +36,7 @@ app.use(cookieParser());
 app.use(session);
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(multer({dest:'./public/images'}).single('singleInputFileName'));
+app.use(multer({dest:'./public/img'}).single('singleInputFileName'));
 
 app.use('/', routes);
 

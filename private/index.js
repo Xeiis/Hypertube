@@ -2,14 +2,9 @@ const PirateBay = require('thepiratebay');
 
 exports.renderIndex = function(req, res)
 {
-    /*PirateBay.topTorrents()
-        .then(results => {
-        res.render('index', {top100 : results});
-    })
-    .catch(err => {
-        console.log(err);
-        res.end();
-    })*/
-    res.render('index');
+    if (req.session.login)
+        res.render('index', {login: true, name: req.session.login});
+    else
+        res.render('index', {login: false});
 };
 

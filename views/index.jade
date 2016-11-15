@@ -1,6 +1,4 @@
 extends layout
-block script
-    script(src='/js/login.js')
 block content
     div.container
       div.row
@@ -30,15 +28,3 @@ block content
                 input(type="password" class="form-control form_stack" id="reset_pass" placeholder="Password" style="margin-right:15px; display:none;")
                 input(type="password" class="form-control form_stack" id="reset_cpass" placeholder="Password confirmation" style="margin-right:15px; display:none;")
                 input(type="submit" class="btn btn-default form_stack"  id="reset" value="Envoyer")
-        div.row
-        div.col-lg-12
-
-          if top100
-              each val in top100
-                div.vignette.col-lg-3
-                    p #{val.name}
-                    p #{val.category.name}
-                    p #{val.subcategory.name}
-                    p #{val.size}
-                    p download now
-                    //#{val.magnetLink}

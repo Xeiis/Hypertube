@@ -180,3 +180,22 @@ video {
     background-position: center center;
     background-size: contain;
 }
+
+a:hover{
+    cursor:pointer;
+}
+
+.container{
+    padding-top: 100px;
+}
+
+.profile{
+    position: absolute;
+    width: 320px;
+    height: auto;
+    top: 50px;
+    background-color: white;
+    right: 60px;
+    border-radius: 10px;
+    border: 1px solid #E4E4E4;"
+}

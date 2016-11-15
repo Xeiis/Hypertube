@@ -19,11 +19,11 @@ router.get('/', function(req, res) {
     index.renderIndex(req, res);
 });
 
-router.get('/video', function(req, res){
+router.get('/video', function(req, res) {
     video.renderVideo(req, res);
 });
 
-router.get('/torrent', function(req, res){
+router.get('/torrent', function(req, res) {
     torrent.getTorrent(req, res);
 });
 
@@ -31,64 +31,65 @@ router.get('/test', function(req, res) {
     test.renderTest(req, res);
 });
 
-router.get('/bibliotheque', function(req, res){
+router.get('/bibliotheque', function(req, res) {
     bibliotheque.renderBibliotheque(req, res);
 });
 
-router.get('/get_list_torrent', function(req, res){
+router.get('/get_list_torrent', function(req, res) {
     parse_torrent.parseTorrentYts(req, res);
 });
 
-router.get('/no_access', function(req, res){
+router.get('/no_access', function(req, res) {
     no_access.renderNoaccess(req, res);
 });
 
-router.post('/logout', function(req, res){
+router.post('/logout', function(req, res) {
    logout.logout(req, res);
 });
 
 /* POST */
-router.post('/edit_info', function(req, res){
+router.post('/edit_info', function(req, res) {
    reset_pass.edit_info(req, res);
 });
-router.post('/find_movie', function(req, res){
+
+router.post('/find_movie', function(req, res) {
     bibliotheque.find_movie(req, res);
 });
 
-router.post('/find_movie_autocompletion', function(req, res){
+router.post('/find_movie_autocompletion', function(req, res) {
     bibliotheque.find_movie_autocompletion(req, res);
 });
 
-router.post('/download_end', function(req, res){
+router.post('/download_end', function(req, res) {
    video.download_end(req, res);
 });
 
-router.post('/video_exist', function(req, res){
+router.post('/video_exist', function(req, res) {
     video.exist(req, res);
 });
 
-router.post('/check_user', function(req, res){
+router.post('/check_user', function(req, res) {
     check_user.connect(req, res);
 });
 
-router.post('/reset_pass', function(req, res){
+router.post('/reset_pass', function(req, res) {
     reset_pass.connect(req, res);
 });
 
-router.post('/load_more_bibliotheque', function(req, res){
+router.post('/load_more_bibliotheque', function(req, res) {
     bibliotheque.load_more(req, res);
 });
 
-router.post('/sign_in', function(req, res){
+router.post('/sign_in', function(req, res) {
     sign_in.connect(req, res);
 });
-router.get('/sign_in_ft', function(req, res){
+router.get('/sign_in_ft', function(req, res) {
     sign_in.ft_connect(req, res);
 });
-router.post('/sign_in_fb', function(req, res){
+router.post('/sign_in_fb', function(req, res) {
     sign_in.fb_connect(req, res);
 });
-router.post('/sign_up', function(req, res){
+router.post('/sign_up', function(req, res) {
     sign_up.inscription(req, res);
 });
 
@@ -97,26 +98,24 @@ router.post('/sign_up', function(req, res){
  * NOT USED
 **/
 
-router.get('/Top100PirateBay', function(req, res){
+router.get('/Top100PirateBay', function(req, res) {
     torrent.Top100PirateBay(req, res);
 });
 
-router.get('/recentTorrent', function(req, res){
+router.get('/recentTorrent', function(req, res) {
     torrent.recentTorrent(req, res);
 });
 
-router.get('/getCateroy', function(req, res){
+router.get('/getCateroy', function(req, res) {
     torrent.getCateroy(req, res);
 });
 
-router.post("/download_torrent", function(req, res){
+router.post("/download_torrent", function(req, res) {
     torrent.downloadTorrent(req, res);
 });
 
 router.get('/test', function(req, res) {
     test.renderTest(req, res);
 });
-
-
 
 module.exports = router;

@@ -17,7 +17,7 @@ exports.renderBibliotheque = function(req, res)
             'left join seen as s on m.m_id = s.m_id and s.u_id = ?\ ' +
             'order by m.rating desc ,t2.seeds desc ,t.seeds desc limit 0, 21', [req.session.id], function (err, rows, fields) {
             if (err) throw err;
-            res.render('bibliotheque', {data: rows});
+            res.render('bibliotheque', {data: rows, login: true, name: req.session.login});
         });
     }
     else

@@ -12,4 +12,4 @@ exports.logout = function(req, res)
     else
         res.send("You are not connected");
     res.end();
-}
+};

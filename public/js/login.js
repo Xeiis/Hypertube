@@ -52,7 +52,16 @@ $(document).ready(function() {
             data    : data,
             success : function (html) {
                 if (html === "OK"){
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html).show('slow').delay(2000).hide('slow');
+                    $("#sign_in").hide('fast');
+                    $("#sign_up_toggle").hide('fast');
+                    $("#login_value").show('slow');
+                    $("#logout").show('slow');
+                    $("#name").text($('#login_in').val());
+                    $("#name").show('slow');
+                    $("#42_sign_in").hide('fast');
+                    $("#fbtn").hide('fast');
+                    $("#video").show('slow');
+                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html('Bienvenue '+ $('#login_in').val()).show('slow').delay(2000).hide('slow');
                     $(".login-bloc").hide('fast');
                 }
                 else if (html === "Wrong password") {
@@ -146,16 +155,23 @@ $(document).ready(function() {
             method  : 'POST',
             success : function (html) {
                 console.log(html);
-
                 if (html === "OK"){
                     FB.getLoginStatus(function(response){
                         if (response.status == 'connected')
                             fbLogout();
                     });
-                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("You are disconnected").show();
+                    $("#sign_in").show('slow');
+                    $("#sign_up_toggle").show('slow');
+                    $("#login_value").hide('fast');
+                    $("#logout").hide('fast');
+                    $("#name").hide('fast');
+                    $("#42_sign_in").show('slow');
+                    $("#fbtn").show('slow');
+                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("You are disconnected").show('slow').delay(2000).hide('slow');
+                    window.location.href = 'http://localhost:3000/';
                 }
                 else
-                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(html).show('slow');
+                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(html).show('slow').delay(2000).hide('slow');
             }
         })
     });
@@ -184,7 +200,7 @@ function fbLogout(){
 function checkLoginState() {
     FB.getLoginStatus(function(response) {
         if (response.status == 'connected') {
-            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are connected with facebook").show();
+            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are connected with facebook").show().delay(2000).hide('slow');
             getCurrentUserInfo(response)
         } else {
             FB.login(function(response) {

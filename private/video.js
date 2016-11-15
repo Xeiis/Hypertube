@@ -94,7 +94,7 @@ exports.renderVideo = function(req, res)
                 res.render('video', {res: 'Video not found'});
         });
     }
-};*/
+};
 
 exports.exist = function(req, res) {
     /*if (!req.session.login) {

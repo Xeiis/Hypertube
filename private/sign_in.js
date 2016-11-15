@@ -29,7 +29,7 @@ exports.connect = function(req, res) {
     res.send(result);
     res.end();
     });
-}
+};
 
 exports.ft_connect = function(req, res) {
     var user_code = req.query.code;
@@ -60,7 +60,7 @@ exports.ft_connect = function(req, res) {
              });
             })
         });
-    }
+    };
 
 
 exports.fb_connect = function(req, res){
@@ -73,4 +73,4 @@ exports.fb_connect = function(req, res){
         res.send(result);
         res.end();
     });
-}
+};
