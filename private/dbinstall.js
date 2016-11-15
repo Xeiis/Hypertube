@@ -73,6 +73,7 @@ conn.query('CREATE TABLE comm(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                               u_id INT(11),\
                               m_id INT(11),\
                               content VARCHAR(255),\
+                              time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
                               FOREIGN KEY (u_id) REFERENCES users(u_id) ON DELETE SET NULL ON UPDATE CASCADE,\
                               FOREIGN KEY (m_id) REFERENCES movies(m_id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
     if(err) throw err;

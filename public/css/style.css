@@ -199,3 +199,28 @@ a:hover{
     border-radius: 10px;
     border: 1px solid #E4E4E4;"
 }
+
+.comm{
+    /*width: 437px;*/
+    width: 140%;
+    background-color: white;
+    /* text-align: left; */
+    /* text-rendering: auto; */
+    padding: 12px;
+    margin-bottom: 19px;
+    /* border: 2px solid #b8b8b8; */
+    /*border-radius: 5px;*/
+    /*overflow: auto;*/
+    word-wrap: break-word;
+    /*box-shadow: 2px 1px 18px grey;*/
+
+}
+.comm-container{
+    padding-top: 28px;
+    width: 26%;
+    margin: auto;
+}
+
+.comms{
+    background-color: bisque;
+}

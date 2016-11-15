@@ -23,3 +23,4 @@ function reload_video(path) {
     vid.play();
     vid.currentTime = time;
 }
+

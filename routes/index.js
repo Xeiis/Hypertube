@@ -63,6 +63,13 @@ router.post('/find_movie_autocompletion', function(req, res) {
 router.post('/download_end', function(req, res) {
    video.download_end(req, res);
 });
+router.post('/is_15pc', function(req, res){
+    video.is_15pc(req, res);
+});
+
+router.post('/is_15pc', function(req, res){
+    video.customstream(req, res);
+});
 
 router.post('/video_exist', function(req, res) {
     video.exist(req, res);
@@ -93,6 +100,9 @@ router.post('/sign_up', function(req, res) {
     sign_up.inscription(req, res);
 });
 
+router.post('/save_comm', function(req, res){
+    video.save_comm(req, res);
+});
 
 /**
  * NOT USED
