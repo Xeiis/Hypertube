@@ -16,6 +16,7 @@ exports.connect = function(req, res) {
             if (rows[0].u_name == user_name) {
                 if (passwordHash.verify(req.body.u_pass, rows[0].u_pass)) {
                     req.session.login = req.body.u_name;
+                    req.session.user_id = rows[0].u_id;
                     result = 'OK';
                 }
                 else
@@ -51,12 +52,16 @@ exports.ft_connect = function(req, res) {
                 u_lname: user.data.last_name,
                 u_mail: user.data.email
             };
-            console.log(user_data);
-            console.log(user.data.login);
             conn.query("INSERT IGNORE INTO users SET ?", [user_data], function(err, rows){
                  if(err) throw err;
-                  req.session.login = user.data.login;
+                conn.query("SELECT * FROM users WHERE u_name = ? AND u_mail = ?", [user.data.login, user.data.email], function(err, rows){
+                    if(err) throw err;
+                    req.session.user_id = rows[0].u_id;
+                    req.session.login = user.data.login;
                     res.redirect('http://localhost:3000/bibliotheque');
+
+                });
+
              });
             })
         });
@@ -67,9 +72,13 @@ exports.fb_connect = function(req, res){
     console.log(req.body);
     conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
         if(err) throw err;
-        req.session.login = req.body.u_name;
+        conn.query("SELECT * FROM users WHERE user_name = ? AND u_mail = ?", [user.data.login, user.data.email], function(err, rows){
+            if(err) throw err;
+            req.session.user_id = rows[0].u_id;
+            req.session.login = req.body.u_name;
+        });
+
         result = 'OK';
-        console.log(req.session.login);
         res.send(result);
         res.end();
     });

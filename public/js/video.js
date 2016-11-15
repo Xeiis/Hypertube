@@ -24,3 +24,4 @@ function reload_video(path) {
     console.log(time);
     vid.currentTime = time;
 }
+

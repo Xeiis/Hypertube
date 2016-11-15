@@ -1,11 +1,11 @@
 extends layout
 block script
-  if path
+  //if path
     //link(href='//vjs.zencdn.net/5.4.6/video-js.min.css', rel='stylesheet')
     //script(src='//vjs.zencdn.net/5.4.6/video.min.js')
     //script(src='/js/video.js')
-  else
-    script(src='/js/video2.js')
+  //else
+  script(src='/js/video2.js')
 block content
   div(class="row")
     div(style="width:1920px;position:relative;height:auto;margin: 0 auto;")
@@ -34,6 +34,27 @@ block content
           p #{summary}
         video#ourvideo(controls='', autoplay='', width='1920', height='1080')
           source(src='/movie/#{path}', type='video/mp4')
+  div(class="comms")
+    if comm
+      div.comm-container
+        each val in comm
+          div.comm
+
+              //p commentaires
+              p#comm-name #{val.u_name}
+              p#comm-time #{val.time}
+              p#comm-content #{val.content}
+        div.form-group
+          form
+            //input(type="text" id="com-content" placeholder="Commentaires ...")
+            .group
+              input(type='text', required='' id="com-content" style="width: 140%;")
+              span.highlight
+              span.bar(style="width: 140%;")
+              label commentaires...
+              input(type="submit" id="send-com" value="valider" style="width: 140%;")
+
+
         //video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{bk}', data-setup='{"autoplay": false}')
           source(src='/movie/#{path}', type='video/mp4')
           // subtitle caption :

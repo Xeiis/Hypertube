@@ -1,47 +1,77 @@
+
 var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
 var http = require('http');
 var fs = require('fs');
 var Throttle = require('throttle');
 var db = require('./dbconn.js');
+
+var fs = require("fs"),
+    http = require("http"),
+    url = require("url"),
+    path = require("path");
+
+exports.customstream = function (req, res) {
+    var range = req.headers.range;
+    if (!range) {
+        // 416 Wrong range
+        return res.sendStatus(416);
+    }
+    var positions = range.replace(/bytes=/, "").split("-");
+    var start = parseInt(positions[0], 10);
+    var total = stats.size;
+    var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+    var chunksize = (end - start) + 1;
+
+    res.writeHead(206, {
+        "Content-Range": "bytes " + start + "-" + end + "/" + total,
+        "Accept-Ranges": "bytes",
+        "Content-Length": chunksize,
+        "Content-Type": "video/mp4"
+    });
+
+    var stream = fs.createReadStream(file, { start: start, end: end })
+        .on("open", function() {
+            stream.pipe(res);
+        }).on("error", function(err) {
+            res.end(err);
+        });
+}
 /*const OS = require('opensubtitles-api');
-const OpenSubtitles = new OS({
-    useragent:'OSTestUserAgentTemp',
-    username: 'Hypertube',
-    password: 'dotef',
-    ssl: true
-});
-*/
+ const OpenSubtitles = new OS({
+ useragent:'OSTestUserAgentTemp',
+ username: 'Hypertube',
+ password: 'dotef',
+ ssl: true
+ });
+ */
 
 /*
-var buff = '';
-
-http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
-    ress.on('data', function (data) {
-        buff += data;
-    });
-    ress.on('end', function () {
-        var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
-
-        var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
-        end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
-        var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
-        end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
-        var stars = end;
-        var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
-
-        var matches = director.match(reg);
-        director = clean_match(matches);
-        console.log(director);
-        matches = writers.match(reg);
-        writers = clean_match(matches);
-        console.log(writers);
-        matches = stars.match(reg);
-        stars = clean_match(matches);
-        console.log(stars);
-    });
-});
-*/
+ var buff = '';
+ http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
+ ress.on('data', function (data) {
+ buff += data;
+ });
+ ress.on('end', function () {
+ var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
+ var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
+ end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
+ var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
+ end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
+ var stars = end;
+ var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
+ var matches = director.match(reg);
+ director = clean_match(matches);
+ console.log(director);
+ matches = writers.match(reg);
+ writers = clean_match(matches);
+ console.log(writers);
+ matches = stars.match(reg);
+ stars = clean_match(matches);
+ console.log(stars);
+ });
+ });
+ */
 // A utiliser pour récupérer les infos imdb a intégré en dessous
 
 function clean_match(matches){
@@ -65,41 +95,43 @@ exports.renderVideo = function(req, res)
     var quality = which_quality(req.query.quality);
     if (req.query.cle) {
         conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = '+quality+' where cle = ?', [req.query.cle], function (err, rows) {
-            console.log(rows);
+            console.log("le film est deja dans la db" + rows);
             /*OpenSubtitles.search({
-                sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
-                hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
-                path: rows[0].path,        // Complete path to the video file, it allows
-                    //   to automatically calculate 'hash'.
-                filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
-                extensions: ['srt', 'vtt'], // Accepted extensions, defaults to 'srt'.
-                limit: '3',                 // Can be 'best', 'all' or an
-                                            // arbitrary nb. Defaults to 'best'
-                imdbid: rows[0].imdb_code   // Text-based query, this is not recommended.
-                }).then(subtitles => {
-                    // parse le site imdb pour récupérer des infos :
-                    // http://www.imdb.com/title/imdb_code
-                    // voir au dessus
-                    r
-            });*/
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/});
+             sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
+             hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
+             path: rows[0].path,        // Complete path to the video file, it allows
+             //   to automatically calculate 'hash'.
+             filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
+             extensions: ['srt', 'vtt'], // Accepted extensions, defaults to 'srt'.
+             limit: '3',                 // Can be 'best', 'all' or an
+             // arbitrary nb. Defaults to 'best'
+             imdbid: rows[0].imdb_code   // Text-based query, this is not recommended.
+             }).then(subtitles => {
+             // parse le site imdb pour récupérer des infos :
+             // http://www.imdb.com/title/imdb_code
+             // voir au dessus
+             r
+             });*/
+                get_comment(req, res, rows);
         });
     }
     else if (req.query.id) {
         conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
             if (rows[0].trailer !== null) {
                 downloadTorrent(req, res);
+
+                res.render('video', {trailer: rows[0].trailer});
             }
             else
                 res.render('video', {res: 'Video not found'});
         });
     }
-};*/
+};
 
 exports.exist = function(req, res) {
     /*if (!req.session.login) {
-        res.send({res: 'no acess'});
-    }*/
+     res.send({res: 'no acess'});
+     }*/
 
     var quality = which_quality(req.body.quality);
     conn.query('select t.path, m.trailer, t.cle from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.body.id], function (err, rows) {
@@ -140,45 +172,45 @@ var downloadTorrent = function(req, res) {
         engine.on('ready', function () {
             engine.files.forEach(function (file) {
                 /*
-                if (i == 0) {
-                    var cle_create = shortid.generate();
-                    conn.query('UPDATE torrent SET path = ?, cle = ? WHERE id = ?', [file.path, cle_create, rows[0].id]);
-                    i++;
-                }
-                console.log(file.name.match(/.*(\..+?)$/));
-                var extension = file.name.match(/.*(\..+?)$/);
-                if (extension !== null && extension.length === 2) {
-                    console.log('Downloading item');
-                    file.select(); // downloads without attaching filestream
-                    engine.on('idle', function(){
-                        console.log("le telechargement est fini");
-                        // on pourra aussi vérifier l'extension du fichier pour le convertir.
-                        conn.query('UPDATE torrent SET download_end = ? WHERE id = ?', [true, rows[0].id]);
-                    });
-                }
-                else {
-                    console.log('Skipping item');
-                }
-                // var stream = file.createReadStream();
-                // stream is readable stream to containing the file content
-            */
+                 if (i == 0) {
+                 var cle_create = shortid.generate();
+                 conn.query('UPDATE torrent SET path = ?, cle = ? WHERE id = ?', [file.path, cle_create, rows[0].id]);
+                 i++;
+                 }
+                 console.log(file.name.match(/.*(\..+?)$/));
+                 var extension = file.name.match(/.*(\..+?)$/);
+                 if (extension !== null && extension.length === 2) {
+                 console.log('Downloading item');
+                 file.select(); // downloads without attaching filestream
+                 engine.on('idle', function(){
+                 console.log("le telechargement est fini");
+                 // on pourra aussi vérifier l'extension du fichier pour le convertir.
+                 conn.query('UPDATE torrent SET download_end = ? WHERE id = ?', [true, rows[0].id]);
+                 });
+                 }
+                 else {
+                 console.log('Skipping item');
+                 }
+                 // var stream = file.createReadStream();
+                 // stream is readable stream to containing the file content
+                 */
                 console.log('filename:', file.name);
                 if (file.name.substr(file.name.length - 3) == 'mkv' || file.name.substr(file.name.length - 3) == 'mp4') {
                     var stream = file.createReadStream({flags: "r", start: 0, end: file.length - 1});
                     engine.on('download', function(){
-                        //stream = stream.pipe(new Throttle(100 * 1024));
-                        //stream.pipe(res);
+                        // stream = stream.pipe(new Throttle(100 * 1024)); //
+                        // stream.pipe(res); //
                         console.log(engine.swarm.downloaded / file.length * 100 + "%");
-                        if (parseInt(engine.swarm.downloaded / file.length * 100) >= 5 && i == 0) {
+                        if (parseInt(engine.swarm.downloaded / file.length * 100) >= 2 && i == 0) {
                             i++;
                             var cle_create = shortid.generate();
                             conn.query('UPDATE torrent SET path = ?, cle = ? WHERE id = ?', [file.path, cle_create, rows[0].id]);
                             console.log("video?cle="+cle_create+"&quality="+req.query.quality);
+
                         }
                     });
                     engine.on('idle', function () {
                         console.log("le telechargement est fini");
-                        //res.render('video', {trailer: rows[0].trailer})
                     });
                 }
                 else {
@@ -216,3 +248,40 @@ var which_quality = function(input){
     return quality;
 };
 
+exports.is_15pc = function(req, res){
+    var quality = which_quality(req.body.quality);
+    conn.query("select t.cle, t.quality, t.download_end, t.path from movies as m left join torrent as t on "+quality+" = t.id where m.id = ?", [req.body.id], function(err, rows){
+        if (err) throw err;
+        if (rows[0].path)
+            res.send({res: "yes", cle: rows[0].cle, quality: rows[0].quality});
+        else
+            res.send("no");
+    });
+
+};
+
+var get_comment = function (req, res, rows) {
+    var m_cle = req.query.cle;
+    conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM comm as c left join torrent as t on c.m_id = t.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
+        if (err) throw err;
+        if (typeof row !== 'undefined')
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row});
+        });
+};
+
+exports.save_comm = function (req, res){
+    conn.query("SELECT id FROM torrent WHERE cle = ?", [req.body.cle], function(err, rows){
+        if (err) throw err;
+        var data = {
+            u_id : req.session.user_id,
+            m_id : rows[0].id,
+            content : req.body.content
+        }
+        conn.query("INSERT INTO comm SET ?", data, function(err, rows){
+            if (err) throw err;
+            res.send(data);
+            res.end;
+        });
+
+    });
+};
