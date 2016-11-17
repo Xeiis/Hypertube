@@ -72,7 +72,7 @@ exports.fb_connect = function(req, res){
     console.log(req.body);
     conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
         if(err) throw err;
-        conn.query("SELECT * FROM users WHERE user_name = ? AND u_mail = ?", [user.data.login, user.data.email], function(err, rows){
+        conn.query("SELECT * FROM users WHERE user_name = ? AND u_mail = ?", [req.body.u_name, req.body.u_mail], function(err, rows){
             if(err) throw err;
             req.session.user_id = rows[0].u_id;
             req.session.login = req.body.u_name;
