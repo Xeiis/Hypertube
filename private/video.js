@@ -261,25 +261,37 @@ exports.is_15pc = function(req, res){
 };
 
 var get_comment = function (req, res, rows) {
+    var quality = which_quality(req.query.quality);
     var m_cle = req.query.cle;
-    conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM comm as c left join torrent as t on c.m_id = t.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
+    conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
-        if (typeof row !== 'undefined')
+        if (row[0].content)
             res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row});
+        else
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/});
         });
 };
 
 exports.save_comm = function (req, res){
-    conn.query("SELECT id FROM torrent WHERE cle = ?", [req.body.cle], function(err, rows){
+    var quality = which_quality(req.body.quality);
+    conn.query("SELECT m.id from movies as m left join torrent as t on t.id = "+quality+" where t.cle = ?", [req.body.cle], function(err, rows){
         if (err) throw err;
+
         var data = {
             u_id : req.session.user_id,
             m_id : rows[0].id,
             content : req.body.content
         }
+        console.log(data);
+
         conn.query("INSERT INTO comm SET ?", data, function(err, rows){
             if (err) throw err;
-            res.send(data);
+            var result = {
+                content : data.content,
+                u_name : req.session.login,
+                time : new Date()
+            }
+            res.send(result);
             res.end;
         });
 

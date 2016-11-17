@@ -41,15 +41,39 @@ $(document).ready(function(){
         var u_name_start_index = window.location.search.indexOf("=") + 1;
         var u_name_end_index   = window.location.search.indexOf("&");
         var cle               = window.location.search.slice(u_name_start_index, u_name_end_index);
+        var u_quality          = window.location.search.split("=")[2];
         event.preventDefault();
+        if ($('#com-content').val() !== "") {
 
-        $.ajax({
-            url : '/save_comm',
-            method : 'POST',
-            data : {content : $('#com-content').val(), cle : cle},
-            success : function(html){
-                console.log(html)
-            }
-        });
+            $.ajax({
+                url: '/save_comm',
+                method: 'POST',
+                data: {content: $('#com-content').val(), cle: cle, quality: u_quality},
+                success: function (html) {
+                    $('#com-content').val("");
+                    console.log(html.content);
+                    var render = '<div class="comm">\
+                        <p class="comm-name">' + html.u_name + '</p>\
+                        <p id="comm-time">' + html.time + '</p>\
+                        <p id="comm-content">' + html.content + '</p>\
+                    </div>';
+                    var container = $(".comm-container").html();
+                    container += render;
+                    $(".comm-container").html(container);
+                }
+            });
+        }
+        else
+            $("#comm_erreur").html("Enter something please").show('slow').delay(2000).hide('slow');
+    });
+    $('.comm-name').on("mouseover", function(){
+        $(this).prev($('.profil-views')).show('slow');
+        console.log($(this).text());
+        $('.p-uname').html($(this).text());
+    });
+    $('.comm-name').on("mouseout", function(){
+        // alert("coucou");
+        $(this).prev($('.profil-views')).hide('slow');
     });
 });
+

@@ -2,7 +2,7 @@
  * Created by aliandie on 10/27/16.
  */
 $(document).ready(function() {
-    $("#header").before("<div id='mavideo'> <video loop autoplay muted> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
+    $("#header").before("<div id='mavideo'> <video loop autoplay> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
     $('#sign_up').on('click', (function(event){
         event.preventDefault();
         var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
@@ -99,7 +99,8 @@ $(document).ready(function() {
     }));
 
 
-    if (window.location.search.includes("log") && window.location.search.includes("cle"))  {
+    if (window.location.search.includes("log") && window.location.search.includes("cle"))
+    {
         $('#reset_pass').show('slow');
         $('#reset_cpass').show('slow');
         $('#reset-pass-form').show('slow');

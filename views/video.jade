@@ -39,20 +39,24 @@ block content
       div.comm-container
         each val in comm
           div.comm
-
-              //p commentaires
-              p#comm-name #{val.u_name}
+              div(class="profil-views" style="width:10px;background-color:red;height:20px;display:none")
+                div(class="p-pic")
+                div(class="p-uname")
+                div(class="p-fname")
+                div(class="p-lname")
+              p.comm-name #{val.u_name}
               p#comm-time #{val.time}
               p#comm-content #{val.content}
-        div.form-group
-          form
-            //input(type="text" id="com-content" placeholder="Commentaires ...")
-            .group
-              input(type='text', required='' id="com-content" style="width: 140%;")
-              span.highlight
-              span.bar(style="width: 140%;")
-              label commentaires...
-              input(type="submit" id="send-com" value="valider" style="width: 140%;")
+    div.form-group(style="width: 26%;margin: auto;")
+      form
+        div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")
+
+        .group
+          input(type='text', required='' id="com-content" style="width: 140%;")
+          span.highlight
+          span.bar(style="width: 140%;")
+          label commentaires...
+          input(type="submit" id="send-com" value="valider" style="width: 140%;")
 
 
         //video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{bk}', data-setup='{"autoplay": false}')
