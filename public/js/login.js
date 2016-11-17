@@ -2,7 +2,7 @@
  * Created by aliandie on 10/27/16.
  */
 $(document).ready(function() {
-    $("#header").before("<div id='mavideo'> <video loop autoplay> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
+    $("#header").before("<div id='mavideo'> <video loop autoplay muted> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
     $('#sign_up').on('click', (function(event){
         event.preventDefault();
         var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
@@ -99,8 +99,7 @@ $(document).ready(function() {
     }));
 
 
-    if (window.location.search.includes("log") && window.location.search.includes("cle"))
-    {
+    if (window.location.search.includes("log") && window.location.search.includes("cle"))  {
         $('#reset_pass').show('slow');
         $('#reset_cpass').show('slow');
         $('#reset-pass-form').show('slow');
@@ -176,63 +175,8 @@ $(document).ready(function() {
         })
     });
 
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '1491425387550978',
-            xfbml      : true,
-            version    : 'v2.8'
-        });
-    };
-
-    (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en_US/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
 
 
-function fbLogout(){
-    FB.logout(function(response) {
-    });
-}
-function checkLoginState() {
-    FB.getLoginStatus(function(response) {
-        if (response.status == 'connected') {
-            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are connected with facebook").show().delay(2000).hide('slow');
-            getCurrentUserInfo(response)
-        } else {
-            FB.login(function(response) {
-                if (response.authResponse){
-                    getCurrentUserInfo(response)
-                } else {
-
-                    console.log('Auth cancelled.')
-                }
-            }, { scope: 'email' });
-        }
-    });
-}
-
-function getCurrentUserInfo() {
-    FB.api('/me', {fields: 'name,email'}, function (userInfo) {
-        data = {
-            u_name: userInfo.name,
-            u_mail: userInfo.email,
-            u_fname: userInfo.name.split(" ")[0],
-            u_lname: userInfo.name.split(" ")[1]
-        };
-        $.ajax({
-            url: '/sign_in_fb',
-            method: 'POST',
-            data: data,
-            success: function (html) {
-
-            }
-        });
-    })
-}
     $('#con-edit').on('click', (function(event) {
         event.preventDefault();
         var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
@@ -277,4 +221,63 @@ function getCurrentUserInfo() {
     }));
 });
 
+window.fbAsyncInit = function() {
+    FB.init({
+        appId      : '1491425387550978',
+        xfbml      : true,
+        version    : 'v2.8'
+    });
+};
+
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+var fbLogout = function (){
+    FB.logout(function(response) {
+    });
+};
+
+var checkLoginState_fb = function () {
+    FB.getLoginStatus(function(response) {
+        if (response.status == 'connected') {
+            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are connected with facebook").show().delay(2000).hide('slow');
+            getCurrentUserInfo();
+        } else {
+            FB.login(function(response) {
+                if (response.authResponse){
+                    console.log(response.authResponse.accessToken);
+                    getCurrentUserInfo();
+                } else {
+
+                    console.log('Auth cancelled.')
+                }
+            }, { scope: 'email, name' });
+        }
+    });
+};
+
+var getCurrentUserInfo = function () {
+    FB.api('/me', {fields: 'name, email'}, function (userInfo) {
+        console.log(userInfo);
+        data = {
+            u_name: userInfo.name,
+            u_mail: userInfo.email,
+            u_fname: userInfo.name.split(" ")[0],
+            u_lname: userInfo.name.split(" ")[1]
+        };
+        $.ajax({
+            url: '/sign_in_fb',
+            method: 'POST',
+            data: data,
+            success: function (html) {
+
+            }
+        });
+    })
+};
 

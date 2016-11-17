@@ -48,6 +48,14 @@ router.post('/logout', function(req, res) {
 });
 
 /* POST */
+router.post('/update_profile', function(req, res){
+    check_user.update_profile(req, res);
+});
+
+router.post('/get_user_data', function(req, res){
+   check_user.get_user_data(req, res);
+});
+
 router.post('/edit_info', function(req, res) {
    reset_pass.edit_info(req, res);
 });
