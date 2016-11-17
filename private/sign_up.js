@@ -4,9 +4,10 @@
 
 var db = require('./dbconn.js');
 var conn = db.connexion();
+var passwordHash = require('password-hash');
 
 exports.inscription = function(req, res) {
-    var passwordHash = require('password-hash');
+
     req.body.u_pass = passwordHash.generate(req.body.u_pass);
     req.body.u_pic = '/img/profile.jpg';
     conn.query('INSERT INTO users SET ?', req.body, function(err){
