@@ -48,6 +48,10 @@ router.post('/logout', function(req, res) {
 });
 
 /* POST */
+router.post('/upload_picture', function(req, res){
+    check_user.upload_picture(req, res);
+});
+
 router.post('/update_profile', function(req, res){
     check_user.update_profile(req, res);
 });

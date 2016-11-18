@@ -62,7 +62,6 @@ exports.update_profile = function(req, res){
     sql += ' WHERE u_name = ' + conn.escape(req.session.login);
     conn.query(sql, function(err, rows){
         if(err) throw err;
-        console.log(rows.affectedRows);
         if (rows.affectedRows > 0) {
             res.send("OK");
             res.end();
@@ -72,4 +71,28 @@ exports.update_profile = function(req, res){
             res.end();
         }
     });
+};
+
+exports.upload_picture = function(req, res){
+    console.log("upload picture");
+    if (typeof(req.file) == 'undefined') {
+        res.send("NO PICTURE");
+        res.end();
+    }
+    var url = req.file.path.substring(req.file.path.indexOf('/') + 1);
+    if ((req.file.originalname.substr(-3) == 'png' || req.file.originalname.substr(-3) == 'jpg' || req.file.originalname.substr(-4) == 'jpeg' || req.file.orginalname.substr(-3) == 'JPG' || req.file.orginalname.substr(-4) == 'JPEG')) {
+        conn.query('UPDATE users SET u_pic = ? WHERE u_name = ?', [url, req.session.login], function(err,rows){
+            if (rows.affectedRows > 0) {
+                res.send("OK");
+                res.end();
+            }
+            else {
+                res.send("KO");
+                res.end();
+            }
+        });
+    }
+    else {
+        res.send("MAUVAIS FORMAT");
+    }
 };

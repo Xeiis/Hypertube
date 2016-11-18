@@ -3,6 +3,7 @@ $(document).ready(function() {
     var input_save = '';
     var input_save_save = '';
     var save_save = '';
+    var save_img;
     // $("#header").before("<div id='mavideo'> <video loop autoplay> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
     $("#sign_in").on('click', function () {
         $('#sign_in_form').show('slow');
@@ -45,8 +46,8 @@ $(document).ready(function() {
             url    : '/get_user_data',
             method : 'POST',
             success: function (data) {
-                html = '<form style="padding:30px 15px 15px 15px">';
-                html += '<div style="margin:0 auto;width:100px;height:100px;"><img src='+data[0].u_pic+' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;"><input type="file" style="position: relative;top: -65px;height: 65px;width: 67px;opacity: 0;"></div>';
+                html = '<form id="upload_picture" method="post" action="upload_picture" style="padding:0px 15px 15px 15px">';
+                html += '<div style="margin:0 auto;width:100px;height:175px;"><img id="profile_picture" src='+data[0].u_pic+' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;"><input type="file" name="singleInputFileName" style="position: relative;top: -100px;height: 100px;width: 100px;opacity: 0;"><input style="position: relative;top: -105px;width: auto;left: -12px;" type="submit" class="btn btn-default form_stack"  value="Change Picture")><input style="display:none;position: relative;top: -110px;width: auto;left: 20px;" type="submit" class="btn btn-default form_stack" id="reset" value="Reset")></div></form>';
                 html += input(data[0].u_name, 'username');
                 html += input(data[0].u_fname, 'firstname');
                 html += input(data[0].u_lname, 'lastname');
@@ -84,6 +85,53 @@ $(document).ready(function() {
                     input_save = input;
                     save = $("label." + input).text();
                     $("label." + input+"").text(input);
+                });
+                $(function () {
+                    $('#upload_picture').on('submit', function (e) {
+                        // On empêche le navigateur de soumettre le formulaire
+                        e.preventDefault();
+
+                        var $form = $(this);
+                        var formdata = (window.FormData) ? new FormData($form[0]) : null;
+                        var data = (formdata !== null) ? formdata : $form.serialize();
+
+                        $.ajax({
+                            url: $form.attr('action'),
+                            type: $form.attr('method'),
+                            contentType: false,
+                            processData: false,
+                            dataType: 'json',
+                            data: data,
+                            success: function (response) {
+                                // La réponse du serveur
+                            }
+                        });
+                    });
+                });
+                $(function () {
+                    // A chaque sélection de fichier
+                    $('#upload_picture').find('input[name="singleInputFileName"]').on('change', function (e) {
+                        console.log("une image a été choisi");
+                        $("#reset").css('display','block');
+                        var files = $(this)[0].files;
+
+                        if (files.length > 0) {
+                            // On part du principe qu'il n'y qu'un seul fichier
+                            // étant donné que l'on a pas renseigné l'attribut "multiple"
+                            var file = files[0];
+                            // Ici on injecte les informations recoltées sur le fichier pour l'utilisateur
+                            save_img = $("#profile_picture").attr('src');
+                            $("#profile_picture").attr('src', window.URL.createObjectURL(file));
+                        }
+                    });
+
+                    // Bouton "Annuler" pour vider le champ d'upload
+                    $('#reset').on('click', function (e) {
+                        e.preventDefault();
+                        $("#profile_picture").attr('src', save_img);
+                        $('#reset').css('display','none');
+                        $('#upload_picture').find('input[name="singleInputFileName"]').val('');
+                    });
                 });
                 $("#update_profile").on('click', function(){
                     var data = {};

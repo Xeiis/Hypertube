@@ -1,7 +1,7 @@
                                                                                          TOTAL : --__ 12.5✓ | 7.5x  __--
 
 
-Partie user :                                                                                       --__ 4.5✓ | 2x  __--
+Partie user :                                                                                         --__ 6✓ | 1x  __--
 
     Inscription : en demandant au minimum                                                                    --__ ✓ __--
      une adresse email,
@@ -28,9 +28,9 @@ Partie user :                                                                   
      L’utilisateur doit pouvoir sélectionner une langue préférée, qui sera par défaut
      l’anglais.
 
-    Modifier son adresse email, sa photo de profil et ses informations                                    --__ 0.5✓ __--
+    Modifier son adresse email, sa photo de profil et ses informations                                       --__ ✓ __--
 
-    Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,                    --__ x __--
+    Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,                    --__ ✓ __--
     ses informations. L’email, en revanche, doit rester privé.
 
 Partie bibliotèque                                                                                   --__ 7✓ | 0.5x __--
@@ -61,7 +61,7 @@ Partie bibliotèque                                                             
     chargée de manière asynchrone. Autrement dit, il ne doit pas y avoir de lien pour
     chaque page.
 
-    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un             --__ 0.5x __--
+    La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ ✓ __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
 Partie Video                                                                                           --__ 1✓ | 5x __--
@@ -70,7 +70,7 @@ Partie Video                                                                    
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
     couverture
 
-    laisser un commentaire                                                                                   --__ x __--
+    laisser un commentaire                                                                                   --__ ✓ __--
     sur la vidéo, et afficher la liste des commentaires précédents.
 
     Si un film n’est pas visionné pendant                                                                    --__ x __--
