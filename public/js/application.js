@@ -38,7 +38,7 @@ $(document).ready(function() {
     var input = function(val, id, id_pass){
         var type;
         type = id_pass ? "type='password'" : "type='text'";
-        return '<div class="group"><input '+type+' required="" class="'+id+'" id="'+id_pass+'"> <span class="highlight"></span> <span class="bar"></span> <label class="'+id+'">'+val+'</label></div>';
+        return '<div class="group"><input '+type+' required="" class="'+id+'" id="'+id_pass+'"> <span class="highlight"></span> <span class="bar"></span> <label class="'+id+' label">'+val+'</label></div>';
     };
 
     var get_user_data = function(hide){
@@ -88,24 +88,31 @@ $(document).ready(function() {
                 });
                 $(function () {
                     $('#upload_picture').on('submit', function (e) {
+
                         // On empêche le navigateur de soumettre le formulaire
                         e.preventDefault();
 
                         var $form = $(this);
                         var formdata = (window.FormData) ? new FormData($form[0]) : null;
                         var data = (formdata !== null) ? formdata : $form.serialize();
-
                         $.ajax({
-                            url: $form.attr('action'),
-                            type: $form.attr('method'),
+                            url: "/upload_picture",
+                            type: "POST",
                             contentType: false,
                             processData: false,
                             dataType: 'json',
-                            data: data,
-                            success: function (response) {
-                                // La réponse du serveur
-                            }
-                        });
+                            data: data
+                        })
+                            .done(function(response) {
+                                if (response.res == "NO PICTURE")
+                                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html("U didn't choose a picture").show('slow').delay(2000).hide('slow');
+                                else if (response.res == "MAUVAIS FORMAT")
+                                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html("Picture format isn't valid").show('slow').delay(2000).hide('slow');
+                                else if (response.res == "KO")
+                                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html("Oups something went wrong").show('slow').delay(2000).hide('slow');
+                                else if (response.res == "OK")
+                                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("You're picture successfully uploaded").show('slow').delay(2000).hide('slow');
+                            });
                     });
                 });
                 $(function () {
@@ -134,6 +141,7 @@ $(document).ready(function() {
                     });
                 });
                 $("#update_profile").on('click', function(){
+
                     var data = {};
                     if ($("input.username").val() != '')
                         data.username = $("input.username").val();
@@ -143,20 +151,21 @@ $(document).ready(function() {
                         data.lastname = $("input.lastname").val();
                     if ($("input.email").val() != '')
                         data.email = $("input.email").val();
-                    if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val())
+                    if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val()) {
                         data.password = $("input#password").val();
+                    }
+                    console.log(data);
                     $.ajax({
                         url: '/update_profile',
                         method: 'POST',
                         data: data,
                         success: function (res) {
-                            if (res == "OK") {
-                                alert('ok');
-                                // afficher un petit message
+                            console.log(res);
+                            if (res.res == "OK") {
+                                $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("You're profile has been updated for "+res.nb+" fields").show('slow').delay(2000).hide('slow');
                             }
                             else {
-                                alert(res);
-                                // afficher un petit message
+                                $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html("Oups something went wrong").show('slow').delay(2000).hide('slow');
                             }
                         }
                     });

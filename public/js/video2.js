@@ -37,6 +37,7 @@
 // var watchDownload = setInterval(download_end, 7000);
 
 $(document).ready(function(){
+    $("#mavideo").css('visibility','hidden');
     $('#send-com').on('click', function(event){
         var u_name_start_index = window.location.search.indexOf("=") + 1;
         var u_name_end_index   = window.location.search.indexOf("&");

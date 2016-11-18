@@ -1,5 +1,4 @@
-                                                                                         TOTAL : --__ 12.5✓ | 7.5x  __--
-
+                                                                                             TOTAL : --__ 15✓ | 5x  __--
 
 Partie user :                                                                                         --__ 6✓ | 1x  __--
 
@@ -33,7 +32,7 @@ Partie user :                                                                   
     Consulter le profil d’un autre utilisateur. C’est à dire afficher sa photo de profil,                    --__ ✓ __--
     ses informations. L’email, en revanche, doit rester privé.
 
-Partie bibliotèque                                                                                   --__ 7✓ | 0.5x __--
+Partie bibliotèque                                                                                          --__ 7✓ __--
 
     Cette partie doit présenter au minimum :                                                                --__ ✓ __--
     • Un champ de recherche.
@@ -64,7 +63,7 @@ Partie bibliotèque                                                             
     La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ ✓ __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
-Partie Video                                                                                           --__ 1✓ | 5x __--
+Partie Video                                                                                           --__ 2✓ | 4x __--
 
     que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                         --__ ✓|x __--
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de

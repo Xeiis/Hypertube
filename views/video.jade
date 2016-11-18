@@ -7,65 +7,42 @@ block script
   //else
   script(src='/js/video2.js')
 block content
-  div(class="row")
-    div(style="width:1920px;position:relative;height:auto;margin: 0 auto;")
-      div(class="animation")
-        .sk-circle
-          .sk-circle1.sk-child
-          .sk-circle2.sk-child
-          .sk-circle3.sk-child
-          .sk-circle4.sk-child
-          .sk-circle5.sk-child
-          .sk-circle6.sk-child
-          .sk-circle7.sk-child
-          .sk-circle8.sk-child
-          .sk-circle9.sk-child
-          .sk-circle10.sk-child
-          .sk-circle11.sk-child
-          .sk-circle12.sk-child
-      if trailer
-        div.jumbotron(style="padding:48px;text-align:center;")
-          h3 Votre film est entrain de download veuillez patienter, vous pouvez regarder le trailer pendant ce temps juste en dessous.
-          div#voir_la_video
-        iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
-      if path
-        p Langue du film #{language}
-        div.jumbotron(style="padding:48px")
-          p #{summary}
-        video#ourvideo(controls='', autoplay='', width='1920', height='1080')
-          source(src='/movie/#{path}', type='video/mp4')
-  div(class="comms")
-    if comm
-      div.comm-container
-        each val in comm
-          div.comm
-              div(class="profil-views" style="width:10px;background-color:red;height:20px;display:none")
-                div(class="p-pic")
-                div(class="p-uname")
-                div(class="p-fname")
-                div(class="p-lname")
-              p.comm-name #{val.u_name}
-              p#comm-time #{val.time}
-              p#comm-content #{val.content}
-    div.form-group(style="width: 26%;margin: auto;")
-      form
-        div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")
-
-        .group
-          input(type='text', required='' id="com-content" style="width: 140%;")
-          span.highlight
-          span.bar(style="width: 140%;")
-          label commentaires...
-          input(type="submit" id="send-com" value="valider" style="width: 140%;")
-
-
+  div.container
+    divv(class="row")
+      div(style="width:auto;height:auto;margin: 0 auto;")
+        div(class="animation")
+          .sk-circle
+            .sk-circle1.sk-child
+            .sk-circle2.sk-child
+            .sk-circle3.sk-child
+            .sk-circle4.sk-child
+            .sk-circle5.sk-child
+            .sk-circle6.sk-child
+            .sk-circle7.sk-child
+            .sk-circle8.sk-child
+            .sk-circle9.sk-child
+            .sk-circle10.sk-child
+            .sk-circle11.sk-child
+            .sk-circle12.sk-child
+        if trailer
+          div.jumbotron(style="padding:48px;text-align:center;")
+            h3 Votre film est entrain de download veuillez patienter, vous pouvez regarder le trailer pendant ce temps juste en dessous.
+            div#voir_la_video
+          iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
+        if path
+          p Langue du film #{language}
+          div.jumbotron(style="padding:48px")
+            p #{summary}
+          video#ourvideo(controls='', autoplay='', width='1920', height='1080')
+            source(src='/movie/#{path}', type='video/mp4')
+          // pour utiliser videojs utiliser le code ci dessous
         //video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{bk}', data-setup='{"autoplay": false}')
-          source(src='/movie/#{path}', type='video/mp4')
-          // subtitle caption :
-           track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
-          p.vjs-no-js
-            | To view this video please enable JavaScript, and consider upgrading to a web browser that
-            a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
+                    source(src='/movie/#{path}', type='video/mp4')
+                    // subtitle caption :
+                     track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
+                    p.vjs-no-js
+                      | To view this video please enable JavaScript, and consider upgrading to a web browser that
+                      a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
         //.row(id="div_download")
           .col-lg-2
             p Download-bar :
@@ -74,3 +51,26 @@ block content
               span#download_bar_text
                 | 0%
               #download_bar.progress-bar(role='progressbar', aria-valuenow='0', aria-valuemin='0', aria-valuemax='100', style='width:0%;')
+    div(class="comms")
+      if comm
+        div.comm-container
+          each val in comm
+            div.comm
+                div(class="profil-views" style="width:10px;background-color:red;height:20px;display:none")
+                  div(class="p-pic")
+                  div(class="p-uname")
+                  div(class="p-fname")
+                  div(class="p-lname")
+                p.comm-name #{val.u_name}
+                p#comm-time #{val.time}
+                p#comm-content #{val.content}
+      div.form-group(style="width: 26%;margin: auto;")
+        form
+          div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")
+
+          .group
+            input(type='text', required='' id="com-content" style="width: 140%;")
+            span.highlight
+            span.bar(style="width: 140%;")
+            label commentaires...
+            input(type="submit" id="send-com" value="valider" style="width: 140%;")

@@ -224,3 +224,13 @@ a:hover{
 .comms{
     background-color: bisque;
 }
+
+input[type="file"]:hover{
+    cursor:pointer;
+}
+
+@media (min-width: 2000px){
+    .container {
+        width: 1950px;
+    }
+}

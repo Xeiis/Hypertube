@@ -16,6 +16,7 @@ h2 small {
     color:#888;
     display:block;
 }
+
 .footer 	{ text-align:center; }
 .footer a  { color:#53B2C8; }
 
@@ -24,6 +25,7 @@ h2 small {
     position:relative;
     margin-bottom:45px;
 }
+
 input 				{
     font-size:18px;
     padding:10px 10px 10px 5px;
@@ -36,7 +38,7 @@ input 				{
 input:focus 		{ outline:none; }
 
 /* LABEL ======================================= */
-label 				 {
+.label {
     color:#999;
     font-size:18px;
     font-weight:normal;
@@ -98,6 +100,7 @@ input:focus ~ .highlight {
     -moz-animation:inputHighlighter 0.3s ease;
     animation:inputHighlighter 0.3s ease;
 }
+
 
 /* ANIMATIONS ================ */
 @-webkit-keyframes inputHighlighter {

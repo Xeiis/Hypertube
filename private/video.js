@@ -6,9 +6,7 @@ var fs = require('fs');
 var Throttle = require('throttle');
 var db = require('./dbconn.js');
 
-var fs = require("fs"),
-    http = require("http"),
-    url = require("url"),
+var url = require("url"),
     path = require("path");
 
 exports.customstream = function (req, res) {
@@ -36,7 +34,7 @@ exports.customstream = function (req, res) {
         }).on("error", function(err) {
             res.end(err);
         });
-}
+};
 /*const OS = require('opensubtitles-api');
  const OpenSubtitles = new OS({
  useragent:'OSTestUserAgentTemp',
@@ -93,39 +91,42 @@ var magnet = '';
 exports.renderVideo = function(req, res)
 {
     var quality = which_quality(req.query.quality);
-    if (req.query.cle) {
-        conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = '+quality+' where cle = ?', [req.query.cle], function (err, rows) {
-            console.log("le film est deja dans la db" + rows);
-            /*OpenSubtitles.search({
-             sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
-             hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
-             path: rows[0].path,        // Complete path to the video file, it allows
-             //   to automatically calculate 'hash'.
-             filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
-             extensions: ['srt', 'vtt'], // Accepted extensions, defaults to 'srt'.
-             limit: '3',                 // Can be 'best', 'all' or an
-             // arbitrary nb. Defaults to 'best'
-             imdbid: rows[0].imdb_code   // Text-based query, this is not recommended.
-             }).then(subtitles => {
-             // parse le site imdb pour récupérer des infos :
-             // http://www.imdb.com/title/imdb_code
-             // voir au dessus
-             r
-             });*/
+    if (req.session.login) {
+        if (req.query.cle) {
+            conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+                console.log("le film est deja dans la db" + rows);
+                /*OpenSubtitles.search({
+                 sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
+                 hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
+                 path: rows[0].path,        // Complete path to the video file, it allows
+                 //   to automatically calculate 'hash'.
+                 filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
+                 extensions: ['srt', 'vtt'], // Accepted extensions, defaults to 'srt'.
+                 limit: '3',                 // Can be 'best', 'all' or an
+                 // arbitrary nb. Defaults to 'best'
+                 imdbid: rows[0].imdb_code   // Text-based query, this is not recommended.
+                 }).then(subtitles => {
+                 // parse le site imdb pour récupérer des infos :
+                 // http://www.imdb.com/title/imdb_code
+                 // voir au dessus
+                 r
+                 });*/
                 get_comment(req, res, rows);
-        });
+            });
+        }
+        else if (req.query.id) {
+            conn.query('select * from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
+                if (rows[0].trailer !== null) {
+                    downloadTorrent(req, res);
+                    res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login});
+                }
+                else
+                    res.render('video', {res: 'Video not found'});
+            });
+        }
     }
-    else if (req.query.id) {
-        conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
-            if (rows[0].trailer !== null) {
-                downloadTorrent(req, res);
-
-                res.render('video', {trailer: rows[0].trailer});
-            }
-            else
-                res.render('video', {res: 'Video not found'});
-        });
-    }
+    else
+        res.render('no_access');
 };
 
 exports.exist = function(req, res) {
@@ -266,9 +267,9 @@ var get_comment = function (req, res, rows) {
     conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
         if (row[0].content)
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row});
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login});
         else
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/});
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login});
         });
 };
 
@@ -281,7 +282,7 @@ exports.save_comm = function (req, res){
             u_id : req.session.user_id,
             m_id : rows[0].id,
             content : req.body.content
-        }
+        };
         console.log(data);
 
         conn.query("INSERT INTO comm SET ?", data, function(err, rows){
@@ -290,7 +291,7 @@ exports.save_comm = function (req, res){
                 content : data.content,
                 u_name : req.session.login,
                 time : new Date()
-            }
+            };
             res.send(result);
             res.end;
         });
