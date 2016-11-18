@@ -40,7 +40,7 @@ exports.connect = function(req, res) {
 };
 
 exports.get_user_data = function(req, res){
-    conn.query('SELECT u_name, u_mail, u_fname, u_pic, u_lname from users where u_name = ?', [req.session.login], function(err, rows){
+    conn.query('SELECT u_name, u_mail, u_fname, u_pic, u_lname from users where u_name = ?', [req.body.login ? req.body.login : req.session.login], function(err, rows){
         res.send(rows);
         res.end();
     });

@@ -111,11 +111,25 @@ exports.renderVideo = function(req, res)
                  // voir au dessus
                  r
                  });*/
+                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, rows) {
+                    if (err) throw err;
+                });
+                var today = new Date();
+                conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+                    if (err) throw err;
+                });
                 get_comment(req, res, rows);
             });
         }
         else if (req.query.id) {
             conn.query('select * from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
+                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, rows) {
+                    if (err) throw err;
+                });
+                var today = new Date();
+                conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+                    if (err) throw err;
+                });
                 if (rows[0].trailer !== null) {
                     downloadTorrent(req, res);
                     res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login});

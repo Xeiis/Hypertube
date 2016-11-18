@@ -1,17 +1,17 @@
-var express = require('express');
-var router = express.Router();
-var test = require('../private/test.js');
-var index = require('../private/index.js');
-var video = require('../private/video.js');
-var torrent = require('../private/torrent.js');
-var parse_torrent = require('../private/parse_torrent.js');
-var bibliotheque = require('../private/bibliotheque.js');
-var sign_up = require('../private/sign_up.js');
-var sign_in = require('../private/sign_in.js');
-var reset_pass = require('../private/reset_pass.js');
-var check_user = require('../private/check_user.js');
-var no_access = require('../private/no_access.js');
-var logout = require('../private/logout.js');
+var express        = require('express');
+var router         = express.Router();
+var test           = require('../private/test.js');
+var index          = require('../private/index.js');
+var video          = require('../private/video.js');
+var torrent        = require('../private/torrent.js');
+var parse_torrent  = require('../private/parse_torrent.js');
+var bibliotheque   = require('../private/bibliotheque.js');
+var sign_up        = require('../private/sign_up.js');
+var sign_in        = require('../private/sign_in.js');
+var reset_pass     = require('../private/reset_pass.js');
+var check_user     = require('../private/check_user.js');
+var no_access      = require('../private/no_access.js');
+var logout         = require('../private/logout.js');
 
 /* GET */
 
@@ -114,6 +114,9 @@ router.post('/sign_up', function(req, res) {
 
 router.post('/save_comm', function(req, res){
     video.save_comm(req, res);
+});
+router.get('/torrent', function(req, res) {
+    torrent.delete_old_movies(req, res);
 });
 
 /**

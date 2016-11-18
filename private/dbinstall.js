@@ -1,6 +1,4 @@
-/**
- * Created by aliandie on 10/26/16.
- */
+2
 
 var db = require('./dbconn.js');
 
@@ -55,6 +53,7 @@ conn.query('CREATE TABLE movies(m_id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY
                                 torrent_720_id INT(11),\
                                 torrent_1080_id INT(11),\
                                 torrent_3D_id INT(11),\
+                                last_view  DATE,\
                                 FOREIGN KEY (torrent_720_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE,\
                                 FOREIGN KEY (torrent_1080_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE,\
                                 FOREIGN KEY (torrent_3D_id) REFERENCES torrent(id) ON DELETE SET NULL ON UPDATE CASCADE)' ,function(err){
@@ -73,7 +72,7 @@ conn.query('CREATE TABLE comm(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                               u_id INT(11),\
                               m_id INT(11),\
                               content VARCHAR(255),\
-                              time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
+                              time TIMESTAMP DEFAULT CURRENT_,\
                               FOREIGN KEY (u_id) REFERENCES users(u_id) ON DELETE SET NULL ON UPDATE CASCADE,\
                               FOREIGN KEY (m_id) REFERENCES movies(m_id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
     if(err) throw err;
