@@ -94,7 +94,7 @@ exports.renderVideo = function(req, res)
 {
     var quality = which_quality(req.query.quality);
     if (req.query.cle) {
-        conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = '+quality+' where cle = ?', [req.query.cle], function (err, rows) {
+        conn.query('select m.id, m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = '+quality+' where cle = ?', [req.query.cle], function (err, rows) {
             console.log("le film est deja dans la db" + rows);
             /*OpenSubtitles.search({
              sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
@@ -112,11 +112,26 @@ exports.renderVideo = function(req, res)
              // voir au dessus
              r
              });*/
-                get_comment(req, res, rows);
+
+            conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, rows) {
+                if (err) throw err;
+            });
+            var today = new Date();
+            conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+                if (err) throw err;
+            });
+            get_comment(req, res, rows);
         });
     }
     else if (req.query.id) {
-        conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
+        conn.query('select m.trailer, m.id from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.query.id], function (err, rows) {
+            conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, rows) {
+                if (err) throw err;
+            });
+            var today = new Date();
+            conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+                if (err) throw err;
+            });
             if (rows[0].trailer !== null) {
                 downloadTorrent(req, res);
 
@@ -274,6 +289,7 @@ var get_comment = function (req, res, rows) {
 
 exports.save_comm = function (req, res){
     var quality = which_quality(req.body.quality);
+    console.log(req.query.id);
     conn.query("SELECT m.id from movies as m left join torrent as t on t.id = "+quality+" where t.cle = ?", [req.body.cle], function(err, rows){
         if (err) throw err;
 

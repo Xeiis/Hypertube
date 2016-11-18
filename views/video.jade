@@ -39,11 +39,12 @@ block content
       div.comm-container
         each val in comm
           div.comm
-              div(class="profil-views" style="width:10px;background-color:red;height:20px;display:none")
-                div(class="p-pic")
-                div(class="p-uname")
-                div(class="p-fname")
-                div(class="p-lname")
+             div(class="profil-views" style="display:none;")
+                img(src='/img/profile.jpg' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
+                div.infos
+                  div.p-fname
+                  div.p-lname
+                  div.p-email
               p.comm-name #{val.u_name}
               p#comm-time #{val.time}
               p#comm-content #{val.content}

@@ -42,6 +42,7 @@ $(document).ready(function(){
         var u_name_end_index   = window.location.search.indexOf("&");
         var cle               = window.location.search.slice(u_name_start_index, u_name_end_index);
         var u_quality          = window.location.search.split("=")[2];
+
         event.preventDefault();
         if ($('#com-content').val() !== "") {
 
@@ -53,6 +54,11 @@ $(document).ready(function(){
                     $('#com-content').val("");
                     console.log(html.content);
                     var render = '<div class="comm">\
+                        <div class="profil-views"  style="display:none">\
+                            <img src="/img/profile.jpg" height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;"/>\
+                            <div class="p-fname"></div>\
+                            <div class="p-lname"></div>\
+                        </div>\
                         <p class="comm-name">' + html.u_name + '</p>\
                         <p id="comm-time">' + html.time + '</p>\
                         <p id="comm-content">' + html.content + '</p>\
@@ -60,20 +66,36 @@ $(document).ready(function(){
                     var container = $(".comm-container").html();
                     container += render;
                     $(".comm-container").html(container);
+                    $(document).on("mouseover", '.comm-name', function(){
+                        $(this).prev($('.profil-views')).show('slow');
+                        $('.p-uname').html($(this).text());
+                    });
+                    $(document).on("mouseout", '.profil-views', function() {
+                        $('.profil-views').hide('slow');
+                    });
+
                 }
             });
         }
         else
             $("#comm_erreur").html("Enter something please").show('slow').delay(2000).hide('slow');
     });
-    $('.comm-name').on("mouseover", function(){
+    $(document).on("mouseover", '.comm-name', function(){
         $(this).prev($('.profil-views')).show('slow');
-        console.log($(this).text());
-        $('.p-uname').html($(this).text());
+        $.ajax({
+            url : '/get_user_data',
+            method : 'POST',
+            data : $(this).text(),
+            success : function(html){
+                $('.p-fname').text(html[0].u_fname);
+                $('.p-lname').text(html[0].u_lname);
+                $('.p-pic').attr("src", html[0].u_pic);
+            }
+        });
     });
-    $('.comm-name').on("mouseout", function(){
-        // alert("coucou");
-        $(this).prev($('.profil-views')).hide('slow');
+
+    $(document).on("mouseout", '.profil-views', function() {
+        $('.profil-views').hide('slow');
     });
 });
 
