@@ -33,8 +33,17 @@ $(document).ready(function() {
                 method : 'POST',
                 data   : data,
                 success: function (html) {
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Great ! You are register on Hypertube").show().delay(2000).hide('slow');
-                    $("#sign_up_form").hide('fast');
+                    if (html === "OK")
+                    {
+                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Great ! You are register on Hypertube").show().delay(2000).hide('slow');
+                        $("#sign_up_form").hide('fast');
+                    }
+                    else
+                    {
+                        $("#signup_erreur").removeClass('alert-success').addClass('alert-danger').html(html).show().delay(2000).hide('slow');
+                        $("#sign_up_form").hide('fast');
+                    }
+
                 }
             });
         }

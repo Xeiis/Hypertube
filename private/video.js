@@ -2,9 +2,11 @@
 var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
 var http = require('http');
-var fs = require('fs');
 var Throttle = require('throttle');
 var db = require('./dbconn.js');
+var fs = require("fs");
+var glob = require("glob");
+var fse = require('fs.extra');
 
 var url = require("url"),
     path = require("path");
@@ -115,7 +117,9 @@ exports.renderVideo = function(req, res)
                     if (err) throw err;
                 });
                 var today = new Date();
-                conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+
+                conn.query("UPDATE movies as m SET last_view = ? WHERE "+quality+" = (SELECT id FROM torrent where cle = ?)", [today, req.query.cle], function(err, row){
+                    console.log("test: " + row);
                     if (err) throw err;
                 });
                 get_comment(req, res, rows);
@@ -127,8 +131,10 @@ exports.renderVideo = function(req, res)
                     if (err) throw err;
                 });
                 var today = new Date();
-                conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+                conn.query("UPDATE movies  SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
                     if (err) throw err;
+                    console.log("2");
+
                 });
                 if (rows[0].trailer !== null) {
                     downloadTorrent(req, res);
@@ -297,18 +303,43 @@ exports.save_comm = function (req, res){
             m_id : rows[0].id,
             content : req.body.content
         };
-        console.log(data);
+        conn.query("SELECT u_pic from users where u_id = ?", [req.session.user_id], function(err, row){
 
-        conn.query("INSERT INTO comm SET ?", data, function(err, rows){
-            if (err) throw err;
-            var result = {
-                content : data.content,
-                u_name : req.session.login,
-                time : new Date()
-            };
-            res.send(result);
-            res.end;
+            var u_pic = row[0].u_pic;
+            conn.query("INSERT INTO comm SET ?", data, function(err, rows){
+                if (err) throw err;
+                var result = {
+                    content : data.content,
+                    u_name : req.session.login,
+                    time : new Date(),
+                    u_pic : u_pic
+                };
+                res.send(result);
+                res.end;
+            });
         });
-
     });
 };
+
+var remove_old_movies = function(req, res){
+    conn.query("SELECT title FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
+        var i = 0;
+        while(rows[i]) {
+
+            var filepath = 'public/movie/' + rows[i].title + "*";
+
+            glob(filepath, function (er, files) {
+                if (files[0] && !er) {
+                    fse.rmrf(files[0], function (err) {
+                        if (err) {
+                            console.error(err);
+                        }
+                    });
+                }
+            });
+            i++;
+        }
+    });
+};
+
+setTimeout(remove_old_movies, 2592000);

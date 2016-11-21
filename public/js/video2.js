@@ -53,10 +53,9 @@ $(document).ready(function(){
                 data: {content: $('#com-content').val(), cle: cle, quality: u_quality},
                 success: function (html) {
                     $('#com-content').val("");
-                    console.log(html.content);
                     var render = '<div class="comm">\
                         <div class="profil-views"  style="display:none">\
-                            <img src="/img/profile.jpg" height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;"/>\
+                            <img id="p-pic" src='+html.u_pic+' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;"/>\
                             <div class="p-fname"></div>\
                             <div class="p-lname"></div>\
                         </div>\
@@ -86,11 +85,12 @@ $(document).ready(function(){
         $.ajax({
             url : '/get_user_data',
             method : 'POST',
-            data : $(this).text(),
+            data : {login : $(this).text()},
             success : function(html){
                 $('.p-fname').text(html[0].u_fname);
                 $('.p-lname').text(html[0].u_lname);
                 $('.p-pic').attr("src", html[0].u_pic);
+                console.log(html[0].u_pic);
             }
         });
     });
