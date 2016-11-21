@@ -1,5 +1,11 @@
+/**
+ * Created by dchristo on 10/25/16.
+ */
+
 var express        = require('express');
 var router         = express.Router();
+var fs             = require("fs");
+var db             = require('../private/dbconn.js');
 var test           = require('../private/test.js');
 var index          = require('../private/index.js');
 var video          = require('../private/video.js');
@@ -13,26 +19,39 @@ var check_user     = require('../private/check_user.js');
 var no_access      = require('../private/no_access.js');
 var logout         = require('../private/logout.js');
 
+var conn = db.connexion();
+
+function get_langue(req, res, callback) {
+    var translation = JSON.parse(fs.readFileSync(__dirname + "/../public/translation/translate.json", "UTF-8"));
+    translation = translation.Translation;
+    if (req.session.login)
+    {
+        conn.query('select u_lang from users where u_name = ?', [req.session.login], function(err, rows){
+           if (rows[0] && rows[0].u_lang == 'FR')
+               callback(req, res, translation.FR, "FR");
+           else
+               callback(req, res, translation.EN, "EN");
+        });
+    }
+    else if (req.session.langue == "FR") {
+        callback(req, res, translation.FR, "FR");
+    }
+    else
+        callback(req, res, translation.EN, "EN");
+}
+
 /* GET */
 
 router.get('/', function(req, res) {
-    index.renderIndex(req, res);
+    get_langue(req, res , index.renderIndex);
 });
 
 router.get('/video', function(req, res) {
-    video.renderVideo(req, res);
-});
-
-router.get('/torrent', function(req, res) {
-    torrent.getTorrent(req, res);
-});
-
-router.get('/test', function(req, res) {
-    test.renderTest(req, res);
+    get_langue(req, res, video.renderVideo);
 });
 
 router.get('/bibliotheque', function(req, res) {
-    bibliotheque.renderBibliotheque(req, res);
+    get_langue(req, res, bibliotheque.renderBibliotheque);
 });
 
 router.get('/get_list_torrent', function(req, res) {
@@ -43,29 +62,59 @@ router.get('/no_access', function(req, res) {
     no_access.renderNoaccess(req, res);
 });
 
-router.post('/logout', function(req, res) {
-   logout.logout(req, res);
+/* POST */
+
+router.post('/change_langue', function(req, res){
+    get_langue(req, res, check_user.change_langue);
 });
 
-/* POST */
+router.post('/logout', function(req, res) {
+    get_langue(req, res, logout.logout);
+});
+
 router.post('/upload_picture', function(req, res){
-    check_user.upload_picture(req, res);
+    get_langue(req, res, check_user.upload_picture);
 });
 
 router.post('/update_profile', function(req, res){
-    check_user.update_profile(req, res);
+    get_langue(req, res, check_user.update_profile);
 });
 
 router.post('/get_user_data', function(req, res){
-   check_user.get_user_data(req, res);
-});
-
-router.post('/edit_info', function(req, res) {
-   reset_pass.edit_info(req, res);
+    get_langue(req, res, check_user.get_user_data);
 });
 
 router.post('/find_movie', function(req, res) {
-    bibliotheque.find_movie(req, res);
+    get_langue(req, res, bibliotheque.find_movie);
+});
+
+router.post('/check_user', function(req, res) {
+    get_langue(req, res, check_user.connect);
+});
+
+router.post('/reset_pass', function(req, res) {
+    get_langue(req, res, reset_pass.connect);
+});
+
+router.post('/sign_in', function(req, res) {
+    get_langue(req, res, sign_in.connect);
+});
+
+router.post('/sign_up', function(req, res) {
+    get_langue(req, res, sign_up.inscription);
+
+});
+
+router.post('/save_comm', function(req, res){
+    get_langue(req, res, video.save_comm);
+});
+
+router.post('/edit_info', function(req, res) {
+    reset_pass.edit_info(req, res);
+});
+
+router.post('/load_more_bibliotheque', function(req, res) {
+    bibliotheque.load_more(req, res);
 });
 
 router.post('/find_movie_autocompletion', function(req, res) {
@@ -87,34 +136,14 @@ router.post('/video_exist', function(req, res) {
     video.exist(req, res);
 });
 
-router.post('/check_user', function(req, res) {
-    check_user.connect(req, res);
-});
-
-router.post('/reset_pass', function(req, res) {
-    reset_pass.connect(req, res);
-});
-
-router.post('/load_more_bibliotheque', function(req, res) {
-    bibliotheque.load_more(req, res);
-});
-
-router.post('/sign_in', function(req, res) {
-    sign_in.connect(req, res);
-});
 router.get('/sign_in_ft', function(req, res) {
     sign_in.ft_connect(req, res);
 });
+
 router.post('/sign_in_fb', function(req, res) {
     sign_in.fb_connect(req, res);
 });
-router.post('/sign_up', function(req, res) {
-    sign_up.inscription(req, res);
-});
 
-router.post('/save_comm', function(req, res){
-    video.save_comm(req, res);
-});
 router.get('/torrent', function(req, res) {
     torrent.delete_old_movies(req, res);
 });
@@ -122,6 +151,14 @@ router.get('/torrent', function(req, res) {
 /**
  * NOT USED
 **/
+
+router.get('/test', function(req, res) {
+    test.renderTest(req, res);
+});
+
+router.get('/torrent', function(req, res) {
+    torrent.getTorrent(req, res);
+});
 
 router.get('/Top100PirateBay', function(req, res) {
     torrent.Top100PirateBay(req, res);

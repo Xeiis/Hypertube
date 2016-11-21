@@ -53,7 +53,6 @@ $(document).ready(function(){
                 data: {content: $('#com-content').val(), cle: cle, quality: u_quality},
                 success: function (html) {
                     $('#com-content').val("");
-                    console.log(html.content);
                     var render = '<div class="comm">\
                         <div class="profil-views"  style="display:none">\
                             <img src="/img/profile.jpg" height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;"/>\
@@ -79,7 +78,7 @@ $(document).ready(function(){
             });
         }
         else
-            $("#comm_erreur").html("Enter something please").show('slow').delay(2000).hide('slow');
+            $("#comm_erreur").html(html.translation.enter_qq).show('slow').delay(2000).hide('slow');
     });
     $(document).on("mouseover", '.comm-name', function(){
         $(this).prev($('.profil-views')).show('slow');
@@ -88,9 +87,9 @@ $(document).ready(function(){
             method : 'POST',
             data : $(this).text(),
             success : function(html){
-                $('.p-fname').text(html[0].u_fname);
-                $('.p-lname').text(html[0].u_lname);
-                $('.p-pic').attr("src", html[0].u_pic);
+                $('.p-fname').text(html.res[0].u_fname);
+                $('.p-lname').text(html.res[0].u_lname);
+                $('.p-pic').attr("src", html.res[0].u_pic);
             }
         });
     });

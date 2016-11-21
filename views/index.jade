@@ -4,27 +4,26 @@ block content
       div.row
         div.col-lg-12
           div.jumbotron
-            h2 Welcome to Hypertube
-      //div(class="alert text-center" role="alert" id="signup_erreur" style="display:none;margin-right:15px;margin-bottom:0px")
+            h2 #{translation.title}
       div.row
         div.col-lg-12
             form
              div(class="form-group" id="sign_up_form" style="display: none;")
-                h2(class="text-center") Sign Up
-                input(type="text" class="form-control form_stack" id="user_name" placeholder="Username" style="margin-right:15px")
-                input(type="text" class="form-control form_stack" id="fname" placeholder="First name" style="margin-right:15px")
-                input(type="text" class="form-control form_stack" id="lname" placeholder="Last name" style="margin-right:15px")
-                input(type="text" class="form-control form_stack" id="email" placeholder="E-mail" style="margin-right:15px")
-                input(type="password" class="form-control form_stack" id="pass" placeholder="Password" style="margin-right:15px")
-                input(type="password" class="form-control form_stack" id="cpass" placeholder="Password confirmation" style="margin-right:15px")
-                input(type="submit" class="btn btn-default form_stack"  id="sign_up" value="Inscription")
+                h2(class="text-center") #{translation.up}
+                input(type="text" class="form-control form_stack" id="user_name" placeholder="#{translation.login}" style="margin-right:15px")
+                input(type="text" class="form-control form_stack" id="fname" placeholder="#{translation.prenom}" style="margin-right:15px")
+                input(type="text" class="form-control form_stack" id="lname" placeholder="#{translation.nom_famille}" style="margin-right:15px")
+                input(type="text" class="form-control form_stack" id="email" placeholder="#{translation.email}" style="margin-right:15px")
+                input(type="password" class="form-control form_stack" id="pass" placeholder="#{translation.mdp}" style="margin-right:15px")
+                input(type="password" class="form-control form_stack" id="cpass" placeholder="#{translation.mdp_conf}" style="margin-right:15px")
+                input(type="submit" class="btn btn-default form_stack"  id="sign_up" value="#{translation.up}")
       div.row
         div.col-lg-12
             form
              div(class="form-group" id="reset-pass-form" style="display: none;")
-                h2(class="text-center") Reset Password
-                input(type="text" class="form-control form_stack" id="reset_uname" placeholder="Username" style="margin-right:15px;")
-                input(type="text" class="form-control form_stack" id="reset_umail" placeholder="E-mail" style="margin-right:15px;")
-                input(type="password" class="form-control form_stack" id="reset_pass" placeholder="Password" style="margin-right:15px; display:none;")
-                input(type="password" class="form-control form_stack" id="reset_cpass" placeholder="Password confirmation" style="margin-right:15px; display:none;")
-                input(type="submit" class="btn btn-default form_stack"  id="reset" value="Envoyer")
+                h2(class="text-center") #{translation.reset_pass}
+                input(type="text" class="form-control form_stack" id="reset_uname" placeholder="#{translation.login}" style="margin-right:15px;")
+                input(type="text" class="form-control form_stack" id="reset_umail" placeholder="#{translation.email}" style="margin-right:15px;")
+                input(type="password" class="form-control form_stack" id="reset_pass" placeholder="#{translation.mdp}" style="margin-right:15px; display:none;")
+                input(type="password" class="form-control form_stack" id="reset_cpass" placeholder="#{translation.mdp_conf}" style="margin-right:15px; display:none;")
+                input(type="submit" class="btn btn-default form_stack"  id="reset" value="#{translation.modif}")

@@ -7,7 +7,7 @@ var passwordHash = require('password-hash');
 var conn = db.connexion();
 var axios = require('axios');
 
-exports.connect = function(req, res) {
+exports.connect = function(req, res, translation, langue) {
     user_name = req.body.u_name;
     conn.query("SELECT * FROM users WHERE u_name= ?", [user_name], function(err, rows){
         var result;
@@ -27,14 +27,13 @@ exports.connect = function(req, res) {
         }
         else
             result = 'Wrong details';
-    res.send(result);
+    res.send({res: result, translation: translation});
     res.end();
     });
 };
 
 exports.ft_connect = function(req, res) {
     var user_code = req.query.code;
-    console.log(req.query.code);
 
     axios.post('https://api.intra.42.fr/oauth/token', {
         grant_type: 'authorization_code',
@@ -69,7 +68,6 @@ exports.ft_connect = function(req, res) {
 
 
 exports.fb_connect = function(req, res){
-    console.log(req.body);
     conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
         if(err) throw err;
         conn.query("SELECT * FROM users WHERE u_name = ?"/* AND u_mail = ?"*/, [req.body.u_name/*, req.body.u_mail*/], function(err, rows){
@@ -77,7 +75,6 @@ exports.fb_connect = function(req, res){
             req.session.user_id = rows[0].u_id;
             req.session.login = req.body.u_name;
         });
-
         res.send('OK');
         res.end();
     });

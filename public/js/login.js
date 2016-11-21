@@ -33,7 +33,7 @@ $(document).ready(function() {
                 method : 'POST',
                 data   : data,
                 success: function (html) {
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Great ! You are register on Hypertube").show().delay(2000).hide('slow');
+                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html.translation.sign_up_success).show().delay(2000).hide('slow');
                     $("#sign_up_form").hide('fast');
                 }
             });
@@ -51,7 +51,7 @@ $(document).ready(function() {
             method  : 'POST',
             data    : data,
             success : function (html) {
-                if (html === "OK"){
+                if (html.res === "OK"){
                     $("#sign_in").hide('fast');
                     $("#sign_up_toggle").hide('fast');
                     $("#login_value").show('slow');
@@ -61,15 +61,15 @@ $(document).ready(function() {
                     $("#42_sign_in").hide('fast');
                     $("#fbtn").hide('fast');
                     $("#video").show('slow');
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html('Bienvenue '+ $('#login_in').val()).show('slow').delay(2000).hide('slow');
+                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html.translation.bienvenue+' '+ $('#login_in').val()).show('slow').delay(2000).hide('slow');
                     $(".login-bloc").hide('fast');
                 }
-                else if (html === "Wrong password") {
+                else if (html.res === "Wrong password") {
                     $('#pass-reset').show('slow');
-                    $("#signup_erreur").addClass('alert-danger').html(html).show('slow').delay(2000).hide('slow');
+                    $("#signup_erreur").addClass('alert-danger').html(html.translation.password_error).show('slow').delay(2000).hide('slow');
                 }
                 else
-                    $("#signup_erreur").addClass('alert-danger').html('Wrong Login / Password').show('slow').delay(2000).hide('slow');
+                    $("#signup_erreur").addClass('alert-danger').html(html.translation.login_error).show('slow').delay(2000).hide('slow');
             }
         })
     }));
@@ -86,9 +86,9 @@ $(document).ready(function() {
                 method  : 'POST',
                 data    : data,
                 success : function(html){
-                    if(html === "OK"){
+                    if(html.res === "OK"){
                         $("#reset-pass-form").hide('fast');
-                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Check you\'re mail !").show('slow').delay(2000).hide('slow');
+                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html.translation.check_mail).show('slow').delay(2000).hide('slow');
                     }
                     else
                         $("#signup_erreur").addClass('alert-danger').html(html).show('slow').delay(2000).hide('slow');
@@ -134,13 +134,13 @@ $(document).ready(function() {
                     method: 'POST',
                     data: data,
                     success: function (html) {
-                        if (html === "OK") {
-                            $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("Password successfully updated.").show('slow').delay(2000).hide('slow');
+                        if (html.res === "OK") {
+                            $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(html.translation.password_update).show('slow').delay(2000).hide('slow');
                             $("#reset-pass-form").hide('fast');
                             $("#forgot_pass").hide('fast');
                         }
                         else{
-                            $("#signup_erreur").addClass('alert-danger').html(html).show('slow').delay(2000).hide('slow');
+                            $("#signup_erreur").addClass('alert-danger').html(html.translation.key_used).show('slow').delay(2000).hide('slow');
                         }
                     }
                 })
@@ -154,8 +154,7 @@ $(document).ready(function() {
             url     : '/logout',
             method  : 'POST',
             success : function (html) {
-                console.log(html);
-                if (html === "OK"){
+                if (html.res === "OK"){
                     FB.getLoginStatus(function(response){
                         if (response.status == 'connected')
                             fbLogout();
@@ -167,59 +166,14 @@ $(document).ready(function() {
                     $("#name").hide('fast');
                     $("#42_sign_in").show('slow');
                     $("#fbtn").show('slow');
-                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html("You are disconnected").show('slow').delay(2000).hide('slow');
+                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(html.translation.logout).show('slow').delay(2000).hide('slow');
                     window.location.href = 'http://localhost:3000/';
                 }
                 else
-                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(html).show('slow').delay(2000).hide('slow');
+                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(html.translation.something_wrong).show('slow').delay(2000).hide('slow');
             }
         })
     });
-
-
-
-    $('#con-edit').on('click', (function(event) {
-        event.preventDefault();
-        var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
-        var email_regex = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
-        var err = "";
-        // if (!password_regex.test($('#edit_pass'))){
-        //    err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-        // }
-        // if (!($('#edit_pass').val() === $('#edit_cpass').val())) {
-        //     err += "Password must match</br>";
-        // }
-        // if (!email_regex.test($('#edit_email')) {
-        //     err += "Please enter a valide email</br>";
-        // }
-        if (err != "") {
-            $("#signup_erreur").addClass('alert-danger').html(err).show().delay(2000).hide('slow');
-        }
-        else {
-            var data = new Object();
-            if ($('#edit_name').val() !== "")
-                data.u_name = $('#edit_name').val();
-            if ($('#edit_fname').val() !== "")
-                data.u_fname = $('#edit_fname').val();
-            if ($('#edit_lname').val() !== "")
-                data.u_lname = $('#edit_lname').val();
-            if ($('#edit_email').val() !== "")
-                data.u_email = $('#edit_email').val();
-            if ($('#edit_pass').val() !== "")
-                data.u_pass = $('#edit_pass').val();
-            console.log(data);
-
-            $.ajax({
-                url    : '/edit',
-                method : 'POST',
-                data   : data,
-                success: function (html) {
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Great ! You are register on Hypertube").show().delay(2000).hide('slow');
-                    $("#sign_up_form").hide('fast');
-                }
-            });
-        }
-    }));
 });
 
 window.fbAsyncInit = function() {
@@ -246,16 +200,13 @@ var fbLogout = function (){
 var checkLoginState_fb = function () {
     FB.getLoginStatus(function(response) {
         if (response.status == 'connected') {
-            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("You are connected with facebook").show().delay(2000).hide('slow');
+            $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html("Facebook Connect").show().delay(2000).hide('slow');
             getCurrentUserInfo();
         } else {
             FB.login(function(response) {
                 if (response.authResponse){
-                    console.log(response.authResponse.accessToken);
                     getCurrentUserInfo();
                 } else {
-
-                    console.log('Auth cancelled.')
                 }
             }, { scope: 'email, name' });
         }
@@ -264,7 +215,6 @@ var checkLoginState_fb = function () {
 
 var getCurrentUserInfo = function () {
     FB.api('/me', {fields: 'name, email'}, function (userInfo) {
-        console.log(userInfo);
         data = {
             u_name: userInfo.name,
             u_mail: userInfo.email,

@@ -10,8 +10,6 @@ exports.renderTest = function(req, res) {
     conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.query.id], function (err, rows) {
         if (err) throw err;
         magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
-        console.log(quality, req.query.id);
-        console.log('toi');
         download(rows);
     });
     var download = function(rows) {
@@ -38,15 +36,12 @@ exports.renderTest = function(req, res) {
                     info.size = file.length;
                     info.file = file.filename;
                     info.mime = 'video/mp4'; // a voir plus tard, pour l'instant ça marche là plupart du temps.
-                    console.info("header info : "+info);
                     downloadHeader(res, info);
                     var file_path = '/Users/dchristo/http/MyWebSite/Hypertube/public/movie/'+file.path;
                     try {
                         var stream = fs.createReadStream(file_path, {start: info.start, end: info.end});
                         stream = stream.pipe(new Throttle(10000 * 1024));
-                        console.log('piping stream');
                         stream.pipe(res);
-                        console.log('stream piped');
                     }
                     catch(exception) {
                         console.log('Error: '.red, exception);

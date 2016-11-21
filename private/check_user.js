@@ -9,7 +9,7 @@ var urlencode = require('urlencode');
 var shortid = require('shortid');
 var passwordHash = require('password-hash');
 
-exports.connect = function(req, res) {
+exports.connect = function(req, res, translation, langue) {
     var  user_name = req.body.u_name;
     var user_mail = req.body.u_mail;
     var cle = shortid.generate();
@@ -34,19 +34,19 @@ exports.connect = function(req, res) {
         }
         else
             result = 'Wrong details';
-        res.send(result);
+        res.send({res: result, translation: translation});
         res.end();
     });
 };
 
-exports.get_user_data = function(req, res){
+exports.get_user_data = function(req, res, translation, langue){
     conn.query('SELECT u_name, u_mail, u_fname, u_pic, u_lname from users where u_name = ?', [req.body.login ? req.body.login : req.session.login], function(err, rows){
-        res.send(rows);
+        res.send({res: rows, translation: translation});
         res.end();
     });
 };
 
-exports.update_profile = function(req, res) {
+exports.update_profile = function(req, res, translation, langue) {
     var modif = 0;
     var sql = 'UPDATE users SET u_restore_key = null';
     if (req.body.username) {
@@ -68,46 +68,66 @@ exports.update_profile = function(req, res) {
     if (req.body.password) {
         sql += ', u_pass = ' + conn.escape(passwordHash.generate(req.body.password));
         modif++;
-        console.log(modif);
     }
     sql += ' WHERE u_name = ' + conn.escape(req.session.login);
     conn.query(sql, function(err, rows){
         if(err) throw err;
+        if(req.body.username)
+            req.session.login = req.body.username;
         if (rows.affectedRows > 0 && modif != 0) {
-            res.send({res : "OK", nb : modif});
+            res.send({res : "OK", nb : modif, translation: translation});
             res.end();
         }
         else {
-            res.send({res : "KO"});
+            res.send({res : "KO", translation: translation});
             res.end();
         }
     });
 };
 
-exports.upload_picture = function(req, res){
+exports.upload_picture = function(req, res, translation, lnague){
     if (typeof(req.file) == 'undefined') {
-        res.send({res : "NO PICTURE"});
+        res.send({res : "NO PICTURE", translation: translation});
         res.end();
     }
     else {
         var url = req.file.path.substring(req.file.path.indexOf('/') + 1);
         if (req.file.originalname && (req.file.originalname.substr(-3) == 'png' || req.file.originalname.substr(-3) == 'jpg' || req.file.originalname.substr(-4) == 'jpeg' || req.file.originalname.substr(-3) == 'JPG' || req.file.originalname.substr(-4) == 'JPEG')) {
             conn.query('UPDATE users SET u_pic = ? WHERE u_name = ?', [url, req.session.login], function (err, rows) {
-                if(req.body.username)
-                    req.session.login = req.body.username;
                 if (rows.affectedRows > 0) {
-                    res.send({res : "OK"});
+                    res.send({res : "OK", translation: translation});
                     res.end();
                 }
                 else {
-                    res.send({res : "KO"});
+                    res.send({res : "KO", translation: translation});
                     res.end();
                 }
             });
         }
         else {
-            res.send({res : "MAUVAIS FORMAT"});
+            res.send({res : "MAUVAIS FORMAT", translation: translation});
             res.end();
         }
+    }
+};
+
+exports.change_langue = function(req, res, translation, langue){
+    req.session.langue = req.body.lang;
+    if(req.session.login) {
+        conn.query("UPDATE users SET u_lang = ? where u_name = ?", [req.body.lang, req.session.login], function(err, rows){
+            if (rows.affectedRows > 0) {
+                res.send({res: "OK", translation: translation});
+                res.end();
+            }
+            else {
+                res.send({res: "KO", translation: translation});
+                res.end();
+            }
+        });
+    }
+    else{
+        res.send({res: "OK", translation: translation});
+        res.end();
+
     }
 };

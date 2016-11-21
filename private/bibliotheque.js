@@ -4,7 +4,7 @@ var conn = db.connexion();
 
 
 
-exports.renderBibliotheque = function(req, res)
+exports.renderBibliotheque = function(req, res, translation, langue)
 {
     if (req.session.login) {
         conn.query('select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, \ ' +
@@ -17,11 +17,11 @@ exports.renderBibliotheque = function(req, res)
             'left join seen as s on m.m_id = s.m_id and s.u_id = ?\ ' +
             'order by m.rating desc ,t2.seeds desc ,t.seeds desc limit 0, 21', [req.session.id], function (err, rows, fields) {
             if (err) throw err;
-            res.render('bibliotheque', {data: rows, login: true, name: req.session.login});
+            res.render('bibliotheque', {data: rows, login: true, name: req.session.login, translation: translation, langue: langue});
         });
     }
     else
-        res.render('no_access');
+        res.render('no_access',{translation: translation, langue: langue});
 };
 
 exports.load_more = function(req, res) {
@@ -67,7 +67,7 @@ exports.find_movie_autocompletion = function(req, res){
     })
 };
 
-exports.find_movie = function(req, res){
+exports.find_movie = function(req, res, translation, langue){
     var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id ';
     sql += ' from movies as m';
     sql +=' where 1 = 1';
@@ -88,7 +88,7 @@ exports.find_movie = function(req, res){
     sql += ' limit 0, 21';
     conn.query(sql, function(err, rows, fields){
         if (err) throw err;
-        res.send({content: rows});
+        res.send({content: rows, translation: translation});
         res.end();
     })
 };

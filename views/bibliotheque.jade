@@ -7,7 +7,7 @@ block content
             .col-md-6
                 #custom-search-input
                     .input-group.col-md-12
-                        input.form-control.input-lg#search(type='text', placeholder='Find a movie')
+                        input.form-control.input-lg#search(type='text', placeholder='#{translation.search}')
                         span.input-group-btn
                             button.btn.btn-info.btn-lg(type='button')
                                 i.glyphicon.glyphicon-search
@@ -16,18 +16,18 @@ block content
                 .input-group(style="height:54px;")
                     span.input-group-addon.custom__addon.blue__addon
                         span.glyphicon.glyphicon-cog
-                        |   Sort by
+                        |   #{translation.tri}
                     select.form-control.custom__select(style="height:54px;")
-                        option(value='') --__ Nothing __--
-                        option(value='name') Name
-                        option(value='note') Note
-                        option(value='year') Year
+                        option(value='') --__ #{translation.rien} __--
+                        option(value='name') #{translation.nom}
+                        option(value='note') #{translation.note}
+                        option(value='year') #{translation.year}
         .row(style="margin-top:20px")
             .col-md-6
                 .input-group
                     span.input-group-addon.custom__addon.blue__addon
                         span.glyphicon.glyphicon-cog
-                        |   Choose year
+                        |   #{translation.choose_year}
                 .range.range-primary
                     output#rangePrimary.rangeLower 2000
                     input(type='range', id="lower_year" name='range', min='1900', max='2016', value='2000', search='year')
@@ -42,7 +42,7 @@ block content
                 .input-group
                     span.input-group-addon.custom__addon.blue__addon
                         span.glyphicon.glyphicon-cog
-                        |   Choose note
+                        |   #{translation.choose_note}
                 .range.range-primary
                     output#rangePrimary.rangeLower 5
                     input(type='range', id="lower_note" name='range', min='0', max='10', value='5', search='note')
@@ -74,4 +74,4 @@ block content
                                     button.film_1080p.bouton(movie="#{val.id}" style="margin:5px;") 1080p
               else
                 div.jumbotron
-                  h2 Oups we found nothing here
+                  h2 #{translation.nothing_here}

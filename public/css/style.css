@@ -254,3 +254,11 @@ input[type="file"]:hover{
     margin-left: 18%;
     padding-top: 2%;
 }
+
+input:focus {
+    outline:none;
+}
+
+input[type="checkbox"] {
+    width:auto;
+}

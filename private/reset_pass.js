@@ -17,8 +17,8 @@ exports.connect = function(req, res) {
             result = 'OK';
         }
         else
-            result = 'Your key is no longer valid. Enter you \'re informations and check you \'re mail again.';
-        res.send(result);
+            result = 'KO';
+        res.send({res: result, translation: translation});
         res.end();
     });
 }
@@ -35,8 +35,8 @@ exports.edit_infos = function(req, res){
             result = 'OK';
         }
         else
-            result = 'Your key is no longer valid. Enter you \'re informations and check you \'re mail again.';
-        res.send(result);
+            result = 'KO';
+        res.send({res: result, translation: translation});
         res.end();
     });
 }

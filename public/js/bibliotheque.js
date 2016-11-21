@@ -132,7 +132,7 @@ $(document).ready(function() {
             data: data
         })
             .done(function (res) {
-                $("#bibliotheque").html(return_bibliotheque(res.content) || '<div class="jumbotron" style="margin-top:20px;"><h2>Oups il n\'y a aucun résultat pour votre recherche.</h2></div>');
+                $("#bibliotheque").html(return_bibliotheque(res.content) || '<div class="jumbotron" style="margin-top:20px;"><h2>'+res.translation.no_result+'</h2></div>');
             })
     }
 

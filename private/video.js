@@ -1,3 +1,6 @@
+/**
+ * Created by dchristo on 10/28/16.
+ */
 
 var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
@@ -88,13 +91,12 @@ function clean_match(matches){
 var conn = db.connexion();
 
 var magnet = '';
-exports.renderVideo = function(req, res)
+exports.renderVideo = function(req, res, translation, langue)
 {
     var quality = which_quality(req.query.quality);
     if (req.session.login) {
         if (req.query.cle) {
             conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
-                console.log("le film est deja dans la db" + rows);
                 /*OpenSubtitles.search({
                  sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
                  hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
@@ -118,7 +120,7 @@ exports.renderVideo = function(req, res)
                 conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
                     if (err) throw err;
                 });
-                get_comment(req, res, rows);
+                get_comment(req, res, rows, translation, langue);
             });
         }
         else if (req.query.id) {
@@ -132,7 +134,7 @@ exports.renderVideo = function(req, res)
                 });
                 if (rows[0].trailer !== null) {
                     downloadTorrent(req, res);
-                    res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login});
+                    res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login, translation: translation, langue: langue});
                 }
                 else
                     res.render('video', {res: 'Video not found'});
@@ -140,30 +142,23 @@ exports.renderVideo = function(req, res)
         }
     }
     else
-        res.render('no_access');
+        res.render('no_access', {translation: translation, langue: langue});
 };
 
 exports.exist = function(req, res) {
-    /*if (!req.session.login) {
-     res.send({res: 'no acess'});
-     }*/
-
     var quality = which_quality(req.body.quality);
     conn.query('select t.path, m.trailer, t.cle from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?',[req.body.id], function (err, rows) {
         if (err) throw err;
         if (rows[0].cle) {
-            console.log("cle:" +rows[0].cle);
             res.send({cle: rows[0].cle, quality: req.body.quality});
             res.end();
         }
         else if (rows[0].trailer)
         {
-            console.log("trailer: " +rows[0].trailer);
             res.send({id: req.body.id, quality: req.body.quality});
             res.end();
         }
         else {
-            console.log(rows[0]);
             res.send({res: 'fail'});
             res.end();
         }
@@ -171,12 +166,10 @@ exports.exist = function(req, res) {
 };
 
 var downloadTorrent = function(req, res) {
-    console.log("downloading the torrent");
     var quality = which_quality(req.query.quality);
     conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.query.id], function (err, rows) {
         if (err) throw err;
         magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
-        console.log(quality, req.query.id);
         download(rows);
     });
     var download = function(rows) {
@@ -281,9 +274,9 @@ var get_comment = function (req, res, rows) {
     conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
         if (row[0].content)
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login});
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login, translation: translation, langue: langue});
         else
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login});
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue});
         });
 };
 
@@ -297,7 +290,6 @@ exports.save_comm = function (req, res){
             m_id : rows[0].id,
             content : req.body.content
         };
-        console.log(data);
 
         conn.query("INSERT INTO comm SET ?", data, function(err, rows){
             if (err) throw err;
