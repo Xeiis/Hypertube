@@ -17,6 +17,7 @@ conn.query('CREATE TABLE users(u_id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
                                u_fname VARCHAR(255) NOT NULL,\
                                u_lname VARCHAR(255) NOT NULL,\
                                u_pass VARCHAR(255) NOT NULL,\
+                               u_lang VARCHAR(2) NOT NULL,\
                                u_restore_key VARCHAR(255))' , function(err){
     if(err) throw err;
     console.log('users table created\n');
@@ -72,7 +73,7 @@ conn.query('CREATE TABLE comm(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                               u_id INT(11),\
                               m_id INT(11),\
                               content VARCHAR(255),\
-                              time TIMESTAMP DEFAULT CURRENT_,\
+                              time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,\
                               FOREIGN KEY (u_id) REFERENCES users(u_id) ON DELETE SET NULL ON UPDATE CASCADE,\
                               FOREIGN KEY (m_id) REFERENCES movies(m_id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
     if(err) throw err;

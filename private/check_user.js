@@ -9,7 +9,7 @@ var urlencode = require('urlencode');
 var shortid = require('shortid');
 var passwordHash = require('password-hash');
 
-exports.connect = function(req, res, translation, langue) {
+exports.connect = function(req, res, translation) {
     var  user_name = req.body.u_name;
     var user_mail = req.body.u_mail;
     var cle = shortid.generate();
@@ -39,14 +39,14 @@ exports.connect = function(req, res, translation, langue) {
     });
 };
 
-exports.get_user_data = function(req, res, translation, langue){
+exports.get_user_data = function(req, res, translation){
     conn.query('SELECT u_name, u_mail, u_fname, u_pic, u_lname from users where u_name = ?', [req.body.login ? req.body.login : req.session.login], function(err, rows){
         res.send({res: rows, translation: translation});
         res.end();
     });
 };
 
-exports.update_profile = function(req, res, translation, langue) {
+exports.update_profile = function(req, res, translation) {
     var modif = 0;
     var sql = 'UPDATE users SET u_restore_key = null';
     if (req.body.username) {
@@ -70,22 +70,46 @@ exports.update_profile = function(req, res, translation, langue) {
         modif++;
     }
     sql += ' WHERE u_name = ' + conn.escape(req.session.login);
-    conn.query(sql, function(err, rows){
-        if(err) throw err;
-        if(req.body.username)
-            req.session.login = req.body.username;
-        if (rows.affectedRows > 0 && modif != 0) {
-            res.send({res : "OK", nb : modif, translation: translation});
-            res.end();
-        }
-        else {
-            res.send({res : "KO", translation: translation});
-            res.end();
-        }
-    });
+    if (req.body.email)
+    {
+        conn.query("select 1 from users where u_name = ? ", [req.session.login], function(err, rows){
+            if (rows[0])
+               res.send({res: "KO", translation: translation});
+            else {
+                conn.query(sql, function(err, rows){
+                    if(err) throw err;
+                    if(req.body.username)
+                        req.session.login = req.body.username;
+                    if (rows.affectedRows > 0 && modif != 0) {
+                        res.send({res : "OK", nb : modif, translation: translation});
+                        res.end();
+                    }
+                    else {
+                        res.send({res : "KO", translation: translation});
+                        res.end();
+                    }
+                });
+            }
+        });
+    }
+    else {
+        conn.query(sql, function (err, rows) {
+            if (err) throw err;
+            if (req.body.username)
+                req.session.login = req.body.username;
+            if (rows.affectedRows > 0 && modif != 0) {
+                res.send({res: "OK", nb: modif, translation: translation});
+                res.end();
+            }
+            else {
+                res.send({res: "KO", translation: translation});
+                res.end();
+            }
+        });
+    }
 };
 
-exports.upload_picture = function(req, res, translation, lnague){
+exports.upload_picture = function(req, res, translation){
     if (typeof(req.file) == 'undefined') {
         res.send({res : "NO PICTURE", translation: translation});
         res.end();
@@ -111,7 +135,7 @@ exports.upload_picture = function(req, res, translation, lnague){
     }
 };
 
-exports.change_langue = function(req, res, translation, langue){
+exports.change_langue = function(req, res, translation){
     req.session.langue = req.body.lang;
     if(req.session.login) {
         conn.query("UPDATE users SET u_lang = ? where u_name = ?", [req.body.lang, req.session.login], function(err, rows){

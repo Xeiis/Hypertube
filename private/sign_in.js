@@ -36,20 +36,20 @@ exports.ft_connect = function(req, res) {
     var user_code = req.query.code;
 
     axios.post('https://api.intra.42.fr/oauth/token', {
-        grant_type: 'authorization_code',
-        client_id: 'ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53',
-        client_secret: 'e50a5d4c329067eb74be150be69de04136631af5f6a0b4d164a10db0d6886a58',
-        code: user_code,
-        redirect_uri: 'http://localhost:3000/sign_in_ft'
+        grant_type    : 'authorization_code',
+        client_id     : 'ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53',
+        client_secret : 'e50a5d4c329067eb74be150be69de04136631af5f6a0b4d164a10db0d6886a58',
+        code          : user_code,
+        redirect_uri  : 'http://localhost:3000/sign_in_ft'
     }).then(function (response) {
         axios.get('https://api.intra.42.fr/v2/me', {
             headers: {'Authorization': response.data.token_type + ' ' + response.data.access_token}
         }).then(function (user) {
             var user_data = {
-                u_name: user.data.login,
-                u_fname: user.data.first_name,
-                u_lname: user.data.last_name,
-                u_mail: user.data.email
+                u_name   : user.data.login,
+                u_fname  : user.data.first_name,
+                u_lname  : user.data.last_name,
+                u_mail   : user.data.email
             };
             conn.query("INSERT IGNORE INTO users SET ?", [user_data], function(err, rows){
                  if(err) throw err;
@@ -74,8 +74,8 @@ exports.fb_connect = function(req, res){
             if(err) throw err;
             req.session.user_id = rows[0].u_id;
             req.session.login = req.body.u_name;
+            res.send('OK');
+            res.end();
         });
-        res.send('OK');
-        res.end();
     });
 };

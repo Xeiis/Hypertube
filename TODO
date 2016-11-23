@@ -1,6 +1,6 @@
-                                                                                             TOTAL : --__ 15✓ | 5x  __--
+                                                                                             TOTAL : --__ 17✓ | 3x  __--
 
-Partie user :                                                                                         --__ 6✓ | 1x  __--
+Partie user :                                                                                              --__ 7✓  __--
 
     Inscription : en demandant au minimum                                                                    --__ ✓ __--
      une adresse email,
@@ -23,7 +23,7 @@ Partie user :                                                                   
      L’utilisateur doit pouvoir se déconnecter en un seul clic depuis n’importe quelle
      page du site.
 
-    Langue                                                                                                   --__ x __--
+    Langue                                                                                                   --__ ✓ __--
      L’utilisateur doit pouvoir sélectionner une langue préférée, qui sera par défaut
      l’anglais.
 
@@ -63,7 +63,7 @@ Partie bibliotèque                                                             
     La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ ✓ __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
-Partie Video                                                                                           --__ 2✓ | 4x __--
+Partie Video                                                                                           --__ 3✓ | 3x __--
 
     que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                         --__ ✓|x __--
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
@@ -72,7 +72,7 @@ Partie Video                                                                    
     laisser un commentaire                                                                                   --__ ✓ __--
     sur la vidéo, et afficher la liste des commentaires précédents.
 
-    Si un film n’est pas visionné pendant                                                                    --__ x __--
+    Si un film n’est pas visionné pendant                                                                    --__ ✓ __--
     un mois, il devra être supprimé.
 
     Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés               --__ x __--

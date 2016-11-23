@@ -214,12 +214,19 @@ var checkLoginState_fb = function () {
 };
 
 var getCurrentUserInfo = function () {
-    FB.api('/me', {fields: 'name, email'}, function (userInfo) {
+    // FB.api(
+    //
+    // );
+
+    FB.api('/me', {fields: 'name, email, picture'}, function (userInfo) {
+        console.log(userInfo);
         data = {
-            u_name: userInfo.name,
-            u_mail: userInfo.email,
-            u_fname: userInfo.name.split(" ")[0],
-            u_lname: userInfo.name.split(" ")[1]
+            u_name  : userInfo.name,
+            u_mail  : userInfo.email,
+            u_fname : userInfo.name.split(" ")[0],
+            u_lname : userInfo.name.split(" ")[1],
+            u_pic   : userInfo.picture.data.url
+
         };
         $.ajax({
             url: '/sign_in_fb',

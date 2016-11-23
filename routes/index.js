@@ -42,6 +42,10 @@ function get_langue(req, res, callback) {
 
 /* GET */
 
+router.get('/null', function(req, res){
+    get_langue(req, res, index.renderIndex);
+});
+
 router.get('/', function(req, res) {
     get_langue(req, res , index.renderIndex);
 });
@@ -60,6 +64,13 @@ router.get('/get_list_torrent', function(req, res) {
 
 router.get('/no_access', function(req, res) {
     no_access.renderNoaccess(req, res);
+});
+router.get('/sign_in_ft', function(req, res) {
+    sign_in.ft_connect(req, res);
+});
+
+router.get('/torrent', function(req, res) {
+    torrent.delete_old_movies(req, res);
 });
 
 /* POST */
@@ -136,17 +147,11 @@ router.post('/video_exist', function(req, res) {
     video.exist(req, res);
 });
 
-router.get('/sign_in_ft', function(req, res) {
-    sign_in.ft_connect(req, res);
-});
-
 router.post('/sign_in_fb', function(req, res) {
     sign_in.fb_connect(req, res);
 });
 
-router.get('/torrent', function(req, res) {
-    torrent.delete_old_movies(req, res);
-});
+
 
 /**
  * NOT USED

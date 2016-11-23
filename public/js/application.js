@@ -35,9 +35,9 @@ $(document).ready(function() {
             */
     });
 
-    var input = function(val, id, id_pass){
+    var input = function(val, id, id_pass, password){
         var type;
-        type = id_pass ? "type='password'" : "type='text'";
+        type = password ? "type='password'" : "type='text'";
         return '<div class="group"><input '+type+' required="" class="'+id+'" id="'+id_pass+'"> <span class="highlight"></span> <span class="bar"></span> <label class="'+id+' label">'+val+'</label></div>';
     };
 
@@ -57,19 +57,19 @@ $(document).ready(function() {
 
     var get_user_data = function(hide){
         $.ajax({
-            url    : '/get_user_data',
-            method : 'POST',
-            success: function (data) {
+            url        : '/get_user_data',
+            method     : 'POST',
+            success    : function (data) {
                 if (!data.res[0])
                     return ;
-                html = '<form id="upload_picture" method="post" action="upload_picture" style="padding:0px 15px 15px 15px">';
+                html  = '<form id="upload_picture" method="post" action="upload_picture" style="padding:0px 15px 15px 15px">';
                 html += '<div style="margin:0 auto;width:100px;height:175px;"><img id="profile_picture" src='+data.res[0].u_pic+' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;"><input type="file" name="singleInputFileName" style="position: relative;top: -100px;height: 100px;width: 100px;opacity: 0;"><input style="position: relative;top: -105px;width: auto;left: -12px;" type="submit" class="btn btn-default form_stack"  value="'+data.translation.picture+'")><input style="display:none;position: relative;top: -110px;width: auto;left: 20px;" type="submit" class="btn btn-default form_stack" id="reset" value="'+data.translation.annuler+'")></div></form>';
-                html += input(data.res[0].u_name, data.translation.login);
-                html += input(data.res[0].u_fname, data.translation.prenom);
-                html += input(data.res[0].u_lname, data.translation.nom_famille);
-                html += input(data.res[0].u_mail, data.translation.email);
-                html += input(data.translation.mdp, 'no', 'password');
-                html += input(data.translation.mdp_conf, 'no', 'passwordConfirmation');
+                html += input(data.res[0].u_name || data.translation.login, data.translation.login, 'userame', 0);
+                html += input(data.res[0].u_fname || data.translation.prenom, data.translation.prenom, 'firstname', 0);
+                html += input(data.res[0].u_lname || data.translation.nom_famille, data.translation.nom_famille, 'lastname', 0);
+                html += input(data.res[0].u_mail || data.translation.email, data.translation.email, 'email', 0);
+                html += input(data.translation.mdp, 'no', 'password', 1);
+                html += input(data.translation.mdp_conf, 'no', 'passwordConfirmation', 1);
                 html += "<input type='submit' class='btn btn-default form_stack'  id='update_profile' value='"+data.translation.modif+"')>";
                 if (hide == 1){}
                 else {
@@ -112,12 +112,12 @@ $(document).ready(function() {
                         var formdata = (window.FormData) ? new FormData($form[0]) : null;
                         var data = (formdata !== null) ? formdata : $form.serialize();
                         $.ajax({
-                            url: "/upload_picture",
-                            type: "POST",
-                            contentType: false,
-                            processData: false,
-                            dataType: 'json',
-                            data: data
+                            url          : "/upload_picture",
+                            type         : "POST",
+                            contentType  : false,
+                            processData  : false,
+                            dataType     : 'json',
+                            data         : data
                         })
                             .done(function(response) {
                                 if (response.res == "NO PICTURE")
@@ -156,18 +156,27 @@ $(document).ready(function() {
                     });
                 });
                 $("#update_profile").on('click', function(){
-
                     var data = {};
-                    if ($("input.username").val() != '')
-                        data.username = $("input.username").val();
-                    if ($("input.firstname").val() != '')
-                        data.firstname = $("input.firstname").val();
-                    if ($("input.lastname").val() != '')
-                        data.lastname = $("input.lastname").val();
-                    if ($("input.email").val() != '')
-                        data.email = $("input.email").val();
+                    var err = "";
+                    if ($("input#username").val() != '')
+                        data.username = $("input#username").val();
+                    if ($("input#firstname").val() != '')
+                        data.firstname = $("input#firstname").val();
+                    if ($("input#lastname").val() != '')
+                        data.lastname = $("input#lastname").val();
+                    if ($("input#email").val() != '')
+                        data.email = $("input#email").val();
                     if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val()) {
                         data.password = $("input#password").val();
+                    }
+                    // if (!password_regex.test(data.password)){
+                    //    err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+                    // }
+                    // if (!email_regex.test(data.email)) {
+                    //     err += "Please enter a valide email</br>";
+                    // }
+                    if(err != ""){
+                        $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(err).show('slow').delay(2000).hide('slow');
                     }
                     $.ajax({
                         url: '/update_profile',
@@ -176,7 +185,7 @@ $(document).ready(function() {
                         success: function (res) {
                             if (res.res == "OK") {
                                 $(".profile").hide('fast');
-                                $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(res.translation.update_profile_success+" "+res.nb+" "+data.translation.champ).show('slow').delay(2000).hide('slow');
+                                $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(res.translation.update_profile_success+" "+res.nb+" "+res.translation.champ).show('slow').delay(2000).hide('slow');
                             }
                             else {
                                 $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(res.translation.something_wrong).show('slow').delay(2000).hide('slow');

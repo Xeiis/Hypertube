@@ -21,16 +21,16 @@ exports.customstream = function (req, res) {
         return res.sendStatus(416);
     }
     var positions = range.replace(/bytes=/, "").split("-");
-    var start = parseInt(positions[0], 10);
-    var total = stats.size;
-    var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+    var start     = parseInt(positions[0], 10);
+    var total     = stats.size;
+    var end       = positions[1] ? parseInt(positions[1], 10) : total - 1;
     var chunksize = (end - start) + 1;
 
     res.writeHead(206, {
-        "Content-Range": "bytes " + start + "-" + end + "/" + total,
-        "Accept-Ranges": "bytes",
-        "Content-Length": chunksize,
-        "Content-Type": "video/mp4"
+        "Content-Range"  : "bytes " + start + "-" + end + "/" + total,
+        "Accept-Ranges"  : "bytes",
+        "Content-Length" : chunksize,
+        "Content-Type"   : "video/mp4"
     });
 
     var stream = fs.createReadStream(file, { start: start, end: end })
@@ -40,6 +40,7 @@ exports.customstream = function (req, res) {
             res.end(err);
         });
 };
+
 /*const OS = require('opensubtitles-api');
  const OpenSubtitles = new OS({
  useragent:'OSTestUserAgentTemp',
@@ -49,32 +50,31 @@ exports.customstream = function (req, res) {
  });
  */
 
-/*
- var buff = '';
- http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
- ress.on('data', function (data) {
- buff += data;
- });
- ress.on('end', function () {
- var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
- var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
- end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
- var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
- end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
- var stars = end;
- var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
- var matches = director.match(reg);
- director = clean_match(matches);
- console.log(director);
- matches = writers.match(reg);
- writers = clean_match(matches);
- console.log(writers);
- matches = stars.match(reg);
- stars = clean_match(matches);
- console.log(stars);
- });
- });
- */
+var get_movies_details = function(imdbcode) {
+
+    var buff = '';
+    http.get('http://www.imdb.com/title/' + imdbcode + '/', function (ress) {
+        ress.on('data', function (data) {
+            buff += data;
+        });
+        ress.on('end', function () {
+            var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
+            var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
+            end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
+            var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
+            end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
+            var stars = end;
+            var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
+            var matches = director.match(reg);
+            director = clean_match(matches);
+            matches = writers.match(reg);
+            writers = clean_match(matches);
+            matches = stars.match(reg);
+            stars = clean_match(matches);
+            return({director: director, writers : writers, stars : stars});
+        });
+    });
+};
 // A utiliser pour récupérer les infos imdb a intégré en dessous
 
 function clean_match(matches){
@@ -93,12 +93,13 @@ function clean_match(matches){
 var conn = db.connexion();
 
 var magnet = '';
-exports.renderVideo = function(req, res, translation, langue)
-{
+exports.renderVideo = function(req, res, translation, langue) {
+
     var quality = which_quality(req.query.quality);
     if (req.session.login) {
         if (req.query.cle) {
-            conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+                var m_details = get_movies_details(rows[0].imdb_code);
                 /*OpenSubtitles.search({
                  sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
                  hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
@@ -121,7 +122,6 @@ exports.renderVideo = function(req, res, translation, langue)
                 var today = new Date();
 
                 conn.query("UPDATE movies as m SET last_view = ? WHERE "+quality+" = (SELECT id FROM torrent where cle = ?)", [today, req.query.cle], function(err, row){
-                    console.log("test: " + row);
                     if (err) throw err;
                 });
                 get_comment(req, res, rows, translation, langue);
@@ -141,7 +141,7 @@ exports.renderVideo = function(req, res, translation, langue)
                     res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login, translation: translation, langue: langue});
                 }
                 else
-                    res.render('video', {res: 'Video not found'});
+                    res.render('video', {res: 'Video not found', translation: translation, langue: langue});
             });
         }
     }
@@ -272,15 +272,19 @@ exports.is_15pc = function(req, res){
 
 };
 
-var get_comment = function (req, res, rows) {
+var get_comment = function (req, res, rows, translation, langue) {
     var quality = which_quality(req.query.quality);
     var m_cle = req.query.cle;
     conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
-        if (row[0].content)
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login, translation: translation, langue: langue});
-        else
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue});
+        if (row[0].content) {
+            console.log(translation);
+            res.render('video', {
+                /*info: rows[0]*//*, subtitles: subtitles*//*, comm: row,*/ /*login: true, name: req.session.login, */
+                translation: translation/*, langue: langue*//*, details : m_details*/
+            });
+        }else
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, details : m_details});
         });
 };
 
@@ -306,7 +310,7 @@ exports.save_comm = function (req, res){
                     u_pic : u_pic
                 };
                 res.send(result);
-                res.end;
+                res.end();
             });
         });
     });
@@ -316,9 +320,7 @@ var remove_old_movies = function(req, res){
     conn.query("SELECT title FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
         var i = 0;
         while(rows[i]) {
-
             var filepath = 'public/movie/' + rows[i].title + "*";
-
             glob(filepath, function (er, files) {
                 if (files[0] && !er) {
                     fse.rmrf(files[0], function (err) {
@@ -333,4 +335,4 @@ var remove_old_movies = function(req, res){
     });
 };
 
-setTimeout(remove_old_movies, 2592000);
+setTimeout(remove_old_movies, 86400000);
