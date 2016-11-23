@@ -49,33 +49,32 @@ exports.customstream = function (req, res) {
  });
  */
 
-/*
- var buff = '';
- http.get('http://www.imdb.com/title/tt1703957/', function (ress) {
- ress.on('data', function (data) {
- buff += data;
- });
- ress.on('end', function () {
- var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
- var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
- end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
- var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
- end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
- var stars = end;
- var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
- var matches = director.match(reg);
- director = clean_match(matches);
- console.log(director);
- matches = writers.match(reg);
- writers = clean_match(matches);
- console.log(writers);
- matches = stars.match(reg);
- stars = clean_match(matches);
- console.log(stars);
- });
- });
- */
-// A utiliser pour récupérer les infos imdb a intégré en dessous
+var get_movies_details = function(imdbcode, req, res, rows, translation, langue) {
+
+    var buff = '';
+    http.get('http://www.imdb.com/title/' + imdbcode + '/', function (ress) {
+        ress.on('data', function (data) {
+            buff += data;
+        });
+        ress.on('end', function () {
+            var end = buff.substring(buff.search("<div class=\"credit_summary_item\">"), buff.search(">See full cast & crew</a>"));
+            var director = end.substring(end.search("<h4 class=\"inline\">Director:</h4>"), end.search("</div>"));
+            end = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"));
+            var writers = end.substring(end.search("<h4 class=\"inline\">Writers:</h4>"), end.search("</div>"));
+            end = end.substring(end.search("<h4 class=\"inline\">Stars:</h4>"));
+            var stars = end;
+            var reg = /<span class="itemprop" itemprop="name">(.*?)<\/span><\/a>/g;
+            var matches = director.match(reg);
+            director = clean_match(matches);
+            matches = writers.match(reg);
+            writers = clean_match(matches);
+            matches = stars.match(reg);
+            stars = clean_match(matches);
+            get_comment(req, res, rows, translation, langue, {director: director, writers : writers, stars : stars});
+        });
+    });
+};
+
 
 function clean_match(matches){
     var i = 0;
@@ -98,7 +97,8 @@ exports.renderVideo = function(req, res, translation, langue)
     var quality = which_quality(req.query.quality);
     if (req.session.login) {
         if (req.query.cle) {
-            conn.query('select m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+
                 /*OpenSubtitles.search({
                  sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
                  hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
@@ -121,15 +121,14 @@ exports.renderVideo = function(req, res, translation, langue)
                 var today = new Date();
 
                 conn.query("UPDATE movies as m SET last_view = ? WHERE "+quality+" = (SELECT id FROM torrent where cle = ?)", [today, req.query.cle], function(err, row){
-                    console.log("test: " + row);
                     if (err) throw err;
                 });
-                get_comment(req, res, rows, translation, langue);
+                get_movies_details(rows[0].imdb_code, req, res, rows, translation, langue);
             });
         }
         else if (req.query.id) {
             conn.query('select * from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
-                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, rows) {
+                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, req.query.id], function (err, rows) {
                     if (err) throw err;
                 });
                 var today = new Date();
@@ -272,15 +271,15 @@ exports.is_15pc = function(req, res){
 
 };
 
-var get_comment = function (req, res, rows) {
+var get_comment = function (req, res, rows, translation, langue, m_detail) {
     var quality = which_quality(req.query.quality);
     var m_cle = req.query.cle;
     conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
         if (row[0].content)
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login, translation: translation, langue: langue});
+            res.render('video', {translation: translation, bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login, langue: langue, detail: m_detail});
         else
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue});
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, detail: m_detail});
         });
 };
 
@@ -306,7 +305,7 @@ exports.save_comm = function (req, res){
                     u_pic : u_pic
                 };
                 res.send(result);
-                res.end;
+                res.end();
             });
         });
     });

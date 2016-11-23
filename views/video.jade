@@ -31,6 +31,9 @@ block content
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
         if path
           p #{langue_film} #{language}
+          p directeur : #{detail.director}
+          p writers   : #{detail.writers}
+          p stars     : #{detail.stars}
           div.jumbotron(style="padding:48px")
             p #{summary}
           video#ourvideo(controls='', autoplay='', width='1920', height='1080')
