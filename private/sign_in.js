@@ -58,9 +58,7 @@ exports.ft_connect = function(req, res) {
                     req.session.user_id = rows[0].u_id;
                     req.session.login = user.data.login;
                     res.redirect('http://localhost:3000/bibliotheque');
-
                 });
-
              });
             })
         });
@@ -70,7 +68,10 @@ exports.ft_connect = function(req, res) {
 exports.fb_connect = function(req, res){
     conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
         if(err) throw err;
-        conn.query("SELECT * FROM users WHERE u_name = ?"/* AND u_mail = ?"*/, [req.body.u_name/*, req.body.u_mail*/], function(err, rows){
+        sql = 'SELECT * FROM users WHERE u_name = '+ conn.escape(req.body.u_name);
+        if (req.body.u_mail)
+            sql += ' AND u_mail = ' + conn.escape(req.body.u_mail);
+        conn.query(sql, function(err, rows){
             if(err) throw err;
             req.session.user_id = rows[0].u_id;
             req.session.login = req.body.u_name;

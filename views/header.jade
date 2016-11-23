@@ -13,13 +13,29 @@ div(id="header" style="position:fixed; width:100%;z-index: 20;")
                         li(id="video" style="display:none")
                             a(href="/bibliotheque").
                                 <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true"></span>
-                div(class="login-bloc navbar-left")
+                if translation
+                    div(class="login-bloc navbar-left")
+                        form
+                            div(class="form-group navbar-form " id="sign_in_form" style="display: none;")
+                                input(type="text" class="form-control" id="login_in" placeholder="#{translation.login}" style="margin-right:15px")
+                                input(type="password" class="form-control" id="password_in" placeholder="#{translation.mdp}" style="margin-right:15px")
+                                button(class="btn btn-default" id="submit_connection" ) #{translation.connect}
+                else
+                    div(class="login-bloc navbar-left")
+                        form
+                            div(class="form-group navbar-form " id="sign_in_form" style="display: none;")
+                                input(type="text" class="form-control" id="login_in" placeholder="login" style="margin-right:15px")
+                                input(type="password" class="form-control" id="password_in" placeholder="password" style="margin-right:15px")
+                                button(class="btn btn-default" id="submit_connection" ) Connection
+                if translation && login
+                    button(type="button" class="btn btn-default navbar-btn navbar-left" style='margin-right:15px;display:none' id="sign_in") #{translation.in}
+                    button(type="butoon" class="btn btn-default navbar-btn navbar-left" id="sign_up_toggle" style="display:none") #{translation.up}
                     form
-                        div(class="form-group navbar-form " id="sign_in_form" style="display: none;")
-                            input(type="text" class="form-control" id="login_in" placeholder="#{translation.login}" style="margin-right:15px")
-                            input(type="password" class="form-control" id="password_in" placeholder="#{translation.mdp}" style="margin-right:15px")
-                            button(class="btn btn-default" id="submit_connection" ) #{translation.connect}
-                if !login
+                        div(id="42_sign_in" style="display:none;")
+                            a(href="https://api.intra.42.fr/oauth/authorize?client_id=ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fsign_in_ft&response_type=code" class="navbar-left navbar-btn" style="margin-top:3px;")
+                                img(src="/images/42_logo.png" width="43" height="43" style='margin-left:15px')
+                    div(id="fbtn" class="fb-login-button" data-max-rows="1" data-size="large" onlogin="checkLoginState();" style='margin-left:20px;margin-top:9px;display:none;')
+                else if translation && !login
                     button(type="button" class="btn btn-default navbar-btn navbar-left" style='margin-right:15px' id="sign_in") #{translation.in}
                     button(type="button" class="btn btn-default navbar-btn navbar-left" id="sign_up_toggle") #{translation.up}
                     form
@@ -28,16 +44,19 @@ div(id="header" style="position:fixed; width:100%;z-index: 20;")
                                 img(src="/images/42_logo.png" width="43" height="43" style='margin-left:15px')
                     div(id="fbtn" class="fb-login-button" data-max-rows="1" data-size="large" onlogin="checkLoginState_fb();" style='margin-left:20px;margin-top:9px;')
                 else
-                    button(type="button" class="btn btn-default navbar-btn navbar-left" style='margin-right:15px;display:none' id="sign_in") #{translation.in}
-                    button(type="butoon" class="btn btn-default navbar-btn navbar-left" id="sign_up_toggle" style="display:none") #{translation.up}
-                    form
-                        div(id="42_sign_in" style="display:none;")
-                            a(href="https://api.intra.42.fr/oauth/authorize?client_id=ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fsign_in_ft&response_type=code" class="navbar-left navbar-btn" style="margin-top:3px;")
-                                img(src="/images/42_logo.png" width="43" height="43" style='margin-left:15px')
-                    div(id="fbtn" class="fb-login-button" data-max-rows="1" data-size="large" onlogin="checkLoginState();" style='margin-left:20px;margin-top:9px;display:none;')
-
-                li(class="navbar-left" id="pass-reset" style="display: none;")
-                    a#forgot_pass #{translation.forgot_pass}
+                    button(type="button" class="btn btn-default navbar-btn navbar-left" style='margin-right:15px;display:none' id="sign_in") Sign in
+                        button(type="butoon" class="btn btn-default navbar-btn navbar-left" id="sign_up_toggle" style="display:none") Sign up
+                        form
+                            div(id="42_sign_in" style="display:none;")
+                                a(href="https://api.intra.42.fr/oauth/authorize?client_id=ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fsign_in_ft&response_type=code" class="navbar-left navbar-btn" style="margin-top:3px;")
+                                    img(src="/images/42_logo.png" width="43" height="43" style='margin-left:15px')
+                        div(id="fbtn" class="fb-login-button" data-max-rows="1" data-size="large" onlogin="checkLoginState();" style='margin-left:20px;margin-top:9px;display:none;')
+                if translation
+                    li(class="navbar-left" id="pass-reset" style="display: none;")
+                        a#forgot_pass #{translation.forgot_pass}
+                else
+                    li(class="navbar-left" id="pass-reset" style="display: none;")
+                        a#forgot_pass Forgot password ?
                 div(class="alert alert-danger form-group navbar-left" role="alert" id="connection_erreur" style="display:none;margin-right:15px;margin-bottom:0px")
                 ul(class="nav navbar-nav navbar-right")
                     li
