@@ -45,11 +45,13 @@ exports.ft_connect = function(req, res) {
         axios.get('https://api.intra.42.fr/v2/me', {
             headers: {'Authorization': response.data.token_type + ' ' + response.data.access_token}
         }).then(function (user) {
+            console.log(user);
             var user_data = {
                 u_name: user.data.login,
                 u_fname: user.data.first_name,
                 u_lname: user.data.last_name,
-                u_mail: user.data.email
+                u_mail: user.data.email,
+                u_pic : user.data.image_url
             };
             conn.query("INSERT IGNORE INTO users SET ?", [user_data], function(err, rows){
                  if(err) throw err;
