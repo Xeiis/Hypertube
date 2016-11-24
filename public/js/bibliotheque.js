@@ -132,7 +132,10 @@ $(document).ready(function() {
             data: data
         })
             .done(function (res) {
-                $("#bibliotheque").html(return_bibliotheque(res.content) || '<div class="jumbotron" style="margin-top:20px;"><h2>'+res.translation.no_result+'</h2></div>');
+                if (res.content[0])
+                    $("#bibliotheque").html(return_bibliotheque(res.content));
+                else
+                    $("#bibliotheque").html('<div class="jumbotron col-lg-12" style="margin-top:20px;"><h2>'+res.translation.no_result+'</h2></div>');
             })
     }
 
@@ -187,7 +190,9 @@ function return_bibliotheque(res){
         html += "<p style='text-align:center;font-weight:700;font-size:medium;overflow-y: auto;max-height: 20px;'>"+res[i].title+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].year+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].rating+"</p>";
-        html += "<img class='vignette' src="+res[i].medium_cover_image+" width='210' height='315'></img>";
+        html += "<img class='vignette' src="+res[i].medium_cover_image+" width='210' height='315'>";
+        if (res[i].vision)
+            html += '<div class="vision">'+res[i].vision+'</div>';
         html += "<div class='button' style='text-align:center'>";
         if (res[i].torrent_3D_id)
             html += "<button class='film_3D bouton' movie='"+res[i].id+"' style='margin:5px;'>3D</button>";

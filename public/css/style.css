@@ -81,20 +81,212 @@
     background: #166cf9;
 }
 
-.vision{
+.profile{
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 180px;
+    background-color: white;
+    right: 0;
+    border-radius: 10px;
+    border: 1px solid #E4E4E4;"
+}
+
+.vision {
     position: absolute;
     padding: 0;
-    top: 129px;
-    left: 38px;
-    font-size: 48px;
+    top: 33%;
+    left: 20%;
+    font-size: 1em;
     font-weight: 700;
     color: #ffffff;
-    height: 315px;
-    width: 210px;
+    height: 40%;
+    width: 60%;
     background-color: #2f2f2f;
     opacity: 0.5;
-    line-height: 315px;
+    line-height: 50px;
     text-align: center;
+}
+
+@media (min-width: 320px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 31px;
+        font-size: 25px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 150px;
+        width: 99px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 150px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 360px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 30px;
+        font-size: 30px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 180px;
+        width: 120px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 190px;
+        text-align: center;
+    }
+}
+@media (min-width: 412px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 31px;
+        font-size: 36px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 220px;
+        width: 146px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 220px;
+        text-align: center;
+    }
+    .profile{
+        position: absolute;
+        width: 320px;
+        height: auto;
+        top: 50px;
+        background-color: white;
+        right: 60px;
+        border-radius: 10px;
+        border: 1px solid #E4E4E4;"
+    }
+}
+
+@media (min-width: 500px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 32px;
+        font-size: 36px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 312px;
+        width: 209px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 220px;
+        text-align: center;
+    }
+    .profile{
+        position: absolute;
+        width: 320px;
+        height: auto;
+        top: 50px;
+        background-color: white;
+        right: 60px;
+        border-radius: 10px;
+        border: 1px solid #E4E4E4;"
+    }
+}
+
+@media (min-width: 600px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 47px;
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 315px;
+        width: 210px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 315px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 768px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 83px;
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 315px;
+        width: 210px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 315px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 996px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 57px;
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 315px;
+        width: 210px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 315px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 1200px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 41px;
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 315px;
+        width: 210px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 315px;
+        text-align: center;
+    }
+}
+
+@media (min-width: 2000px) {
+    .vision {
+        position: absolute;
+        padding: 0;
+        top: 105px;
+        left: 139px;
+        font-size: 48px;
+        font-weight: 700;
+        color: #ffffff;
+        height: 315px;
+        width: 210px;
+        background-color: #2f2f2f;
+        opacity: 0.5;
+        line-height: 315px;
+        text-align: center;
+    }
 }
 
 .arrow{
@@ -187,17 +379,6 @@ a:hover{
 
 .container{
     padding-top: 100px;
-}
-
-.profile{
-    position: absolute;
-    width: 320px;
-    height: auto;
-    top: 50px;
-    background-color: white;
-    right: 60px;
-    border-radius: 10px;
-    border: 1px solid #E4E4E4;"
 }
 
 .comm{

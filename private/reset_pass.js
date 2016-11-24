@@ -21,7 +21,7 @@ exports.connect = function(req, res) {
         res.send({res: result, translation: translation});
         res.end();
     });
-}
+};
 
 exports.edit_infos = function(req, res){
     var cur_user = session.login;
