@@ -260,7 +260,7 @@ function clean_match(matches){
 }
 
 var remove_old_movies = function(req, res){
-    conn.query("SELECT title FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
+    conn.query("SELECT title,  torrent_720_id, torrent_1080_id, torrent_3D_id FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
         var i = 0;
         while(rows[i]) {
             var filepath = 'public/movie/' + rows[i].title + "*";
@@ -273,9 +273,14 @@ var remove_old_movies = function(req, res){
                     });
                 }
             });
+            conn.query("UPDATE torrent SET path= null, cle = null WHERE id = ? OR id = ? OR id = ?", rows[i].torrent_3D_id, rows[i].torrent_1080_id, rows[i].torrent_720_id, function (er, row) {
+                if (err) throw err;
+
+            });
             i++;
         }
     });
+
 };
 
 setTimeout(remove_old_movies, 86400000);

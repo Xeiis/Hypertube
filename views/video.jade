@@ -7,7 +7,7 @@ block script
   script(src='/js/video2.js')
 block content
   div.container
-    divv(class="row")
+    div(class="row")
       div(style="width:auto;height:auto;margin: 0 auto;")
         div(class="animation")
           .sk-circle
@@ -28,7 +28,7 @@ block content
             h3 #{translation.Description_trailer}
             div#voir_la_video
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
-        else
+        else if info && info.path
           p #{langue_film} #{info.language}
           p #{translation.directeur} : #{details.director}
           p #{translation.ecrivain} : #{details.writers}
@@ -42,9 +42,10 @@ block content
             p.vjs-no-js
               | To view this video please enable JavaScript, and consider upgrading to a web browser that
               a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
+
         div(class="comms")
-            if comm
                 div.comm-container
+                 if comm
                     each val in comm
                         div.comm
                             div(class="profil-views" style="display:none;")
@@ -54,11 +55,12 @@ block content
                                     div.p-lname
                                     div.p-email
                             p.comm-name #{val.u_name}
-                            p#comm-time #{val.time}
-                            p#comm-content #{val.content}
+                            p.comm-time #{val.time}
+                            p.comm-content #{val.content}
             div.form-group(style="width: 26%;margin: auto;")
                 form
                     div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")
+
 
                     .group
                         input(type='text', required='' id="com-content" style="width: 140%;")

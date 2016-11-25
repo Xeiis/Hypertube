@@ -379,6 +379,7 @@ a:hover{
 
 .container{
     padding-top: 100px;
+    background-color : bisque;
 }
 
 .comm{
@@ -442,4 +443,8 @@ input:focus {
 
 input[type="checkbox"] {
     width:auto;
+}
+
+body{
+    background-color: bisque;
 }
