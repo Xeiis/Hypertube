@@ -8,6 +8,7 @@ $(document).ready(function(){
     console.log(position);
     if (position == -1) {
         $(".comms").hide();
+        $(".test").hide();
     }
         $('#send-com').on('click', function (event) {
             var u_name_start_index = window.location.search.indexOf("=") + 1;
