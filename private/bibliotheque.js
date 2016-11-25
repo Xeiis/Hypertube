@@ -23,7 +23,7 @@ exports.renderBibliotheque = function(req, res, translation, langue)
 
 exports.load_more = function(req, res) {
 
-    var sql = 'select m.title, m.year, m.rating, m.medium_cover_image, m.id, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, ';
+    var sql = 'select distinct m.title, m.year, m.rating, m.medium_cover_image, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, ';
     sql += ' CASE WHEN s.u_id is not null';
     sql +=' THEN \'Visionné\'';
     sql +=' END as vision';
@@ -49,6 +49,7 @@ exports.load_more = function(req, res) {
     else
         sql +=' order by m.rating desc ,t2.seeds desc ,t.seeds desc';
     sql += ' limit '+req.body.result+', 21';
+    console.log(sql);
     conn.query(sql, function(err, rows, fields) {
         if (err) throw err;
         res.send(rows);

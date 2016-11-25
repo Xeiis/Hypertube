@@ -15,12 +15,3 @@ $( document ).ready(function() {
     });
 });
 
-function reload_video(path) {
-    var vid = document.getElementById("ourvideo");
-    var time = vid.currentTime;
-    vid.setAttribute('src', '/movie/'+path+'/essai.mp4');
-    vid.load();
-    vid.play();
-    vid.currentTime = time;
-}
-

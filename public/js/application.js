@@ -4,7 +4,6 @@ $(document).ready(function() {
     var input_save_save = '';
     var save_save = '';
     var save_img;
-    // $("#header").before("<div id='mavideo'> <video loop autoplay> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
     $("#sign_in").on('click', function () {
         $('#sign_in_form').show('slow');
         $('#sign_up_form').hide('fast');
@@ -26,13 +25,6 @@ $(document).ready(function() {
             get_user_data();
         else
             $(".profile").hide('fast');
-        // afficher les infos de la personne dans une petite box
-        /*
-        if ($("#sidebar-wrapper").css('display') == 'block')
-            $("#sidebar-wrapper").hide('fast');
-        else
-            $("#sidebar-wrapper").show('slow');
-            */
     });
 
     var input = function(val, id, id_pass, password){
@@ -104,7 +96,6 @@ $(document).ready(function() {
                 });
                 $(function () {
                     $('#upload_picture').on('submit', function (e) {
-
                         // On empêche le navigateur de soumettre le formulaire
                         e.preventDefault();
 
@@ -138,15 +129,12 @@ $(document).ready(function() {
                         var files = $(this)[0].files;
 
                         if (files.length > 0) {
-                            // On part du principe qu'il n'y qu'un seul fichier
-                            // étant donné que l'on a pas renseigné l'attribut "multiple"
                             var file = files[0];
                             // Ici on injecte les informations recoltées sur le fichier pour l'utilisateur
                             save_img = $("#profile_picture").attr('src');
                             $("#profile_picture").attr('src', window.URL.createObjectURL(file));
                         }
                     });
-
                     // Bouton "Annuler" pour vider le champ d'upload
                     $('#reset').on('click', function (e) {
                         e.preventDefault();
@@ -169,12 +157,12 @@ $(document).ready(function() {
                     if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val()) {
                         data.password = $("input#password").val();
                     }
-                    // if (!password_regex.test(data.password)){
-                    //    err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-                    // }
-                    // if (!email_regex.test(data.email)) {
-                    //     err += "Please enter a valide email</br>";
-                    // }
+                    if (!password_regex.test(data.password)){
+                       err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+                    }
+                    if (!email_regex.test(data.email)) {
+                        err += "Please enter a valide email</br>";
+                    }
                     if(err != ""){
                         $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(err).show('slow').delay(2000).hide('slow');
                     }

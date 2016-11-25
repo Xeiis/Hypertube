@@ -2,21 +2,21 @@
  * Created by aliandie on 10/27/16.
  */
 $(document).ready(function() {
-    $("#header").before("<div id='mavideo'> <video loop autoplay muted> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
+    $("#header").before("<div id='mavideo'><video loop autoplay muted> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
     $('#sign_up').on('click', (function(event){
         event.preventDefault();
         var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
         var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
         var err            = "";
-        // if (!password_regex.test($('#pass'))){
-        //    err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-        // }
-        // if (!($('#pass').val() === $('#cpass').val())) {
-        //     err += "Password must match</br>";
-        // }
-        // if (!email_regex.test(email)) {
-        //     err += "Please enter a valide email</br>";
-        // }
+        if (!password_regex.test($('#pass'))){
+           err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+        }
+        if (!($('#pass').val() === $('#cpass').val())) {
+            err += "Password must match</br>";
+        }
+        if (!email_regex.test(email)) {
+            err += "Please enter a valide email</br>";
+        }
         if (err != ""){
             $("#signup_erreur").addClass('alert-danger').html(err).show().delay(2000).hide('slow');
         }
@@ -113,14 +113,13 @@ $(document).ready(function() {
             var u_name_end_index   = window.location.search.indexOf("&");
             var u_name             = window.location.search.slice(u_name_start_index, u_name_end_index);
             var u_cle              = window.location.search.split("=")[2];
-
-            // var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
-            // if (!password_regex.test($('#reset_pass'))){
-            //     err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-            // }
-            // if ($('#reset_pass').val() !== $('#reset_cpass').val()) {
-            //     err += "Password must match</br>";
-            // }
+            var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
+            if (!password_regex.test($('#reset_pass'))){
+                 err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+            }
+            if ($('#reset_pass').val() !== $('#reset_cpass').val()) {
+                err += "Password must match</br>";
+            }
             if (err !== "")
                 $("#signup_erreur").addClass('alert-danger').html(err).show('slow');
             else {
@@ -214,10 +213,6 @@ var checkLoginState_fb = function () {
 };
 
 var getCurrentUserInfo = function () {
-    // FB.api(
-    //
-    // );
-
     FB.api('/me', {fields: 'name, email, picture'}, function (userInfo) {
         console.log(userInfo);
         data = {
@@ -233,7 +228,19 @@ var getCurrentUserInfo = function () {
             method: 'POST',
             data: data,
             success: function (html) {
-
+                if(html == "OK")
+                {
+                    $("#sign_in").hide('fast');
+                    $("#sign_up_toggle").hide('fast');
+                    $("#login_value").show('slow');
+                    $("#logout").show('slow');
+                    $("#name").text(userInfo.name);
+                    $("#name").show('slow');
+                    $("#42_sign_in").hide('fast');
+                    $("#fbtn").hide('fast');
+                    $("#video").show('slow');
+                    $(".login-bloc").hide('fast');
+                }
             }
         });
     })

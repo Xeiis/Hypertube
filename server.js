@@ -6,7 +6,6 @@
 var debug = require('debug')('hypertube:server');
 var http = require('http');
 var ent = require('ent');
-var rss = require('./private/socket.js');
 
 var express = require('express');
 var path = require('path');

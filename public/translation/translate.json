@@ -46,7 +46,10 @@
         "forgot_pass" : "Mot de passe oublié ?",
         "reset_pass" : "Modifié mot de passe",
         "nothing_here" : "Oups nous n'avons rien trouver ici",
-        "key_used" : "Votre clé n'es plus valide. Entrer vos informations et regarder vos mails a nouveaux"
+        "key_used" : "Votre clé n'es plus valide. Entrer vos informations et regarder vos mails a nouveaux",
+        "directeur" : "Directeur",
+        "ecrivain" : "Écrivains",
+        "acteur" : "Acteur"
       },
       "EN" : {
         "title": "Welcome to Hypertube",
@@ -94,7 +97,10 @@
         "forgot_pass" : "Forgot Password ?",
         "reset_pass" : "Reset password",
         "nothing_here" : "Oups we found nothing here",
-        "key_used" : "Your key is no longer valid. Enter you're informations and check you're mail again."
+        "key_used" : "Your key is no longer valid. Enter you're informations and check you're mail again.",
+        "directeur" : "Director",
+        "ecrivain" : "Writers",
+        "acteur" : "Actors"
       }
     }
 }
