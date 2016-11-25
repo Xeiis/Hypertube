@@ -69,10 +69,10 @@ exports.update_profile = function(req, res, translation) {
         sql += ', u_pass = ' + conn.escape(passwordHash.generate(req.body.password));
         modif++;
     }
-    sql += ' WHERE u_name = ' + conn.escape(req.session.login);
+    sql += ' WHERE u_id = ' + conn.escape(req.session.user_id);
     if (req.body.email)
     {
-        conn.query("select 1 from users where u_name = ? ", [req.session.login], function(err, rows){
+        conn.query("select 1 from users where u_id = ? ", [req.session.user_id], function(err, rows){
             if (rows[0])
                res.send({res: "KO", translation: translation});
             else {
@@ -117,7 +117,7 @@ exports.upload_picture = function(req, res, translation){
     else {
         var url = req.file.path.substring(req.file.path.indexOf('/') + 1);
         if (req.file.originalname && (req.file.originalname.substr(-3) == 'png' || req.file.originalname.substr(-3) == 'jpg' || req.file.originalname.substr(-4) == 'jpeg' || req.file.originalname.substr(-3) == 'JPG' || req.file.originalname.substr(-4) == 'JPEG')) {
-            conn.query('UPDATE users SET u_pic = ? WHERE u_name = ?', [url, req.session.login], function (err, rows) {
+            conn.query('UPDATE users SET u_pic = ? WHERE u_id = ?', [url, req.session.user_id], function (err, rows) {
                 if (rows.affectedRows > 0) {
                     res.send({res : "OK", translation: translation});
                     res.end();
@@ -138,7 +138,7 @@ exports.upload_picture = function(req, res, translation){
 exports.change_langue = function(req, res, translation){
     req.session.langue = req.body.lang;
     if(req.session.login) {
-        conn.query("UPDATE users SET u_lang = ? where u_name = ?", [req.body.lang, req.session.login], function(err, rows){
+        conn.query("UPDATE users SET u_lang = ? where u_id = ?", [req.body.lang, req.session.user_id], function(err, rows){
             if (rows.affectedRows > 0) {
                 res.send({res: "OK", translation: translation});
                 res.end();

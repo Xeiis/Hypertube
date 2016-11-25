@@ -2,7 +2,7 @@
  * Created by aliandie on 10/27/16.
  */
 
-exports.logout = function(req, res,translation, langue)
+exports.logout = function(req, res,translation)
 {
     if (req.session.login)
     {

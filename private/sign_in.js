@@ -7,7 +7,7 @@ var passwordHash = require('password-hash');
 var conn = db.connexion();
 var axios = require('axios');
 
-exports.connect = function(req, res, translation, langue) {
+exports.connect = function(req, res, translation) {
     user_name = req.body.u_name;
     conn.query("SELECT * FROM users WHERE u_name= ?", [user_name], function(err, rows){
         var result;
@@ -58,9 +58,7 @@ exports.ft_connect = function(req, res) {
                     req.session.user_id = rows[0].u_id;
                     req.session.login = user.data.login;
                     res.redirect('http://localhost:3000/bibliotheque');
-
                 });
-
              });
             })
         });
