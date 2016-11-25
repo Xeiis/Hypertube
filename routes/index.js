@@ -123,7 +123,7 @@ router.post('/edit_info', function(req, res) {
 });
 
 router.post('/load_more_bibliotheque', function(req, res) {
-    bibliotheque.load_more(req, res);
+    get_langue(req, res, bibliotheque.load_more);
 });
 
 router.post('/find_movie_autocompletion', function(req, res) {

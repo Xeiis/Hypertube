@@ -49,7 +49,9 @@
         "key_used" : "Votre clé n'es plus valide. Entrer vos informations et regarder vos mails a nouveaux",
         "directeur" : "Directeur",
         "ecrivain" : "Écrivains",
-        "acteur" : "Acteur"
+        "acteur" : "Acteur",
+        "vision" : "Visionné",
+        "email_used" : "Cette email est déjà utilisé"
       },
       "EN" : {
         "title": "Welcome to Hypertube",
@@ -100,7 +102,9 @@
         "key_used" : "Your key is no longer valid. Enter you're informations and check you're mail again.",
         "directeur" : "Director",
         "ecrivain" : "Writers",
-        "acteur" : "Actors"
+        "acteur" : "Actors",
+        "vision" : "Seen",
+        "email_used" : "This mail is already used"
       }
     }
 }

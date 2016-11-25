@@ -83,13 +83,14 @@
 
 .profile{
     position: absolute;
-    width: 100%;
-    height: auto;
-    top: 180px;
+    width: 80%;
+    height: 400px;
+    top: 50px;
     background-color: white;
-    right: 0;
+    right: 33px;
     border-radius: 10px;
-    border: 1px solid #E4E4E4;"
+    border: 1px solid #E4E4E4;
+    overflow-y: auto;
 }
 
 .vision {
@@ -162,12 +163,13 @@
     .profile{
         position: absolute;
         width: 320px;
-        height: auto;
+        height: 500px;
         top: 50px;
         background-color: white;
         right: 60px;
         border-radius: 10px;
-        border: 1px solid #E4E4E4;"
+        border: 1px solid #E4E4E4;
+        overflow-y: auto;
     }
 }
 

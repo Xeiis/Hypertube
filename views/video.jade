@@ -7,7 +7,7 @@ block script
   script(src='/js/video2.js')
 block content
   div.container
-    divv(class="row")
+    div(class="row")
       div(style="width:auto;height:auto;margin: 0 auto;")
         div(class="animation")
           .sk-circle
@@ -28,7 +28,7 @@ block content
             h3 #{translation.Description_trailer}
             div#voir_la_video
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
-        else
+        else if info && info.path
           p #{langue_film} #{info.language}
           p #{translation.directeur} : #{details.director}
           p #{translation.ecrivain} : #{details.writers}
@@ -48,7 +48,7 @@ block content
                     each val in comm
                         div.comm
                             div(class="profil-views" style="display:none;")
-                                img(class="p-pic" src='/img/profile.jpg' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
+                                img(class="p-pic" src='/img/profile.jpg' onerror='change_image()' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
                                 div.infos
                                     div.p-fname
                                     div.p-lname

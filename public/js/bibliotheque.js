@@ -37,7 +37,7 @@ $(document).scroll(function() {
                 .done(function (res) {
                     if (res) {
                         var bibliotheque = $("#bibliotheque").html();
-                        bibliotheque += return_bibliotheque(res);
+                        bibliotheque += return_bibliotheque(res.content, res.translation);
                         $("#bibliotheque").html(bibliotheque);
                         finish = 0;
                     }
@@ -74,7 +74,7 @@ $(document).ready(function() {
                             html = "";
                             while (res.content[i]) {
                                 html += '<div class="result_autocompletion">';
-                                html += '<div class="img_autocompletion"><img src=' + res.content[i].medium_cover_image + ' width="105" height="162"></div>';
+                                html += '<div class="img_autocompletion"><img src=' + res.content[i].medium_cover_image + ' onerror="on_error_image(this)" width="105" height="162"></div>';
                                 html += '<div class="text_result_autocompletion"><h2>' + res.content[i].title + '</h2>';
                                 html += '<h4>' + res.content[i].year + '</h4></div>';
                                 html += "</div>";
@@ -89,7 +89,7 @@ $(document).ready(function() {
                             });
                         });
                 }
-            }, 200);
+            }, 100);
         }
     })
         .keydown(function (event) {
@@ -132,9 +132,9 @@ $(document).ready(function() {
             data: data
         })
             .done(function (res) {
-                if (res.content[0])
-                    $("#bibliotheque").html(return_bibliotheque(res.content));
-                else
+                if (res.content[0]) {
+                    $("#bibliotheque").html(return_bibliotheque(res.content, res.translation));
+                }else
                     $("#bibliotheque").html('<div class="jumbotron col-lg-12" style="margin-top:20px;"><h2>'+res.translation.no_result+'</h2></div>');
             })
     }
@@ -182,7 +182,7 @@ $(document).ready(function() {
     });
 });
 
-function return_bibliotheque(res){
+function return_bibliotheque(res, translation){
     var i = 0;
     var html = '';
     while(res[i]) {
@@ -190,9 +190,9 @@ function return_bibliotheque(res){
         html += "<p style='text-align:center;font-weight:700;font-size:medium;overflow-y: auto;max-height: 20px;'>"+res[i].title+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].year+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].rating+"</p>";
-        html += "<img class='vignette' src="+res[i].medium_cover_image+" width='210' height='315'>";
+        html += "<img class='vignette' src="+res[i].medium_cover_image+" onerror='on_error_image(this)' width='210' height='315'>";
         if (res[i].vision)
-            html += '<div class="vision">'+res[i].vision+'</div>';
+            html += '<div class="vision">'+translation.vision+'</div>';
         html += "<div class='button' style='text-align:center'>";
         if (res[i].torrent_3D_id)
             html += "<button class='film_3D bouton' movie='"+res[i].id+"' style='margin:5px;'>3D</button>";
@@ -214,6 +214,10 @@ function video_exist(id, quality, callback) {
         .done(function (res) {
             callback(res);
         });
+}
+
+function on_error_image(zis){
+    zis.src = '/img/clap_cinema.png';
 }
 
 function go_to_video(res) {

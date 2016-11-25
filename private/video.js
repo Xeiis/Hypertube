@@ -27,7 +27,7 @@ exports.renderVideo = function(req, res, translation, langue) {
     var quality = which_quality(req.query.quality);
     if (req.session.login) {
         if (req.query.cle) {
-            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language, m.id from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language, m.m_id from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
                 /*
                 OpenSubtitles.search({
                     sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
@@ -46,9 +46,9 @@ exports.renderVideo = function(req, res, translation, langue) {
                     r
                 });
                 */
-                conn.query("INSERT IGNORE INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, row) {
+                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
-                    console.log(req.session.user_id, rows[0].id);
+                    console.log(req.session.user_id, rows[0].m_id);
                 });
                 var today = new Date();
 
@@ -59,8 +59,8 @@ exports.renderVideo = function(req, res, translation, langue) {
             });
         }
         else if (req.query.id) {
-            conn.query('select m.id from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
-                conn.query("INSERT IGNORE INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, row) {
+            conn.query('select m.m_id, m.trailer from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
+                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
                     console.log(req.session.user_id, rows[0].id);
                 });
