@@ -29,18 +29,19 @@ block content
             h3 #{translation.Description_trailer}
             div#voir_la_video
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
-        if path
-          p #{langue_film} #{language}
-          p directeur : #{detail.director}
-          p writers   : #{detail.writers}
-          p stars     : #{detail.stars}
+        else
+          p #{langue_film} #{info.language}
+
+          p directeur : #{details.director}
+          p writers   : #{details.writers}
+          p stars     : #{details.stars}
           div.jumbotron(style="padding:48px")
-            p #{summary}
+            p #{info.summary}
           video#ourvideo(controls='', autoplay='', width='1920', height='1080')
-            source(src='/movie/#{path}', type='video/mp4')
+            source(src='/movie/#{info.path}', type='video/mp4')
           // pour utiliser videojs utiliser le code ci dessous
-        //video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{bk}', data-setup='{"autoplay": false}')
-                    source(src='/movie/#{path}', type='video/mp4')
+        //video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{info.background_image_original}', data-setup='{"autoplay": false}')
+                    source(src='/movie/#{info.path}', type='video/mp4')
                     // subtitle caption :
                      track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
                     p.vjs-no-js

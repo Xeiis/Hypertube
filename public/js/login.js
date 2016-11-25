@@ -214,21 +214,26 @@ var checkLoginState_fb = function () {
 };
 
 var getCurrentUserInfo = function () {
+    // FB.api(
+    //
+    // );
+
     FB.api('/me', {fields: 'name, email, picture'}, function (userInfo) {
+        console.log(userInfo);
         data = {
-            u_name: userInfo.name,
-            u_mail: userInfo.email,
-            u_fname: userInfo.name.split(" ")[0],
-            u_lname: userInfo.name.split(" ")[1],
-            u_pic: userInfo.picture.data.url
+            u_name  : userInfo.name,
+            u_mail  : userInfo.email,
+            u_fname : userInfo.name.split(" ")[0],
+            u_lname : userInfo.name.split(" ")[1],
+            u_pic   : userInfo.picture.data.url
+
         };
         $.ajax({
             url: '/sign_in_fb',
             method: 'POST',
             data: data,
             success: function (html) {
-                if(html == 'OK')
-                    window.location.href = 'http://localhost:3000/bibliotheque';
+
             }
         });
     })

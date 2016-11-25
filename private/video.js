@@ -21,16 +21,16 @@ exports.customstream = function (req, res) {
         return res.sendStatus(416);
     }
     var positions = range.replace(/bytes=/, "").split("-");
-    var start = parseInt(positions[0], 10);
-    var total = stats.size;
-    var end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+    var start     = parseInt(positions[0], 10);
+    var total     = stats.size;
+    var end       = positions[1] ? parseInt(positions[1], 10) : total - 1;
     var chunksize = (end - start) + 1;
 
     res.writeHead(206, {
-        "Content-Range": "bytes " + start + "-" + end + "/" + total,
-        "Accept-Ranges": "bytes",
-        "Content-Length": chunksize,
-        "Content-Type": "video/mp4"
+        "Content-Range"  : "bytes " + start + "-" + end + "/" + total,
+        "Accept-Ranges"  : "bytes",
+        "Content-Length" : chunksize,
+        "Content-Type"   : "video/mp4"
     });
 
     var stream = fs.createReadStream(file, { start: start, end: end })
@@ -40,6 +40,7 @@ exports.customstream = function (req, res) {
             res.end(err);
         });
 };
+
 /*const OS = require('opensubtitles-api');
  const OpenSubtitles = new OS({
  useragent:'OSTestUserAgentTemp',
@@ -49,7 +50,7 @@ exports.customstream = function (req, res) {
  });
  */
 
-var get_movies_details = function(imdbcode, req, res, rows, translation, langue) {
+var get_movies_details = function(imdbcode) {
 
     var buff = '';
     http.get('http://www.imdb.com/title/' + imdbcode + '/', function (ress) {
@@ -70,11 +71,11 @@ var get_movies_details = function(imdbcode, req, res, rows, translation, langue)
             writers = clean_match(matches);
             matches = stars.match(reg);
             stars = clean_match(matches);
-            get_comment(req, res, rows, translation, langue, {director: director, writers : writers, stars : stars});
+            return({director: director, writers : writers, stars : stars});
         });
     });
 };
-
+// A utiliser pour récupérer les infos imdb a intégré en dessous
 
 function clean_match(matches){
     var i = 0;
@@ -92,13 +93,13 @@ function clean_match(matches){
 var conn = db.connexion();
 
 var magnet = '';
-exports.renderVideo = function(req, res, translation, langue)
-{
+exports.renderVideo = function(req, res, translation, langue) {
+
     var quality = which_quality(req.query.quality);
     if (req.session.login) {
         if (req.query.cle) {
             conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
-
+                var m_details = get_movies_details(rows[0].imdb_code);
                 /*OpenSubtitles.search({
                  sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
                  hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
@@ -123,12 +124,12 @@ exports.renderVideo = function(req, res, translation, langue)
                 conn.query("UPDATE movies as m SET last_view = ? WHERE "+quality+" = (SELECT id FROM torrent where cle = ?)", [today, req.query.cle], function(err, row){
                     if (err) throw err;
                 });
-                get_movies_details(rows[0].imdb_code, req, res, rows, translation, langue);
+                get_comment(req, res, rows, translation, langue);
             });
         }
         else if (req.query.id) {
             conn.query('select * from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
-                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, req.query.id], function (err, rows) {
+                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].id], function (err, rows) {
                     if (err) throw err;
                 });
                 var today = new Date();
@@ -140,7 +141,7 @@ exports.renderVideo = function(req, res, translation, langue)
                     res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login, translation: translation, langue: langue});
                 }
                 else
-                    res.render('video', {res: 'Video not found'});
+                    res.render('video', {res: 'Video not found', translation: translation, langue: langue});
             });
         }
     }
@@ -271,15 +272,19 @@ exports.is_15pc = function(req, res){
 
 };
 
-var get_comment = function (req, res, rows, translation, langue, m_detail) {
+var get_comment = function (req, res, rows, translation, langue) {
     var quality = which_quality(req.query.quality);
     var m_cle = req.query.cle;
     conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
-        if (row[0].content)
-            res.render('video', {translation: translation, bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, comm : row, login: true, name: req.session.login, langue: langue, detail: m_detail});
-        else
-            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, detail: m_detail});
+        if (row[0].content) {
+            console.log(translation);
+            res.render('video', {
+                /*info: rows[0]*//*, subtitles: subtitles*//*, comm: row,*/ /*login: true, name: req.session.login, */
+                translation: translation/*, langue: langue*//*, details : m_details*/
+            });
+        }else
+            res.render('video', {bk: rows[0].background_image_original, path: rows[0].path, summary: rows[0].summary, language: rows[0].language/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, details : m_details});
         });
 };
 
@@ -315,9 +320,7 @@ var remove_old_movies = function(req, res){
     conn.query("SELECT title FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
         var i = 0;
         while(rows[i]) {
-
             var filepath = 'public/movie/' + rows[i].title + "*";
-
             glob(filepath, function (er, files) {
                 if (files[0] && !er) {
                     fse.rmrf(files[0], function (err) {
@@ -332,4 +335,4 @@ var remove_old_movies = function(req, res){
     });
 };
 
-setTimeout(remove_old_movies, 2592000);
+setTimeout(remove_old_movies, 86400000);
