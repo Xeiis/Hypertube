@@ -1,0 +1,4 @@
+.DS_*
+.idea*
+node_module*
+tmp*
