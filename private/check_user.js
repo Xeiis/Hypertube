@@ -72,9 +72,11 @@ exports.update_profile = function(req, res, translation) {
     sql += ' WHERE u_id = ' + conn.escape(req.session.user_id);
     if (req.body.email)
     {
-        conn.query("select 1 from users where u_id = ? ", [req.session.user_id], function(err, rows){
-            if (rows[0])
-               res.send({res: "KO", translation: translation});
+        conn.query("select u_id from users where u_id = ? ", [req.session.user_id], function(err, rows){
+            if (!rows[0]) {
+                res.send({res: "KO1", translation: translation});
+                res.end();
+            }
             else {
                 conn.query(sql, function(err, rows){
                     if(err) throw err;
@@ -85,7 +87,7 @@ exports.update_profile = function(req, res, translation) {
                         res.end();
                     }
                     else {
-                        res.send({res : "KO", translation: translation});
+                        res.send({res : "KO2", translation: translation});
                         res.end();
                     }
                 });

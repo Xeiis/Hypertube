@@ -11,7 +11,7 @@ exports.renderBibliotheque = function(req, res, translation, langue)
             'from movies as m\ ' +
             'left join torrent as t on m.torrent_720_id = t.id\ ' +
             'left join torrent as t2 on m.torrent_1080_id = t2.id\ ' +
-            'left join seen as s on m.id = s.m_id and s.u_id = ?\ ' +
+            'left join seen as s on m.m_id = s.m_id and s.u_id = ?\ ' +
             'order by m.rating desc ,t2.seeds desc ,t.seeds desc limit 0, 21', [req.session.user_id], function (err, rows, fields) {
             if (err) throw err;
             res.render('bibliotheque', {data: rows, login: true, name: req.session.login, translation: translation, langue: langue});
@@ -21,7 +21,7 @@ exports.renderBibliotheque = function(req, res, translation, langue)
         res.render('no_access',{translation: translation, langue: langue});
 };
 
-exports.load_more = function(req, res) {
+exports.load_more = function(req, res, translation) {
 
     var sql = 'select distinct m.title, m.year, m.rating, m.medium_cover_image, m.id, m.torrent_720_id, m.torrent_1080_id, m.torrent_3D_id, ';
     sql += ' CASE WHEN s.u_id is not null';
@@ -30,7 +30,7 @@ exports.load_more = function(req, res) {
     sql +=' from movies as m';
     sql +=' left join torrent as t on m.torrent_720_id = t.id';
     sql +=' left join torrent as t2 on m.torrent_1080_id = t2.id';
-    sql +=' left join seen as s on m.id = s.m_id and s.u_id = ' + conn.escape(req.session.user_id);
+    sql +=' left join seen as s on m.m_id = s.m_id and s.u_id = ' + conn.escape(req.session.user_id);
     sql +=' where 1 = 1';
     if (req.body.search)
         sql += ' and m.title like ' + conn.escape('%'+req.body.search+'%');
@@ -49,10 +49,9 @@ exports.load_more = function(req, res) {
     else
         sql +=' order by m.rating desc ,t2.seeds desc ,t.seeds desc';
     sql += ' limit '+req.body.result+', 21';
-    console.log(sql);
     conn.query(sql, function(err, rows, fields) {
         if (err) throw err;
-        res.send(rows);
+        res.send({content: rows, translation: translation});
         res.end();
     });
 };
@@ -73,7 +72,7 @@ exports.find_movie = function(req, res, translation, langue){
     sql +=' from movies as m';
     sql +=' left join torrent as t on m.torrent_720_id = t.id';
     sql +=' left join torrent as t2 on m.torrent_1080_id = t2.id';
-    sql +=' left join seen as s on m.id = s.m_id and s.u_id = ' + conn.escape(req.session.user_id);
+    sql +=' left join seen as s on m.m_id = s.m_id and s.u_id = ' + conn.escape(req.session.user_id);
     sql +=' where 1 = 1';
     if (req.body.search)
         sql += ' and m.title like ' + conn.escape('%'+req.body.search+'%');

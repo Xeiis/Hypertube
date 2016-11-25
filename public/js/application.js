@@ -40,7 +40,7 @@ $(document).ready(function() {
             data: {lang: $(this).text()},
             success: function (data) {
                 if (data.res == "OK")
-                    window.location.href = "http://localhost:3000/";
+                    window.location.href = document.location.href;
                 else
                     $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(data.translation.something_wrong).show('slow').delay(2000).hide('slow');
             }
@@ -56,7 +56,7 @@ $(document).ready(function() {
                     return ;
                 html  = '<form id="upload_picture" method="post" action="upload_picture" style="padding:0px 15px 15px 15px">';
                 html += '<div style="margin:0 auto;width:100px;height:175px;"><img id="profile_picture" src='+data.res[0].u_pic+' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;"><input type="file" name="singleInputFileName" style="position: relative;top: -100px;height: 100px;width: 100px;opacity: 0;"><input style="position: relative;top: -105px;width: auto;left: -12px;" type="submit" class="btn btn-default form_stack"  value="'+data.translation.picture+'")><input style="display:none;position: relative;top: -110px;width: auto;left: 20px;" type="submit" class="btn btn-default form_stack" id="reset" value="'+data.translation.annuler+'")></div></form>';
-                html += input(data.res[0].u_name || data.translation.login, data.translation.login, 'userame', 0);
+                html += input(data.res[0].u_name || data.translation.login, data.translation.login, 'username', 0);
                 html += input(data.res[0].u_fname || data.translation.prenom, data.translation.prenom, 'firstname', 0);
                 html += input(data.res[0].u_lname || data.translation.nom_famille, data.translation.nom_famille, 'lastname', 0);
                 html += input(data.res[0].u_mail || data.translation.email, data.translation.email, 'email', 0);
@@ -118,7 +118,7 @@ $(document).ready(function() {
                                 else if (response.res == "KO")
                                     $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(response.translation.something_went_wrong).show('slow').delay(2000).hide('slow');
                                 else if (response.res == "OK")
-                                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(response.translation.update_profile_success).show('slow').delay(2000).hide('slow');
+                                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(response.translation.picture_success).show('slow').delay(2000).hide('slow');
                             });
                     });
                 });
@@ -157,29 +157,37 @@ $(document).ready(function() {
                     if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val()) {
                         data.password = $("input#password").val();
                     }
-                    if (!password_regex.test(data.password)){
-                       err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+                    var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
+                    var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
+                    if (data.password) {
+                        if (!password_regex.test(data.password)) {
+                            err += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+                        }
                     }
-                    if (!email_regex.test(data.email)) {
-                        err += "Please enter a valide email</br>";
+                    if (data.email) {
+                        if (!email_regex.test(data.email)) {
+                            err += "Please enter a valide email</br>";
+                        }
                     }
                     if(err != ""){
                         $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(err).show('slow').delay(2000).hide('slow');
                     }
-                    $.ajax({
-                        url: '/update_profile',
-                        method: 'POST',
-                        data: data,
-                        success: function (res) {
-                            if (res.res == "OK") {
-                                $(".profile").hide('fast');
-                                $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(res.translation.update_profile_success+" "+res.nb+" "+res.translation.champ).show('slow').delay(2000).hide('slow');
+                    else {
+                        $.ajax({
+                            url: '/update_profile',
+                            method: 'POST',
+                            data: data,
+                            success: function (res) {
+                                if (res.res == "OK") {
+                                    $(".profile").hide('fast');
+                                    $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(res.translation.update_profile_success + " " + res.nb + " " + res.translation.champ).show('slow').delay(2000).hide('slow');
+                                }
+                                else {
+                                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(res.translation.something_wrong).show('slow').delay(2000).hide('slow');
+                                }
                             }
-                            else {
-                                $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(res.translation.something_wrong).show('slow').delay(2000).hide('slow');
-                            }
-                        }
-                    });
+                        });
+                    }
                 });
             }
         });

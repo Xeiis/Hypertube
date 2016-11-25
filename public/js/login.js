@@ -8,13 +8,13 @@ $(document).ready(function() {
         var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
         var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
         var err            = "";
-        if (!password_regex.test($('#pass'))){
+        if (!password_regex.test($('#pass').val())){
            err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
         }
         if (!($('#pass').val() === $('#cpass').val())) {
             err += "Password must match</br>";
         }
-        if (!email_regex.test(email)) {
+        if (!email_regex.test($("#email").val())) {
             err += "Please enter a valide email</br>";
         }
         if (err != ""){
@@ -33,8 +33,12 @@ $(document).ready(function() {
                 method : 'POST',
                 data   : data,
                 success: function (html) {
-                    $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html.translation.sign_up_success).show().delay(2000).hide('slow');
-                    $("#sign_up_form").hide('fast');
+                    if(html.res == "OK") {
+                        $("#signup_erreur").removeClass('alert-danger').addClass('alert-success').html(html.translation.sign_up_success).show().delay(2000).hide('slow');
+                        $("#sign_up_form").hide('fast');
+                    }
+                    else
+                        $("#signup_erreur").removeClass('alert-success').addClass('alert-danger').html(html.translation.email_used).show().delay(2000).hide('slow');
                 }
             });
         }
