@@ -4,6 +4,7 @@
 **/
 var result = 0;
 var finish = 0;
+
 $(document).scroll(function() {
     var body = document.body;
     if (body.scrollTop + (window.innerHeight) >= (body.scrollHeight - (body.scrollHeight * 0.01)))
@@ -47,6 +48,7 @@ $(document).scroll(function() {
         }
     }
 });
+
 var enter = 0;
 $(document).ready(function() {
     $("body").on('click', function(){

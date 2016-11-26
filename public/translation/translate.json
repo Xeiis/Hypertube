@@ -3,7 +3,7 @@
       "FR" : {
         "title" : "Bienvenue sur Hypertube",
         "picture" : "Modifier Photo",
-        "login" : "Login",
+        "login" : "Pseudonyme",
         "prenom" : "Prénom",
         "nom_famille" : "Nom",
         "email" : "E-mail",
@@ -51,7 +51,7 @@
         "ecrivain" : "Écrivains",
         "acteur" : "Acteur",
         "vision" : "Visionné",
-        "email_used" : "Cette email est déjà utilisé"
+        "email_used" : "Cette email ou pseudonyme est déjà utilisé"
       },
       "EN" : {
         "title": "Welcome to Hypertube",
@@ -104,7 +104,7 @@
         "ecrivain" : "Writers",
         "acteur" : "Actors",
         "vision" : "Seen",
-        "email_used" : "This mail is already used"
+        "email_used" : "This mail or username is already used"
       }
     }
 }

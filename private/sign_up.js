@@ -10,7 +10,7 @@ exports.inscription = function(req, res, translation) {
     req.body.u_pass = passwordHash.generate(req.body.u_pass);
     req.body.u_pic = '/img/profile.jpg';
     var result = "";
-    conn.query("SELECT u_mail FROM users WHERE u_mail = ?", [req.body.u_mail], function(err, rows){
+    conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ?", [req.body.u_mail, req.body.u_name], function(err, rows){
         if(err) throw err;
         if (rows[0] != undefined)
         {
