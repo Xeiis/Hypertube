@@ -10,6 +10,7 @@ $(document).scroll(function() {
     if (body.scrollTop + (window.innerHeight) >= (body.scrollHeight - (body.scrollHeight * 0.01)))
     {
         if (finish == 0) {
+            finish = 1;
             result += 21;
             var data = {result: result};
             var checkbox = $("input[type='checkbox']");
@@ -29,7 +30,6 @@ $(document).scroll(function() {
                 data.order = 'year';
             else if ($(".custom__select").val() == 'name')
                 data.order = 'name';
-            finish = 1;
             $.ajax({
                 url: '/load_more_bibliotheque',
                 method: 'POST',
@@ -62,10 +62,10 @@ $(document).ready(function() {
         }
         else {
             delay(function () {
-                if (zis.val().length < 3) {
+                if (zis.val().length == 0) {
                     $("#autocompletion").hide("slow");
                 }
-                else if (zis.val().length >= 3) {
+                else {
                     $.ajax({
                         url: '/find_movie_autocompletion',
                         method: 'POST',
@@ -76,7 +76,7 @@ $(document).ready(function() {
                             html = "";
                             while (res.content[i]) {
                                 html += '<div class="result_autocompletion">';
-                                html += '<div class="img_autocompletion"><img src=' + res.content[i].medium_cover_image + ' onerror="on_error_image(this)" width="105" height="162"></div>';
+                                html += '<div class="img_autocompletion"><img src=' + res.content[i].medium_cover_image + ' width="105" height="162"></div>';
                                 html += '<div class="text_result_autocompletion"><h2>' + res.content[i].title + '</h2>';
                                 html += '<h4>' + res.content[i].year + '</h4></div>';
                                 html += "</div>";
@@ -91,7 +91,7 @@ $(document).ready(function() {
                             });
                         });
                 }
-            }, 100);
+            }, 300);
         }
     })
         .keydown(function (event) {
@@ -192,7 +192,7 @@ function return_bibliotheque(res, translation){
         html += "<p style='text-align:center;font-weight:700;font-size:medium;overflow-y: auto;max-height: 20px;'>"+res[i].title+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].year+"</p>";
         html += "<p style='text-align:center;font-weight:700'>"+res[i].rating+"</p>";
-        html += "<img class='vignette' src="+res[i].medium_cover_image+" onerror='on_error_image(this)' width='210' height='315'>";
+        html += "<img class='vignette' src="+res[i].medium_cover_image+" width='210' height='315'>";
         if (res[i].vision)
             html += '<div class="vision">'+translation.vision+'</div>';
         html += "<div class='button' style='text-align:center'>";
@@ -216,10 +216,6 @@ function video_exist(id, quality, callback) {
         .done(function (res) {
             callback(res);
         });
-}
-
-function on_error_image(zis){
-    zis.src = '/img/clap_cinema.png';
 }
 
 function go_to_video(res) {

@@ -1,6 +1,9 @@
 var db = require('./dbconn.js');
 var conn = db.connexion();
-
+var async = require('async');
+var https = require('https');
+var i = 0;
+var last;
 exports.renderBibliotheque = function(req, res, translation, langue)
 {
     if (req.session.login) {
@@ -14,7 +17,28 @@ exports.renderBibliotheque = function(req, res, translation, langue)
             'left join seen as s on m.m_id = s.m_id and s.u_id = ?\ ' +
             'order by m.rating desc ,t2.seeds desc ,t.seeds desc limit 0, 21', [req.session.user_id], function (err, rows, fields) {
             if (err) throw err;
-            res.render('bibliotheque', {data: rows, login: true, name: req.session.login, translation: translation, langue: langue});
+            async.each(rows,
+                function(row, callback){
+                    https.get(row.medium_cover_image, function(response) {
+                        response.on('data', function(){
+
+                        });
+                        response.on('end', function () {
+                            if (response.statusCode != 200)
+                                rows[rows.indexOf(row)].medium_cover_image = '/img/clap_cinema.png';
+                            callback(null);
+                        });
+                        response.on('error', function (err) {
+                            console.log(err);
+                        });
+                    });
+                },
+                function(err)
+                {
+                    if (err) throw err;
+                    res.render('bibliotheque', {data: rows,login: true, name: req.session.login,translation: translation,langue: langue});
+                }
+            );
         });
     }
     else
@@ -51,16 +75,58 @@ exports.load_more = function(req, res, translation) {
     sql += ' limit '+req.body.result+', 21';
     conn.query(sql, function(err, rows, fields) {
         if (err) throw err;
-        res.send({content: rows, translation: translation});
-        res.end();
+        async.each(rows,
+            function(row, callback){
+                https.get(row.medium_cover_image, function(response) {
+                    response.on('data', function(){
+
+                    });
+                    response.on('end', function () {
+                        if (response.statusCode != 200)
+                            rows[rows.indexOf(row)].medium_cover_image = '/img/clap_cinema.png';
+                        callback(null);
+                    });
+                    response.on('error', function (err) {
+                        console.log(err);
+                    });
+                });
+            },
+            function(err)
+            {
+                if (err) throw err;
+                res.send({content: rows, translation: translation});
+                res.end();
+            }
+        );
     });
 };
 
 exports.find_movie_autocompletion = function(req, res){
     conn.query('select m.title, m.year, m.medium_cover_image from movies as m where m.title like '+ conn.escape('%'+req.body.search+'%'), function(err, rows, fields){
       if (err) throw err;
-      res.send({content: rows});
-      res.end();
+        async.each(rows,
+            function(row, callback){
+                https.get(row.medium_cover_image, function(response) {
+                    response.on('data', function(){
+
+                    });
+                    response.on('end', function () {
+                        if (response.statusCode != 200)
+                            rows[rows.indexOf(row)].medium_cover_image = '/img/clap_cinema.png';
+                        callback(null);
+                    });
+                    response.on('error', function (err) {
+                        console.log(err);
+                    });
+                });
+            },
+            function(err)
+            {
+                if (err) throw err;
+                res.send({content: rows});
+                res.end();
+            }
+        );
     })
 };
 
@@ -89,9 +155,31 @@ exports.find_movie = function(req, res, translation, langue){
     else
         sql += ' order by m.title';
     sql += ' limit 0, 21';
+    console.log(sql);
     conn.query(sql, function(err, rows, fields){
         if (err) throw err;
-        res.send({content: rows, translation: translation});
-        res.end();
+        async.each(rows,
+            function(row, callback){
+                https.get(row.medium_cover_image, function(response) {
+                    response.on('data', function(){
+
+                    });
+                    response.on('end', function () {
+                        if (response.statusCode != 200)
+                            rows[rows.indexOf(row)].medium_cover_image = '/img/clap_cinema.png';
+                        callback(null);
+                    });
+                    response.on('error', function (err) {
+                        console.log(err);
+                    });
+                });
+
+            },
+            function(err) {
+                if (err) throw err;
+                res.send({content: rows, translation: translation});
+                res.end();
+            }
+        );
     })
 };

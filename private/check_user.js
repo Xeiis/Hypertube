@@ -49,70 +49,72 @@ exports.get_user_data = function(req, res, translation){
 exports.update_profile = function(req, res, translation) {
     conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ?", [req.body.email, req.body.username], function(err, rows) {
         if (err) throw err;
-        if (rows[0] != undefined) {
+        if (rows[0].u_mail) {
             res.send({res: "KO", translation: translation});
             res.end();
         }
-        var modif = 0;
-        var sql = 'UPDATE users SET u_restore_key = null';
-        if (req.body.username) {
-            sql += ', u_name = ' + conn.escape(req.body.username);
-            modif++;
-        }
-        if (req.body.firstname) {
-            sql += ', u_fname = ' + conn.escape(req.body.firstname);
-            modif++;
-        }
-        if (req.body.lastname) {
-            sql += ',u_lname = ' + conn.escape(req.body.lastname);
-            modif++;
-        }
-        if (req.body.email) {
-            sql += ', u_mail = ' + conn.escape(req.body.email);
-            modif++;
-        }
-        if (req.body.password) {
-            sql += ', u_pass = ' + conn.escape(passwordHash.generate(req.body.password));
-            modif++;
-        }
-        sql += ' WHERE u_id = ' + conn.escape(req.session.user_id);
-        if (req.body.email) {
-            conn.query("select u_id from users where u_id = ? ", [req.session.user_id], function (err, rows) {
-                if (!rows[0]) {
-                    res.send({res: "KO1", translation: translation});
-                    res.end();
-                }
-                else {
-                    conn.query(sql, function (err, rows) {
-                        if (err) throw err;
-                        if (req.body.username)
-                            req.session.login = req.body.username;
-                        if (rows.affectedRows > 0 && modif != 0) {
-                            res.send({res: "OK", nb: modif, translation: translation});
-                            res.end();
-                        }
-                        else {
-                            res.send({res: "KO2", translation: translation});
-                            res.end();
-                        }
-                    });
-                }
-            });
-        }
         else {
-            conn.query(sql, function (err, rows) {
-                if (err) throw err;
-                if (req.body.username)
-                    req.session.login = req.body.username;
-                if (rows.affectedRows > 0 && modif != 0) {
-                    res.send({res: "OK", nb: modif, translation: translation});
-                    res.end();
-                }
-                else {
-                    res.send({res: "KO", translation: translation});
-                    res.end();
-                }
-            });
+            var modif = 0;
+            var sql = 'UPDATE users SET u_restore_key = null';
+            if (req.body.username) {
+                sql += ', u_name = ' + conn.escape(req.body.username);
+                modif++;
+            }
+            if (req.body.firstname) {
+                sql += ', u_fname = ' + conn.escape(req.body.firstname);
+                modif++;
+            }
+            if (req.body.lastname) {
+                sql += ',u_lname = ' + conn.escape(req.body.lastname);
+                modif++;
+            }
+            if (req.body.email) {
+                sql += ', u_mail = ' + conn.escape(req.body.email);
+                modif++;
+            }
+            if (req.body.password) {
+                sql += ', u_pass = ' + conn.escape(passwordHash.generate(req.body.password));
+                modif++;
+            }
+            sql += ' WHERE u_id = ' + conn.escape(req.session.user_id);
+            if (req.body.email) {
+                conn.query("select u_id from users where u_id = ? ", [req.session.user_id], function (err, rows) {
+                    if (!rows[0]) {
+                        res.send({res: "KO1", translation: translation});
+                        res.end();
+                    }
+                    else {
+                        conn.query(sql, function (err, rows) {
+                            if (err) throw err;
+                            if (req.body.username)
+                                req.session.login = req.body.username;
+                            if (rows.affectedRows > 0 && modif != 0) {
+                                res.send({res: "OK", nb: modif, translation: translation});
+                                res.end();
+                            }
+                            else {
+                                res.send({res: "KO2", translation: translation});
+                                res.end();
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                conn.query(sql, function (err, rows) {
+                    if (err) throw err;
+                    if (req.body.username)
+                        req.session.login = req.body.username;
+                    if (rows.affectedRows > 0 && modif != 0) {
+                        res.send({res: "OK", nb: modif, translation: translation});
+                        res.end();
+                    }
+                    else {
+                        res.send({res: "KO", translation: translation});
+                        res.end();
+                    }
+                });
+            }
         }
     });
 };

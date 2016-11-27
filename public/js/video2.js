@@ -5,7 +5,6 @@
 $(document).ready(function(){
     $("#mavideo").css('visibility','hidden');
     var position = window.location.search.indexOf("cle");
-    console.log(position);
     if (position == -1) {
         $(".comms").hide();
         $(".test").hide();

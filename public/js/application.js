@@ -182,9 +182,10 @@ $(document).ready(function() {
                                     $(".profile").hide('fast');
                                     $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(res.translation.update_profile_success + " " + res.nb + " " + res.translation.champ).show('slow').delay(2000).hide('slow');
                                 }
-                                else {
+                                else if (res.res == "KO")
+                                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(res.translation.email_used).show('slow').delay(2000).hide('slow');
+                                else
                                     $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(res.translation.something_wrong).show('slow').delay(2000).hide('slow');
-                                }
                             }
                         });
                     }
