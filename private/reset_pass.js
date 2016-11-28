@@ -6,7 +6,8 @@ var db = require('./dbconn.js');
 var passwordHash = require('password-hash');
 var conn = db.connexion();
 
-exports.connect = function(req, res) {
+exports.connect = function(req, res, translation) {
+
     var  user_name = req.body.u_name;
     var  user_pass = passwordHash.generate(req.body.u_pass);
     var  user_cle  = req.body.u_cle;

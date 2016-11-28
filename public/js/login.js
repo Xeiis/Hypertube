@@ -55,6 +55,8 @@ $(document).ready(function() {
             method  : 'POST',
             data    : data,
             success : function (html) {
+                console.log(html.res);
+
                 if (html.res === "OK"){
                     $("#sign_in").hide('fast');
                     $("#sign_up_toggle").hide('fast');
@@ -69,8 +71,8 @@ $(document).ready(function() {
                     $(".login-bloc").hide('fast');
                     window.location.href = 'http://localhost:3000/bibliotheque';
                 }
-                else if (html.res === "Wrong password") {
-                    $('#pass-reset').show('slow');
+                else if (html.res === "Wrong password" || html.res === "Wrong details") {
+                    $("#pass-reset").show();
                     $("#signup_erreur").addClass('alert-danger').html(html.translation.password_error).show('slow').delay(2000).hide('slow');
                 }
                 else
@@ -81,7 +83,8 @@ $(document).ready(function() {
 
     $('#reset').on('click', (function(event){
         event.preventDefault();
-        if ($('#reset_uname').val() !== "" && $('#reset_umail').val() !== ""){
+        if ($('#reset_uname').val() !== "" && $('#reset_umail').val() !== "" && $('#reset_pass').val() === "" && $('#reset_cpass').val() === ""){
+            console.log("coucou");
             var data = {
                 u_name : $('#reset_uname').val(),
                 u_mail : $('#reset_umail').val()
@@ -120,7 +123,7 @@ $(document).ready(function() {
             var u_name             = window.location.search.slice(u_name_start_index, u_name_end_index);
             var u_cle              = window.location.search.split("=")[2];
             var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
-            if (!password_regex.test($('#reset_pass'))){
+            if (!password_regex.test($('#reset_pass').val())){
                  err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
             }
             if ($('#reset_pass').val() !== $('#reset_cpass').val()) {
@@ -139,6 +142,7 @@ $(document).ready(function() {
                     method: 'POST',
                     data: data,
                     success: function (html) {
+                        console.log(html.res);
                         if (html.res === "OK") {
                             $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(html.translation.password_update).show('slow').delay(2000).hide('slow');
                             $("#reset-pass-form").hide('fast');
