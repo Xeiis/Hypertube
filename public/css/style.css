@@ -58,6 +58,7 @@
     border-radius : 5px;
 }
 
+
 .big_vignette{
     background-color: #9cc9f9;
     padding:15px;
@@ -449,4 +450,8 @@ input[type="checkbox"] {
 
 body{
     background-color: bisque;
+}
+
+.videoplayer{
+    width: 100%;
 }

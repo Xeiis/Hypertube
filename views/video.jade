@@ -35,7 +35,7 @@ block content
           p #{translation.acteur} : #{details.stars}
           div.jumbotron(style="padding:48px")
             p #{info.summary}
-          video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width='1920', height='1080', poster='#{info.background_image_original}', data-setup='{"autoplay": false}')
+          video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(class="videoplayer" controls='', preload='auto', width='1920', height='1080', poster='#{info.background_image_original}', data-setup='{"autoplay": false}')
             source(src='/movie/#{info.path}', type='video/mp4')
             // subtitle caption :
              track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
@@ -60,11 +60,9 @@ block content
             div.form-group(style="width: 26%;margin: auto;")
                 form
                     div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")
-
-
                     .group.test
                         input(type='text', required='' id="com-content" style="width: 140%;")
                         span.highlight
                         span.bar(style="width: 140%;")
-                        label #{translation.comm}
+                        label.label #{translation.comm}
                         input(type="submit" id="send-com" value="#{translation.valider}" style="width: 140%;")

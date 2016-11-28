@@ -57,7 +57,7 @@ div(id="header" style="position:fixed; width:100%;z-index: 20;")
                                     img(src="/images/42_logo.png" width="43" height="43" style='margin-left:15px')
                         div(id="fbtn" class="fb-login-button" data-max-rows="1" data-size="large" onlogin="checkLoginState();" style='margin-left:20px;margin-top:9px;display:none;float:left;margin-right:20px')
                 if translation
-                    li(class="navbar-left" id="pass-reset" style="display: none;")
+                    li(class="navbar-left" id="pass-reset" style="list-style-type: none;margin-top: 12px; display:none;")
                         a#forgot_pass #{translation.forgot_pass}
                 else
                     li(class="navbar-left" id="pass-reset" style="display: none;")
