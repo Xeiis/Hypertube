@@ -126,7 +126,7 @@ exports.upload_picture = function(req, res, translation){
     }
     else {
         var url = req.file.path.substring(req.file.path.indexOf('/') + 1);
-        if (req.file.originalname && (req.file.originalname.substr(-3) == 'png' || req.file.originalname.substr(-3) == 'jpg' || req.file.originalname.substr(-4) == 'jpeg' || req.file.originalname.substr(-3) == 'JPG' || req.file.originalname.substr(-4) == 'JPEG')) {
+        if (req.file.originalname && (req.file.originalname.substr(-3) == 'png'|| req.file.originalname.substr(-3) == 'PNG' || req.file.originalname.substr(-3) == 'gif' || req.file.originalname.substr(-3) == 'jpg' || req.file.originalname.substr(-4) == 'jpeg' || req.file.originalname.substr(-3) == 'JPG' || req.file.originalname.substr(-4) == 'JPEG')) {
             conn.query('UPDATE users SET u_pic = ? WHERE u_id = ?', [url, req.session.user_id], function (err, rows) {
                 if (rows.affectedRows > 0) {
                     res.send({res : "OK", translation: translation});

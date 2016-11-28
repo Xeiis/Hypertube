@@ -154,24 +154,22 @@ $(document).ready(function() {
                         data.lastname = $("input#lastname").val();
                     if ($("input#email").val() != '')
                         data.email = $("input#email").val();
-                    if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val()) {
+                    if ($("input#password").val() != '' && $("input#password").val() == $("input#passwordConfirmation").val())
                         data.password = $("input#password").val();
-                    }
                     var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
                     var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
-                    if (data.password) {
-                        if (!password_regex.test(data.password)) {
+                    if (data.password)
+                        if (!password_regex.test(data.password))
                             err += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-                        }
-                    }
-                    if (data.email) {
-                        if (!email_regex.test(data.email)) {
+                    if (data.email)
+                        if (!email_regex.test(data.email))
                             err += "Please enter a valide email</br>";
-                        }
-                    }
-                    if(err != ""){
+                    if ($("input#password").val() != $("input#passwordConfirmation").val())
+                        err += "Password doesn't match";
+                    if (!data.username && !data.firstname && !data.lastname && !data.email && !data.password)
+                        err += "Please enter some information";
+                    if(err != "")
                         $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(err).show('slow').delay(2000).hide('slow');
-                    }
                     else {
                         $.ajax({
                             url: '/update_profile',
