@@ -49,7 +49,7 @@ exports.get_user_data = function(req, res, translation){
 exports.update_profile = function(req, res, translation) {
     conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ?", [req.body.email, req.body.username], function(err, rows) {
         if (err) throw err;
-        if (rows[0].u_mail) {
+        if (rows[0]) {
             res.send({res: "KO", translation: translation});
             res.end();
         }

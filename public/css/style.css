@@ -450,3 +450,11 @@ input[type="checkbox"] {
 body{
     background-color: bisque;
 }
+
+#signup_erreur{
+    display:none;
+    margin-bottom:0;
+    z-index:21;
+    position:fixed;
+    width:100%;
+}

@@ -2,8 +2,7 @@ var db = require('./dbconn.js');
 var conn = db.connexion();
 var async = require('async');
 var https = require('https');
-var i = 0;
-var last;
+
 exports.renderBibliotheque = function(req, res, translation, langue)
 {
     if (req.session.login) {

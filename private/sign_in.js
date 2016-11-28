@@ -55,9 +55,13 @@ exports.ft_connect = function(req, res) {
                  if(err) throw err;
                 conn.query("SELECT * FROM users WHERE u_name = ? AND u_mail = ?", [user.data.login, user.data.email], function(err, rows){
                     if(err) throw err;
-                    req.session.user_id = rows[0].u_id;
-                    req.session.login = user.data.login;
-                    res.redirect('http://localhost:3000/bibliotheque');
+                    if (rows[0]) {
+                        req.session.user_id = rows[0].u_id;
+                        req.session.login = user.data.login;
+                        res.redirect('http://localhost:3000/bibliotheque');
+                    }
+                    else
+                        res.redirect('http://localhost:3000/');
                 });
              });
             })
@@ -65,15 +69,24 @@ exports.ft_connect = function(req, res) {
     };
 
 
-exports.fb_connect = function(req, res){
+exports.fb_connect = function(req, res, translation){
     conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
         if(err) throw err;
-        conn.query("SELECT * FROM users WHERE u_name = ?"/* AND u_mail = ?"*/, [req.body.u_name/*, req.body.u_mail*/], function(err, rows){
+        var sql = 'SELECT * FROM users WHERE u_name = '+ conn.escape(req.body.u_name);
+        if (req.body.u_mail)
+            sql += ' AND u_mail = '+ conn.escape(req.body.u_mail);
+        conn.query(sql, function(err, rows){
             if(err) throw err;
-            req.session.user_id = rows[0].u_id;
-            req.session.login = req.body.u_name;
-            res.send('OK');
-            res.end();
+            if(rows[0]) {
+                req.session.user_id = rows[0].u_id;
+                req.session.login = req.body.u_name;
+                res.send('OK');
+                res.end();
+            }
+            else {
+                res.send({res: "KO", translation: translation});
+                res.end();
+            }
         });
     });
 };

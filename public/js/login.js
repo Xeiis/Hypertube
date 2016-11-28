@@ -2,22 +2,22 @@
  * Created by aliandie on 10/27/16.
  */
 $(document).ready(function() {
-    $("#header").before("<div id='mavideo'><video loop autoplay muted> <source type='video/mp4' src='/movie/home.mp4'></video></div>");
+    $("#header").before("<div id='mavideo'><video loop autoplay muted><source type='video/mp4' src='/movie/home.mp4'></video></div>");
     $('#sign_up').on('click', (function(event){
         event.preventDefault();
-        // var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
-        // var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
+        var password_regex = new RegExp(/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-z^A-Z^0-9]).{8,}$/);
+        var email_regex    = new RegExp(/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
         var err            = "";
-        // if (!password_regex.test($('#pass').val())){
-        //    err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
-        // }
-        // if (!($('#pass').val() === $('#cpass').val())) {
-        //     err += "Password must match</br>";
-        // }
-        // if (!email_regex.test($("#email").val())) {
-        //     err += "Please enter a valide email</br>";
-        // }
-        if (err != ""){
+        if (!password_regex.test($('#pass').val())){
+           err  += 'Password must contain at least 8 characters with a capital letter, a special character, a number</br>';
+        }
+        if (!($('#pass').val() === $('#cpass').val())) {
+            err += "Password must match</br>";
+        }
+        if (!email_regex.test($("#email").val())) {
+             err += "Please enter a valide email</br>";
+        }
+        if (err != "") {
             $("#signup_erreur").addClass('alert-danger').html(err).show().delay(2000).hide('slow');
         }
         else {
@@ -106,6 +106,7 @@ $(document).ready(function() {
 
     if (window.location.search.includes("log") && window.location.search.includes("cle"))
     {
+        $(".group").show('slow');
         $('#reset_pass').show('slow');
         $('#reset_cpass').show('slow');
         $('#reset-pass-form').show('slow');
@@ -163,13 +164,6 @@ $(document).ready(function() {
                         if (response.status == 'connected')
                             fbLogout();
                     });
-                    $("#sign_in").show('slow');
-                    $("#sign_up_toggle").show('slow');
-                    $("#login_value").hide('fast');
-                    $("#logout").hide('fast');
-                    $("#name").hide('fast');
-                    $("#42_sign_in").show('slow');
-                    $("#fbtn").show('slow');
                     $("#signup_erreur").addClass('alert-success').removeClass('alert-danger').html(html.translation.logout).show('slow').delay(2000).hide('slow');
                     window.location.href = 'http://localhost:3000/';
                 }
@@ -208,10 +202,8 @@ var checkLoginState_fb = function () {
             getCurrentUserInfo();
         } else {
             FB.login(function(response) {
-                if (response.authResponse){
+                if (response.authResponse)
                     getCurrentUserInfo();
-                } else {
-                }
             }, { scope: 'email, name' });
         }
     });
@@ -233,9 +225,11 @@ var getCurrentUserInfo = function () {
             method: 'POST',
             data: data,
             success: function (html) {
-                if(html == "OK")
-                {
+                if(html == "OK") {
                     window.location.href = 'http://localhost:3000/bibliotheque';
+                }
+                else {
+                    $("#signup_erreur").addClass('alert-danger').removeClass('alert-success').html(html.translation.something_wrong).show('slow').delay(2000).hide('slow');
                 }
             }
         });

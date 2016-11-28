@@ -146,7 +146,7 @@ router.post('/video_exist', function(req, res) {
 });
 
 router.post('/sign_in_fb', function(req, res) {
-    sign_in.fb_connect(req, res);
+    get_langue(req, res, sign_in.fb_connect);
 });
 
 

@@ -30,9 +30,9 @@ block content
                         |   #{translation.choose_year}
                 .range.range-primary
                     output#rangePrimary.rangeLower 2000
-                    input(type='range', id="lower_year" name='range', min='1900', max='2016', value='2000', search='year')
+                    input#lower_year(type='range', name='range', min='1900', max='2016', value='2000', search='year')
                 .range.range-primary
-                    input(type='range', id="higher_year" name='range', min='2000', max='2016', value='2000', search='year')
+                    input#higher_year(type='range', name='range', min='2000', max='2016', value='2000', search='year')
                     output#rangePrimary.rangeHigher 2000
                 .btn-group.checkbox_btn(data-toggle='buttons')
                     label.btn.btn-primary(style="width:100%")
@@ -45,9 +45,9 @@ block content
                         |   #{translation.choose_note}
                 .range.range-primary
                     output#rangePrimary.rangeLower 5
-                    input(type='range', id="lower_note" name='range', min='0', max='10', value='5', search='note')
+                    input#lower_note(type='range', name='range', min='0', max='10', value='5', search='note')
                 .range.range-primary
-                    input(type='range', id="higher_note" name='range', min='5', max='10', value='10', search='note')
+                    input#higher_note(type='range', name='range', min='5', max='10', value='10', search='note')
                     output#rangePrimary.rangeHigher 10
                 .btn-group.checkbox_btn(data-toggle='buttons')
                     label.btn.btn-primary(style="width:100%")
@@ -60,7 +60,7 @@ block content
                         div.big_vignette
                             p(style="text-align:center;font-weight:700;font-size:medium;overflow-y: auto;max-height: 20px;") #{val.title}
                             p(style="text-align:center;font-weight:700") #{val.year}
-                            p(style="text-align:center;font-weight:700") #{val.rating} / 10
+                            p(style="text-align:center;font-weight:700") #{val.rating}
                             img.vignette(src='#{val.medium_cover_image}', width='210', height='315')
                             if val.vision
                                 div.vision #{translation.vision}

@@ -7,7 +7,13 @@ var conn = db.connexion();
 var passwordHash = require('password-hash');
 
 exports.inscription = function(req, res, translation) {
-    req.body.u_pass = passwordHash.generate(req.body.u_pass);
+    if (req.body.u_pass) {
+        req.body.u_pass = passwordHash.generate(req.body.u_pass);
+    }
+    else {
+        res.send({res: "KO", translation: translation});
+        res.end();
+    }
     req.body.u_pic = '/img/profile.jpg';
     var result = "";
     conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ?", [req.body.u_mail, req.body.u_name], function(err, rows){
