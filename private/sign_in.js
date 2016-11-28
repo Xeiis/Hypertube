@@ -45,7 +45,6 @@ exports.ft_connect = function(req, res) {
         axios.get('https://api.intra.42.fr/v2/me', {
             headers: {'Authorization': response.data.token_type + ' ' + response.data.access_token}
         }).then(function (user) {
-            console.log(user);
             var user_data = {
                 u_name   : user.data.login,
                 u_fname  : user.data.first_name,
