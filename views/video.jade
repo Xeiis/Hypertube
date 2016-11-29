@@ -6,9 +6,9 @@ block script
     script(src='/js/video.js')
   script(src='/js/video2.js')
 block content
-  div.container
-    div(class="row")
-      div(style="width:auto;height:auto;margin: 0 auto;")
+  div.container(style="height:100%")
+    div(class="row" style="height:100%")
+      div(style="width:auto;height:100%;margin: 0 auto;")
         div(class="animation")
           .sk-circle
             .sk-circle1.sk-child
@@ -27,7 +27,7 @@ block content
           div.jumbotron(style="padding:48px;text-align:center;")
             h3 #{translation.Description_trailer}
             div#voir_la_video
-          iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="1920" height="1080")
+          iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
         else if info && info.path
           p #{langue_film} #{info.language}
           p #{translation.directeur} : #{details.director}
