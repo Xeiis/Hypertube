@@ -59,13 +59,13 @@ exports.renderVideo = function(req, res, translation, langue) {
             });
         }
         else if (req.query.id) {
-            conn.query('select m.m_id, m.trailer from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
+            conn.query('select m.m_id, m.trailer, m.id from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
                 conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
                     console.log(req.session.user_id, rows[0].id);
                 });
                 var today = new Date();
-                conn.query("UPDATE movies  SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
+                conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
                     if (err) throw err;
                 });
                 if (rows[0].trailer !== null) {
@@ -194,16 +194,15 @@ var get_comment = function (req, res, rows, translation, langue, m_details) {
 
 exports.save_comm = function (req, res){
     var quality = which_quality(req.body.quality);
-    conn.query("SELECT m.id from movies as m left join torrent as t on t.id = "+quality+" where t.cle = ?", [req.body.cle], function(err, rows){
+    conn.query("SELECT m.m_id from movies as m left join torrent as t on t.id = "+quality+" where t.cle = ?", [req.body.cle], function(err, rows){
         if (err) throw err;
 
         var data = {
             u_id : req.session.user_id,
-            m_id : rows[0].id,
+            m_id : rows[0].m_id,
             content : req.body.content
         };
         conn.query("SELECT u_pic from users where u_id = ?", [req.session.user_id], function(err, row){
-
             var u_pic = row[0].u_pic;
             conn.query("INSERT INTO comm SET ?", data, function(err, rows){
                 if (err) throw err;

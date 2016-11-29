@@ -63,7 +63,7 @@ conn.query('CREATE TABLE seen(id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
                                u_id INT(11),\
                                m_id INT(11),\
                                FOREIGN KEY (u_id) REFERENCES users(u_id) ON DELETE SET NULL ON UPDATE CASCADE,\
-                               FOREIGN KEY (m_id) REFERENCES movies(id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
+                               FOREIGN KEY (m_id) REFERENCES movies(m_id) ON DELETE SET NULL ON UPDATE CASCADE)', function(err){
     if(err) throw err;
     console.log('seen table created\n');
 });
