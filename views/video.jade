@@ -29,7 +29,7 @@ block content
             div#voir_la_video
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
         else if info && info.path
-          p #{langue_film} #{info.language}
+          p #{translation.langue_film} #{info.language}
           p #{translation.directeur} : #{details.director}
           p #{translation.ecrivain} : #{details.writers}
           p #{translation.acteur} : #{details.stars}

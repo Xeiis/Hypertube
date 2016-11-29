@@ -194,7 +194,7 @@ window.fbAsyncInit = function() {
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
-var fbLogout = function (){
+var fbLogout = function () {
     FB.logout(function(response) {
     });
 };

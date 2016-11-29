@@ -17,7 +17,6 @@ $(document).ready(function(){
 
             event.preventDefault();
             if ($('#com-content').val() !== "") {
-                console.log("coucou1");
                 $.ajax({
                     url: '/save_comm',
                     method: 'POST',
