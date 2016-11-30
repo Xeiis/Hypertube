@@ -11,7 +11,7 @@ exports.connect = function(req, res, translation) {
     var  user_name = req.body.u_name;
     var  user_pass = passwordHash.generate(req.body.u_pass);
     var  user_cle  = req.body.u_cle;
-    conn.query("UPDATE users SET u_pass = ?, u_restore_key = NULL WHERE u_name= ? AND u_restore_key = ?", [user_pass, user_name, user_cle], function(err, rows){
+    conn.query("UPDATE users SET u_pass = ?, u_restore_key = NULL WHERE u_name= ? AND u_restore_key = ? and u_from = 0", [user_pass, user_name, user_cle], function(err, rows){
         var result;
         if(err) throw err;
         if(rows.changedRows !== 0) {
@@ -29,7 +29,7 @@ exports.edit_infos = function(req, res){
 
     if (req.body.pass)
         req.body.pass = passwordHash.generate(req.body.u_pass);
-    conn.query("UPDATE users SET ? WHERE user_name = ?", [cur_user], function(err, rows) {
+    conn.query("UPDATE users SET ? WHERE user_name = ? and u_from = 0", [cur_user], function(err, rows) {
         var result;
         if(err) throw err;
         if(rows.changedRows !== 0) {

@@ -16,14 +16,13 @@ exports.inscription = function(req, res, translation) {
     }
     req.body.u_pic = '/img/profile.jpg';
     var result = "";
-    conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ?", [req.body.u_mail, req.body.u_name], function(err, rows){
+    conn.query("SELECT u_mail FROM users WHERE (u_mail = ? or u_name = ?) and u_from = 0", [req.body.u_mail, req.body.u_name], function(err, rows){
         if(err) throw err;
-        if (rows[0] != undefined)
-        {
+        if (rows[0] != undefined) {
             result = "This mail is already used";
         }
-        else
-        {
+        else {
+            req.body.u_from = 0;
             conn.query('INSERT INTO users SET ?', req.body, function(err){
                 if(err) throw err;
             });

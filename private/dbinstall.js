@@ -9,14 +9,15 @@ conn.query('DROP TABLE IF EXISTS users');
 
 
 conn.query('CREATE TABLE users(u_id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY,\
-                               u_name VARCHAR(255) UNIQUE NOT NULL,\
-                               u_mail VARCHAR(255) UNIQUE NOT NULL,\
+                               u_name VARCHAR(255) NOT NULL,\
+                               u_mail VARCHAR(255) NOT NULL,\
                                u_pic VARCHAR(255),\
                                u_fname VARCHAR(255) NOT NULL,\
                                u_lname VARCHAR(255) NOT NULL,\
                                u_pass VARCHAR(255) NOT NULL,\
                                u_lang VARCHAR(2) NOT NULL,\
-                               u_restore_key VARCHAR(255))' , function(err){
+                               u_restore_key VARCHAR(255)),\
+                               u_from INT(11)' , function(err){
     if(err) throw err;
     console.log('users table created\n');
 });

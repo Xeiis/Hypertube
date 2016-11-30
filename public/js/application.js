@@ -56,12 +56,15 @@ $(document).ready(function() {
                     return ;
                 html  = '<form id="upload_picture" method="post" action="upload_picture" style="padding:0px 15px 15px 15px">';
                 html += '<div style="margin:0 auto;width:100px;height:175px;"><img id="profile_picture" src='+data.res[0].u_pic+' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;"><input type="file" name="singleInputFileName" style="position: relative;top: -100px;height: 100px;width: 100px;opacity: 0;"><input style="position: relative;top: -105px;width: auto;left: -12px;" type="submit" class="btn btn-default form_stack"  value="'+data.translation.picture+'")><input style="display:none;position: relative;top: -110px;width: auto;left: 20px;" type="submit" class="btn btn-default form_stack" id="reset" value="'+data.translation.annuler+'")></div></form>';
-                html += input(data.res[0].u_name || data.translation.login, data.translation.login, 'username', 0);
+                if (data.from == 0)
+                    html += input(data.res[0].u_name || data.translation.login, data.translation.login, 'username', 0);
                 html += input(data.res[0].u_fname || data.translation.prenom, data.translation.prenom, 'firstname', 0);
                 html += input(data.res[0].u_lname || data.translation.nom_famille, data.translation.nom_famille, 'lastname', 0);
-                html += input(data.res[0].u_mail || data.translation.email, data.translation.email, 'email', 0);
-                html += input(data.translation.mdp, 'no', 'password', 1);
-                html += input(data.translation.mdp_conf, 'no', 'passwordConfirmation', 1);
+                if (data.from == 0) {
+                    html += input(data.res[0].u_mail || data.translation.email, data.translation.email, 'email', 0);
+                    html += input(data.translation.mdp, 'no', 'password', 1);
+                    html += input(data.translation.mdp_conf, 'no', 'passwordConfirmation', 1);
+                }
                 html += "<input type='submit' class='btn btn-default form_stack'  id='update_profile' value='"+data.translation.modif+"')>";
                 if (hide == 1){}
                 else {

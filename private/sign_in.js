@@ -9,7 +9,7 @@ var axios = require('axios');
 
 exports.connect = function(req, res, translation) {
     user_name = req.body.u_name;
-    conn.query("SELECT * FROM users WHERE u_name= ?", [user_name], function(err, rows){
+    conn.query("SELECT * FROM users WHERE u_name = ? and u_from = 0", [user_name], function(err, rows){
         var result;
         if(err) throw err;
         if(typeof rows[0] !== 'undefined') {
@@ -17,6 +17,7 @@ exports.connect = function(req, res, translation) {
                 if (passwordHash.verify(req.body.u_pass, rows[0].u_pass)) {
                     req.session.login = req.body.u_name;
                     req.session.user_id = rows[0].u_id;
+                    req.session.from = 0;
                     result = 'OK';
                 }
                 else
@@ -50,15 +51,18 @@ exports.ft_connect = function(req, res) {
                 u_fname  : user.data.first_name,
                 u_lname  : user.data.last_name,
                 u_mail   : user.data.email,
-                u_pic    : user.data.image_url
+                u_pic    : user.data.image_url,
+                u_from   : 1
             };
+            console.log(user_data);
             conn.query("INSERT IGNORE INTO users SET ?", [user_data], function(err, rows){
                  if(err) throw err;
-                conn.query("SELECT * FROM users WHERE u_name = ? AND u_mail = ?", [user.data.login, user.data.email], function(err, rows){
+                conn.query("SELECT * FROM users WHERE u_name = ? AND u_mail = ? and u_from = 1", [user.data.login, user.data.email], function(err, rows){
                     if(err) throw err;
                     if (rows[0]) {
                         req.session.user_id = rows[0].u_id;
                         req.session.login = user.data.login;
+                        req.session.from = 1;
                         res.redirect('http://localhost:3000/bibliotheque');
                     }
                     else
@@ -71,16 +75,19 @@ exports.ft_connect = function(req, res) {
 
 
 exports.fb_connect = function(req, res, translation){
+    req.body.u_from = 2;
     conn.query("INSERT IGNORE INTO users SET ?", [req.body], function(err, rows){
         if(err) throw err;
         var sql = 'SELECT * FROM users WHERE u_name = '+ conn.escape(req.body.u_name);
         if (req.body.u_mail)
             sql += ' AND u_mail = '+ conn.escape(req.body.u_mail);
+        sql += 'AND u_from = 2';
         conn.query(sql, function(err, rows){
             if(err) throw err;
             if(rows[0]) {
                 req.session.user_id = rows[0].u_id;
                 req.session.login = req.body.u_name;
+                req.session.from = 2;
                 res.send('OK');
                 res.end();
             }

@@ -13,7 +13,7 @@ exports.connect = function(req, res, translation) {
     var  user_name = req.body.u_name;
     var user_mail = req.body.u_mail;
     var cle = shortid.generate();
-    conn.query("UPDATE users SET u_restore_key = ? WHERE u_name = ? AND u_mail = ?", [cle, user_name, user_mail], function(err, rows){
+    conn.query("UPDATE users SET u_restore_key = ? WHERE u_name = ? AND u_mail = ? and u_from = 0", [cle, user_name, user_mail], function(err, rows){
         var result;
         var num = rows.affectedRows;
         if(err) throw err;
@@ -25,7 +25,7 @@ exports.connect = function(req, res, translation) {
                 subject: "Reset your hypertube password",
                 html: "<b>Hello! <b> To reset you're password, please follow this link : <a  href='http://localhost:3000/?log=" + urlencode(user_name)+ "&cle=" + urlencode(cle) +"'>Recuperation du mot de passe</a><br><br></b>"
             };
-            transporter.sendMail(mailOptions, function(error, info){
+            transporter.sendMail(mailOptions, function(error, info) {
                 if(error){
                     return console.log(error);
                 }
@@ -40,14 +40,14 @@ exports.connect = function(req, res, translation) {
 };
 
 exports.get_user_data = function(req, res, translation){
-    conn.query('SELECT u_name, u_mail, u_fname, u_pic, u_lname from users where u_name = ?', [req.body.login ? req.body.login : req.session.login], function(err, rows){
-        res.send({res: rows, translation: translation});
+    conn.query('SELECT u_name, u_mail, u_fname, u_pic, u_lname from users where u_name = ? and u_from = ?', [req.body.login ? req.body.login : req.session.login, req.session.from], function(err, rows){
+        res.send({res: rows, translation: translation, from: req.session.from});
         res.end();
     });
 };
 
 exports.update_profile = function(req, res, translation) {
-    conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ?", [req.body.email, req.body.username], function(err, rows) {
+    conn.query("SELECT u_mail FROM users WHERE u_mail = ? or u_name = ? and u_from = ?", [req.body.email, req.body.username, req.session.from], function(err, rows) {
         if (err) throw err;
         if (rows[0]) {
             res.send({res: "KO", translation: translation});
@@ -78,7 +78,7 @@ exports.update_profile = function(req, res, translation) {
             }
             sql += ' WHERE u_id = ' + conn.escape(req.session.user_id);
             if (req.body.email) {
-                conn.query("select u_id from users where u_id = ? ", [req.session.user_id], function (err, rows) {
+                conn.query("select u_id from users where u_id = ?", [req.session.user_id], function (err, rows) {
                     if (!rows[0]) {
                         res.send({res: "KO1", translation: translation});
                         res.end();

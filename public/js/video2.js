@@ -20,7 +20,7 @@ $(document).ready(function(){
                 $.ajax({
                     url: '/save_comm',
                     method: 'POST',
-                    data: {content: $('#com-content').val(), cle: cle, quality: u_quality},
+                    data: {content: no_injection($('#com-content').val()), cle: cle, quality: u_quality},
                     success: function (html) {
                         $('#com-content').val("");
                         var render = '<div class="comm">\
@@ -69,4 +69,12 @@ $(document).ready(function(){
             $('.profil-views').hide('slow');
         });
 });
+
+var no_injection = function(message) {
+    // Return a the same string with escaped "<script>" tags to avoid code injection
+    message = message.replace(/&/g, '&amp;');
+    message = message.replace(/</g, '&lt;');
+    message = message.replace(/>/g, '&gt;');
+    return (message);
+};
 
