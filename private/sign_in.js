@@ -35,7 +35,6 @@ exports.connect = function(req, res, translation) {
 
 exports.ft_connect = function(req, res) {
     var user_code = req.query.code;
-
     axios.post('https://api.intra.42.fr/oauth/token', {
         grant_type    : 'authorization_code',
         client_id     : 'ad3235caccb1f5d591b4136a695284080b9a7db99ba6f0e13da1b0bb7a592c53',
@@ -54,7 +53,6 @@ exports.ft_connect = function(req, res) {
                 u_pic    : user.data.image_url,
                 u_from   : 1
             };
-            console.log(user_data);
             conn.query("INSERT IGNORE INTO users SET ?", [user_data], function(err, rows){
                  if(err) throw err;
                 conn.query("SELECT * FROM users WHERE u_name = ? AND u_mail = ? and u_from = 1", [user.data.login, user.data.email], function(err, rows){
