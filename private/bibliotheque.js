@@ -154,7 +154,6 @@ exports.find_movie = function(req, res, translation, langue){
     else
         sql += ' order by m.title';
     sql += ' limit 0, 21';
-    console.log(sql);
     conn.query(sql, function(err, rows, fields){
         if (err) throw err;
         async.each(rows,

@@ -29,13 +29,20 @@ block content
             div#voir_la_video
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
         else if info && info.path
-          p #{translation.langue_film} #{info.language}
-          p #{translation.directeur} : #{details.director}
-          p #{translation.ecrivain} : #{details.writers}
-          p #{translation.acteur} : #{details.stars}
           div.jumbotron(style="padding:48px")
+            table.table.table-hover
+              tr
+                th #{translation.langue_film}
+                th #{translation.directeur}
+                th #{translation.ecrivain}
+                th #{translation.acteur}
+              tr
+                td #{info.language}
+                td #{details.director}
+                td #{details.writers}
+                td #{details.stars}
             p #{info.summary}
-          video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered(class="videoplayer" controls='', preload='auto', width='1920', height='1080', poster='#{info.background_image_original}', data-setup='{"autoplay": false}')
+          video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered.videoplayer(controls='', preload='auto', width='1920', height='1080', poster='#{info.background_image_original}', data-setup='{"autoplay": false}')
             source(src='/movie/#{info.path}', type='video/mp4')
             // subtitle caption :
              track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')

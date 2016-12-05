@@ -24,15 +24,15 @@ $(document).ready(function(){
                     success: function (html) {
                         $('#com-content').val("");
                         var render = '<div class="comm">\
-                        <div class="profil-views"  style="display:none">\
-                            <img id="p-pic" src=' + html.u_pic + ' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;"/>\
-                            <div class="p-fname"></div>\
-                            <div class="p-lname"></div>\
-                        </div>\
-                        <p class="comm-name">' + html.u_name + '</p>\
-                        <p id="comm-time">' + html.time + '</p>\
-                        <p id="comm-content">' + html.content + '</p>\
-                    </div>';
+                                        <div class="profil-views"  style="display:none">\
+                                            <img id="p-pic" src=' + html.u_pic + ' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;"/>\
+                                            <div class="p-fname"></div>\
+                                            <div class="p-lname"></div>\
+                                        </div>\
+                                        <p class="comm-name">' + html.u_name + '</p>\
+                                        <p id="comm-time">' + html.time + '</p>\
+                                        <p id="comm-content">' + html.content + '</p>\
+                                      </div>';
                         var container = $(".comm-container").html();
                         container += render;
                         $(".comm-container").html(container);

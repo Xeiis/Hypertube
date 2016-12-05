@@ -48,7 +48,6 @@ exports.renderVideo = function(req, res, translation, langue) {
                 */
                 conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
-                    console.log(req.session.user_id, rows[0].m_id);
                 });
                 var today = new Date();
 
@@ -62,7 +61,6 @@ exports.renderVideo = function(req, res, translation, langue) {
             conn.query('select m.m_id, m.trailer, m.id from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
                 conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
-                    console.log(req.session.user_id, rows[0].id);
                 });
                 var today = new Date();
                 conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){

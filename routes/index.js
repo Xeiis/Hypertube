@@ -24,7 +24,7 @@ function get_langue(req, res, callback) {
     translation = translation.Translation;
     if (req.session.login)
     {
-        conn.query('select u_lang from users where u_name = ?', [req.session.login], function(err, rows){
+        conn.query('select u_lang from users where u_name = ? and u_from = ?', [req.session.login, req.session.from], function(err, rows){
            if (rows[0] && rows[0].u_lang == 'FR')
                callback(req, res, translation.FR, "FR");
            else
