@@ -16,6 +16,7 @@ var reset_pass     = require('../private/reset_pass.js');
 var check_user     = require('../private/check_user.js');
 var no_access      = require('../private/no_access.js');
 var logout         = require('../private/logout.js');
+var play           = require('../private/play.js')
 
 var conn = db.connexion();
 
@@ -69,6 +70,10 @@ router.get('/sign_in_ft', function(req, res) {
 
 router.get('/torrent', function(req, res) {
     torrent.delete_old_movies(req, res);
+});
+
+router.get('/play*', function (req, res) {
+    play.stream(req, res);
 });
 
 /* POST */

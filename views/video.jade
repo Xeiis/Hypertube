@@ -9,6 +9,8 @@ block content
   div.container(style="height:100%")
     div(class="row" style="height:100%")
       div(style="width:auto;height:100%;margin: 0 auto;")
+        div(class="stream")
+          iframe(src="/play?id=#{id}&quality=#{quality}", class="iframe")
         div(class="animation")
           .sk-circle
             .sk-circle1.sk-child

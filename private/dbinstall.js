@@ -16,8 +16,8 @@ conn.query('CREATE TABLE users(u_id INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KE
                                u_lname VARCHAR(255) NOT NULL,\
                                u_pass VARCHAR(255) NOT NULL,\
                                u_lang VARCHAR(2) NOT NULL,\
-                               u_restore_key VARCHAR(255)),\
-                               u_from INT(11)' , function(err){
+                               u_restore_key VARCHAR(255),\
+                               u_from INT(11))', function(err){
     if(err) throw err;
     console.log('users table created\n');
 });
