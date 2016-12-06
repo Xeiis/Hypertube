@@ -202,13 +202,9 @@ var get_comment = function (req, res, rows, translation, langue, m_details, whic
 };
 
 exports.save_comm = function (req, res){
-    var quality = which_quality(req.body.quality);
-    conn.query("SELECT m.m_id from movies as m left join torrent as t on t.id = "+quality+" where t.cle = ?", [req.body.cle], function(err, rows){
-        if (err) throw err;
-
         var data = {
             u_id : req.session.user_id,
-            m_id : rows[0].m_id,
+            m_id : req.body.id,
             content : req.body.content
         };
         conn.query("SELECT u_pic from users where u_id = ?", [req.session.user_id], function(err, row){
@@ -225,7 +221,6 @@ exports.save_comm = function (req, res){
                 res.end();
             });
         });
-    });
 };
 
 var get_movies_details = function(imdbcode, req, res, rows, translation, langue, which) {
@@ -254,6 +249,7 @@ var get_movies_details = function(imdbcode, req, res, rows, translation, langue,
     });
 };
 
+
 function clean_match(matches){
     var i = 0;
     if (matches) {
@@ -268,7 +264,7 @@ function clean_match(matches){
 }
 
 var remove_old_movies = function(req, res){
-    conn.query("SELECT title,  torrent_720_id, torrent_1080_id, torrent_3D_id FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
+    conn.query("SELECT title, torrent_720_id, torrent_1080_id, torrent_3D_id FROM movies WHERE (((last_view) < Now()-30)) AND last_view != 0;", function(err, rows){
         var i = 0;
         while(rows[i]) {
             var filepath = 'public/movie/' + rows[i].title + "*";
@@ -281,7 +277,7 @@ var remove_old_movies = function(req, res){
                     });
                 }
             });
-            conn.query("UPDATE torrent SET path= null, cle = null WHERE id = ? OR id = ? OR id = ?", rows[i].torrent_3D_id, rows[i].torrent_1080_id, rows[i].torrent_720_id, function (er, row) {
+            conn.query("UPDATE torrent SET path = null, cle=null WHERE id = ? OR id = ? OR id = ?", rows[i].torrent_3D_id, rows[i].torrent_1080_id, rows[i].torrent_720_id, function (er, row) {
                 if (err) throw err;
             });
             i++;

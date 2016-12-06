@@ -491,6 +491,10 @@ body{
     width: 100%;
 }
 
+.class{
+    display: none;
+}
+
 .vjs_video_3-dimensions {
     width: 100% !important;
     height: 100% !important;
