@@ -14,4 +14,3 @@ $( document ).ready(function() {
         video.onloadstart = function() {console.log("on load start");};
     });
 });
-

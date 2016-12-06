@@ -2,7 +2,6 @@
  * Created by dchristo on 10/28/16.
  */
 
-var torrentStream = require('torrent-stream');
 var shortid = require('shortid');
 var http = require('http');
 var db = require('./dbconn.js');
@@ -21,13 +20,12 @@ var path = require("path");
 
 var conn = db.connexion();
 
-var magnet = '';
 exports.renderVideo = function(req, res, translation, langue) {
 
     var quality = which_quality(req.query.quality);
     if (req.session.login) {
-        if (req.query.cle) {
-            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language, m.m_id from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
+        /*if (req.query.cle) {
+            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language, m.m_id, m.trailer from torrent as t left join movies as m on t.id = ' + quality + ' where cle = ?', [req.query.cle], function (err, rows) {
                 /*
                 OpenSubtitles.search({
                     sublanguageid: ['fre', 'eng'],       // Can be an array.join, 'all', or be omitted.
@@ -40,13 +38,14 @@ exports.renderVideo = function(req, res, translation, langue) {
                     // arbitrary nb. Defaults to 'best'
                     imdbid: rows[0].imdb_code   // Text-based query, this is not recommended.
                 }).then(subtitles => {
+
                     // parse le site imdb pour récupérer des infos :
                     // http://www.imdb.com/title/imdb_code
                     // voir au dessus
                     r
                 });
                 */
-                conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
+                /*conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
                 });
                 var today = new Date();
@@ -54,11 +53,11 @@ exports.renderVideo = function(req, res, translation, langue) {
                 conn.query("UPDATE movies as m SET last_view = ? WHERE "+quality+" = (SELECT id FROM torrent where cle = ?)", [today, req.query.cle], function(err, row){
                     if (err) throw err;
                 });
-                get_movies_details(rows[0].imdb_code, req, res, rows, translation, langue);
+                get_movies_details(rows[0].imdb_code, req, res, rows, translation, langue, 1);
             });
         }
-        else if (req.query.id) {
-            conn.query('select m.m_id, m.trailer, m.id from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
+        else */if (req.query.id) {
+            conn.query('select m.imdb_code, m.background_image_original, t.path, m.summary, m.language, m.m_id, m.trailer, m.id from movies as m left join torrent as t on ' + quality + ' = t.id where m.id = ?', [req.query.id], function (err, rows) {
                 conn.query("INSERT INTO seen(u_id, m_id) VALUES(?, ?)", [req.session.user_id, rows[0].m_id], function (err, row) {
                     if (err) throw err;
                 });
@@ -66,10 +65,8 @@ exports.renderVideo = function(req, res, translation, langue) {
                 conn.query("UPDATE movies SET last_view = ? WHERE id = ?", [today, rows[0].id], function(err, rows){
                     if (err) throw err;
                 });
-                if (rows[0].trailer !== null) {
-                    //downloadTorrent(req, res);
-                    res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login, translation: translation, langue: langue, quality: quality, id : req.query.id});
-                }
+                if (rows[0].trailer !== null)
+                    get_movies_details(rows[0].imdb_code, req, res, rows, translation, langue, 2);
                 else
                     res.render('video', {res: 'Video not found', translation: translation, langue: langue, quality: quality, id : req.query.id});
             });
@@ -98,47 +95,7 @@ exports.exist = function(req, res) {
         }
     });
 };
-/*
-var downloadTorrent = function(req, res) {
-    var quality = which_quality(req.query.quality);
-    conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.query.id], function (err, rows) {
-        if (err) throw err;
-        magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
-        download(rows);
-    });
-    var download = function(rows) {
-        conn.query('UPDATE torrent SET download_end = ? WHERE id = ?', [false, rows[0].id]);
-        var i = 0;
-        var engine = torrentStream(magnet, {path: 'public/movie/'});
-        engine.on('ready', function () {
-            engine.files.forEach(function (file) {
-                console.log('filename:', file.name);
-                if (file.name.substr(file.name.length - 3) == 'mkv' || file.name.substr(file.name.length - 3) == 'mp4') {
-                    var stream = file.createReadStream({flags: "r", start: 0, end: file.length - 1});
-                    engine.on('download', function(){
-                        // stream = stream.pipe(new Throttle(100 * 1024)); //
-                        // stream.pipe(res); //
-                        console.log(engine.swarm.downloaded / file.length * 100 + "%");
-                        if (parseInt(engine.swarm.downloaded / file.length * 100) >= 2 && i == 0) {
-                            i++;
-                            var cle_create = shortid.generate();
-                            conn.query('UPDATE torrent SET path = ?, cle = ? WHERE id = ?', [file.path, cle_create, rows[0].id]);
-                            console.log("video?cle="+cle_create+"&quality="+req.query.quality);
 
-                        }
-                    });
-                    engine.on('idle', function () {
-                        console.log("le telechargement est fini");
-                    });
-                }
-                else {
-                    console.log('error file.name : '+file.name);
-                }
-            });
-        });
-    }
-};
-*/
 exports.download_end = function(req, res) {
     var quality = which_quality(req.body.quality);
     conn.query('select t.cle, t.quality, t.download_end from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.body.id], function (err, rows) {
@@ -178,16 +135,70 @@ exports.is_15pc = function(req, res){
 
 };
 
-var get_comment = function (req, res, rows, translation, langue, m_details) {
+var get_comment = function (req, res, rows, translation, langue, m_details, which) {
     var quality = which_quality(req.query.quality);
     var m_cle = req.query.cle;
-    conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
-        if (err) throw err;
-        if (row[0].content)
-            res.render('video', {info: rows[0]/*, subtitles: subtitles*/, comm: row, login: true, name: req.session.login,translation: translation, langue: langue, details : m_details, quality: quality, id : req.query.id});
-        else
-            res.render('video', {info: rows[0]/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, details : m_details, quality: quality, id : req.query.id});
+    if (which == 2)
+    {
+        conn.query("select c.content, c.u_id, c.m_id, c.time, u.u_name from movies as m left join torrent as t on " + quality + " = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id where m.id = ?", [req.query.id], function(err, row){
+            if (err) throw err;
+            if (row[0].content)
+                res.render('video', {
+                    info: rows[0]/*, subtitles: subtitles*/,
+                    trailer: rows[0].trailer,
+                    comm: row,
+                    login: true,
+                    name: req.session.login,
+                    translation: translation,
+                    langue: langue,
+                    details: m_details,
+                    quality: quality,
+                    id: req.query.id
+                });
+            else
+                res.render('video', {
+                    info: rows[0]/*, subtitles: subtitles*/,
+                    trailer: rows[0].trailer,
+                    login: true,
+                    name: req.session.login,
+                    translation: translation,
+                    langue: langue,
+                    details: m_details,
+                    quality: quality,
+                    id: req.query.id
+                });
         });
+    }
+    else {
+        conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  " + quality + " = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function (err, row) {
+            if (err) throw err;
+            if (row[0].content)
+                res.render('video', {
+                    info: rows[0]/*, subtitles: subtitles*/,
+                    trailer: rows[0].trailer,
+                    comm: row,
+                    login: true,
+                    name: req.session.login,
+                    translation: translation,
+                    langue: langue,
+                    details: m_details,
+                    quality: quality,
+                    id: req.query.id
+                });
+            else
+                res.render('video', {
+                    info: rows[0]/*, subtitles: subtitles*/,
+                    trailer: rows[0].trailer,
+                    login: true,
+                    name: req.session.login,
+                    translation: translation,
+                    langue: langue,
+                    details: m_details,
+                    quality: quality,
+                    id: req.query.id
+                });
+        });
+    }
 };
 
 exports.save_comm = function (req, res){
@@ -217,7 +228,7 @@ exports.save_comm = function (req, res){
     });
 };
 
-var get_movies_details = function(imdbcode, req, res, rows, translation, langue) {
+var get_movies_details = function(imdbcode, req, res, rows, translation, langue, which) {
 
     var buff = '';
     http.get('http://www.imdb.com/title/' + imdbcode + '/', function (ress) {
@@ -238,7 +249,7 @@ var get_movies_details = function(imdbcode, req, res, rows, translation, langue)
             writers = clean_match(matches);
             matches = stars.match(reg);
             stars = clean_match(matches);
-            get_comment(req, res, rows, translation, langue, {director: director, writers : writers, stars : stars});
+            get_comment(req, res, rows, translation, langue, {director: director, writers : writers, stars : stars}, which);
         });
     });
 };
@@ -272,7 +283,6 @@ var remove_old_movies = function(req, res){
             });
             conn.query("UPDATE torrent SET path= null, cle = null WHERE id = ? OR id = ? OR id = ?", rows[i].torrent_3D_id, rows[i].torrent_1080_id, rows[i].torrent_720_id, function (er, row) {
                 if (err) throw err;
-
             });
             i++;
         }

@@ -23,7 +23,7 @@ html{
 
 .iframe {
   height: 90%;
-  width: 100%;
+  width: 77%;
   position: absolute;
 }
 
@@ -487,6 +487,15 @@ body{
     width:100%;
 }
 
-.videoplayer{
+.videoplayer {
     width: 100%;
+}
+
+.vjs_video_3-dimensions {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.stream {
+    display:none;
 }

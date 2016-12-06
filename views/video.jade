@@ -9,63 +9,40 @@ block content
   div.container(style="height:100%")
     div(class="row" style="height:100%")
       div(style="width:auto;height:100%;margin: 0 auto;")
-        div(class="stream")
-          iframe(src="/play?id=#{id}&quality=#{quality}", class="iframe")
-        div(class="animation")
-          .sk-circle
-            .sk-circle1.sk-child
-            .sk-circle2.sk-child
-            .sk-circle3.sk-child
-            .sk-circle4.sk-child
-            .sk-circle5.sk-child
-            .sk-circle6.sk-child
-            .sk-circle7.sk-child
-            .sk-circle8.sk-child
-            .sk-circle9.sk-child
-            .sk-circle10.sk-child
-            .sk-circle11.sk-child
-            .sk-circle12.sk-child
-        if trailer
-          div.jumbotron(style="padding:48px;text-align:center;")
-            h3 #{translation.Description_trailer}
-            div#voir_la_video
-          iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
-        else if info && info.path
           div.jumbotron(style="padding:48px")
-            table.table.table-hover
-              tr
-                th #{translation.langue_film}
-                th #{translation.directeur}
-                th #{translation.ecrivain}
-                th #{translation.acteur}
-              tr
-                td #{info.language}
-                td #{details.director}
-                td #{details.writers}
-                td #{details.stars}
-            p #{info.summary}
-          video#rush_hour.video-js.vjs-default-skin.vjs-big-play-centered.videoplayer(controls='', preload='auto', width='1920', height='1080', poster='#{info.background_image_original}', data-setup='{"autoplay": false}')
-            source(src='/movie/#{info.path}', type='video/mp4')
-            // subtitle caption :
-             track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')
-            p.vjs-no-js
-              | To view this video please enable JavaScript, and consider upgrading to a web browser that
-              a(href='http://videojs.com/html5-video-support/', target='_blank') supports HTML5 video
-
+              table.table.table-hover
+                  tr
+                      th #{translation.langue_film}
+                      th #{translation.directeur}
+                      th #{translation.ecrivain}
+                      th #{translation.acteur}
+                  tr
+                      td #{info.language}
+                      td #{details.director}
+                      td #{details.writers}
+                      td #{details.stars}
+              p #{info.summary}
+          if trailer
+              div.jumbotron.youtube(style="padding:48px;text-align:center;")
+                  h3 #{translation.Description_trailer}
+                  div#voir_la_video
+              iframe.youtube(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
+          div(class="stream")
+            iframe(src="/play?id=#{id}&quality=#{quality}&background=#{info.background_image_original}", class="iframe")
         div(class="comms")
-                div.comm-container
-                 if comm
-                    each val in comm
-                        div.comm
-                            div(class="profil-views" style="display:none;")
-                                img(class="p-pic" src='/img/profile.jpg' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
-                                div.infos
-                                    div.p-fname
-                                    div.p-lname
-                                    div.p-email
-                            p.comm-name #{val.u_name}
-                            p.comm-time #{val.time}
-                            p.comm-content #{val.content}
+            div.comm-container
+             if comm
+                each val in comm
+                    div.comm
+                        div(class="profil-views" style="display:none;")
+                            img(class="p-pic" src='/img/profile.jpg' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
+                            div.infos
+                                div.p-fname
+                                div.p-lname
+                                div.p-email
+                        p.comm-name #{val.u_name}
+                        p.comm-time #{val.time}
+                        p.comm-content #{val.content}
             div.form-group(style="width: 26%;margin: auto;")
                 form
                     div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")

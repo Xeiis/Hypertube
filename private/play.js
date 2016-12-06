@@ -13,7 +13,7 @@ var express = require('express'),
     ffmpeg = require('fluent-ffmpeg'),
     pump = require('pump'),
     torrentStream = require('torrent-stream'),
-    Promise = require("bluebird")
+    Promise = require("bluebird"),
     db = require('./dbconn.js'),
     conn = db.connexion();
 
@@ -54,21 +54,21 @@ function randomIntInc (low, high) {
 
 let engineGo = function (magnet, id) {
   return new Promise(function (resolve, reject) {
-    console.log("entering engineGo");
+    //console.log("entering engineGo");
     if (runningEngines[id] == undefined) {
       var engine = torrentStream(magnet);
       engine.on('ready', function() {
-          console.log(engine.files);
+          //console.log(engine.files);
           engine.files.forEach(function(file) {
             if (file.name.substr(file.name.length - 3) == 'mkv' || file.name.substr(file.name.length - 3) == 'mp4') {
-              console.log('filename:', file.name);
+              //console.log('filename:', file.name);
               var stream = file.createReadStream();
               var writable = fs.createWriteStream('public/movie/' + file.name);
-              console.log("about to write file");
+              //console.log("about to write file");
               runningEngines[id] = engine;
               pump(stream, writable);
               engine.on('download', function () {
-                console.log(file.name);
+                //console.log(file.name);
                 console.log(engine.swarm.downloaded / file.length * 100 + "%");
                 resolve(file);
               });
@@ -84,7 +84,7 @@ let engineGo = function (magnet, id) {
       })
     }
   });
-}
+};
 
 var which_quality = function(input){
     var quality = '';
@@ -102,13 +102,13 @@ var escape_space = function(string){
 };
 
 let downloadTorrent = function(quality, id) {
-  console.log(quality, id);
+  //console.log(quality, id);
   return new Promise(function(resolve, reject) {
     conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', id, function (err, rows) {
         if (err) throw err;
-        console.log(rows);
+        //console.log(rows);
         magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
-        console.log(magnet);
+        //console.log(magnet);
         resolve(magnet);
     });
   });
@@ -116,35 +116,33 @@ let downloadTorrent = function(quality, id) {
 
 var quality;
 var id;
+var background;
 
 exports.stream = function (req, res) {
-  console.log("the requested url is " + req.url);
+  //console.log("the requested url is " + req.url);
     if (req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.mp4"
       && req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.webm"
       && req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.ogg") {
       quality = req.query.quality;
       id = req.query.id;
-      console.log("quality is " + quality);
-      console.log("id is " + id);
+      background = req.query.background;
+      console.log(background);
       var rpath = __dirname + '/../views/play.jade';
       fs.readFile(rpath, 'utf8', function (err, str) {
         if (err) {
           throw err;
         }
-        console.log("reading file");
         var fn = jade.compile(str);
         //console.log(fn);
         res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(fn());
+        res.write(fn({background: background}));
         res.end();
       });
-
-      console.log("getting here");
-    } else {
-      console.log("going here");
+    }
+    else {
       downloadTorrent(quality, id).then(function (magnet) {
         engineGo(magnet, id).delay(5000).then(function (result) {
-          console.log('engineGo has happened');
+          //console.log('engineGo has happened');
           var filer = path.resolve(__dirname,"../public/movie/" + result.name);
           fs.stat(filer, function(err, stats) {
             if (err) {
@@ -156,14 +154,13 @@ exports.stream = function (req, res) {
             res.end(err);
             }
             var range = req.headers.range;
-            console.log("range is " + range);
+            //console.log("range is " + range);
             if (!range) {
               console.log("no range");
              // 416 Wrong range
              return res.sendStatus(416);
             }
-
-            console.log(range);
+            //console.log(range);
             var positions = range.replace(/bytes=/, "").split("-");
             var start = parseInt(positions[0], 10);
             var total = stats.size;
@@ -182,14 +179,14 @@ exports.stream = function (req, res) {
               target = result;
               var ext = target.name.split('.').pop();
               if (mimeTypes[ext] === -1 || result.name.indexOf("sample") !== -1) {
-                console.log("getting in here");
+                //console.log("getting in here");
                 return;
               }
               var stream = target.createReadStream({start: start, end: end});
               //var writer = fs.createWriteStream(target.name);
               if (mimeToConvert[ext] !== undefined) {
                 var id = randomIntInc(1, 10000);
-                console.log("the new id is " + id);
+                //console.log("the new id is " + id);
                 runningCommands[id] = ffmpeg(stream).videoCodec('libvpx').audioCodec('libvorbis').format('webm')
                 .audioBitrate(128)
                 .videoBitrate(1024)
@@ -199,7 +196,7 @@ exports.stream = function (req, res) {
                   '-error-resilient 1'
                 ])
                 .on('start', function (cmd) {
-                  console.log('this has started ' + cmd);
+                  //console.log('this has started ' + cmd);
 
                 })
                 .on('end', function () {
@@ -210,13 +207,13 @@ exports.stream = function (req, res) {
                   console.log(err);
                   delete runningCommands[id];
                   console.log("runningCommands[id] is deleted from id " + id);
-                })
+                });
                 //console.log(convert);
                 pump(runningCommands[id], res);
               }
 
             } else {
-              console.log("about to write");
+              //console.log("about to write");
               var stream = fs.createReadStream(filer, {start: start, end: end});
               pump(stream, res);
             }
