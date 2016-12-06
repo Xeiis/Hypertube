@@ -28,7 +28,8 @@ block content
         if trailer
           div.jumbotron(style="padding:48px;text-align:center;")
             h3 #{translation.Description_trailer}
-            div#voir_la_video
+            div#voir_la_video(style="display:none;")
+                button Play
           iframe(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
         else if info && info.path
           div.jumbotron(style="padding:48px")

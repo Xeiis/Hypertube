@@ -35,7 +35,7 @@ var mimeTypes = {
 	"mp2":		"video/mpeg",
 	"webm":		"video/webm",
 	"ogg":		"video/ogg",
-  "wmv":    "video/webm"
+    "wmv":    "video/webm"
 };
 
 var mimeToConvert = {

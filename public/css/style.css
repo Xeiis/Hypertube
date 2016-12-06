@@ -490,3 +490,6 @@ body{
 .videoplayer{
     width: 100%;
 }
+.class{
+    display: none;
+}
