@@ -102,9 +102,11 @@ var escape_space = function(string){
 };
 
 let downloadTorrent = function(quality, id) {
+  console.log(quality, id);
   return new Promise(function(resolve, reject) {
     conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', id, function (err, rows) {
         if (err) throw err;
+        console.log(rows);
         magnet = "magnet:?xt=urn:btih:" + rows[0].hash + "&dn=" + escape_space(rows[0].title) + "&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Fzer0day.ch%3A1337&tr=udp%3A%2F%2Fopen.demonii.com%3A1337&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Fexodus.desync.com%3A6969";
         console.log(magnet);
         resolve(magnet);
