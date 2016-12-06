@@ -67,11 +67,11 @@ exports.renderVideo = function(req, res, translation, langue) {
                     if (err) throw err;
                 });
                 if (rows[0].trailer !== null) {
-                    downloadTorrent(req, res);
-                    res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login, translation: translation, langue: langue});
+                    //downloadTorrent(req, res);
+                    res.render('video', {trailer: rows[0].trailer, login: true, name: req.session.login, translation: translation, langue: langue, quality: quality, id : req.query.id});
                 }
                 else
-                    res.render('video', {res: 'Video not found', translation: translation, langue: langue});
+                    res.render('video', {res: 'Video not found', translation: translation, langue: langue, quality: quality, id : req.query.id});
             });
         }
     }
@@ -98,7 +98,7 @@ exports.exist = function(req, res) {
         }
     });
 };
-
+/*
 var downloadTorrent = function(req, res) {
     var quality = which_quality(req.query.quality);
     conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.query.id], function (err, rows) {
@@ -138,7 +138,7 @@ var downloadTorrent = function(req, res) {
         });
     }
 };
-
+*/
 exports.download_end = function(req, res) {
     var quality = which_quality(req.body.quality);
     conn.query('select t.cle, t.quality, t.download_end from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', [req.body.id], function (err, rows) {
@@ -184,9 +184,9 @@ var get_comment = function (req, res, rows, translation, langue, m_details) {
     conn.query("SELECT c.content, c.u_id, c.m_id, c.time, u.u_name FROM movies as m left join torrent as t on  "+quality+" = t.id left join comm as c on c.m_id = m.id left join users as u on u.u_id = c.u_id WHERE t.cle = ?", [m_cle], function(err, row){
         if (err) throw err;
         if (row[0].content)
-            res.render('video', {info: rows[0]/*, subtitles: subtitles*/, comm: row, login: true, name: req.session.login,translation: translation, langue: langue, details : m_details});
+            res.render('video', {info: rows[0]/*, subtitles: subtitles*/, comm: row, login: true, name: req.session.login,translation: translation, langue: langue, details : m_details, quality: quality, id : req.query.id});
         else
-            res.render('video', {info: rows[0]/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, details : m_details});
+            res.render('video', {info: rows[0]/*, subtitles: subtitles*/, login: true, name: req.session.login, translation: translation, langue: langue, details : m_details, quality: quality, id : req.query.id});
         });
 };
 
