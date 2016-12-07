@@ -6,7 +6,7 @@ html(style="width:100%;height:100%;")
       script(src='//vjs.zencdn.net/5.4.6/video.min.js')
       title Video
   body(style="width:100%;height:100%;margin:0")
-      video.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', poster='#{background}', data-setup='{"autoplay": false}')
+      video.video-js.vjs-default-skin.vjs-big-play-centered(controls='', preload='auto', width="1920px", height="1080px", poster='#{background}', data-setup='{"autoplay": false}')
           source(src='http://localhost:3000/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.mp4', type='video/mp4')
           // subtitle caption :
            track(kind='captions', src='http://example.com/path/to/captions.vtt', srclang='en', label='English', default='')

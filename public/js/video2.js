@@ -79,6 +79,7 @@ window.onload = function()
     $("#voir_la_video").on("click", function(){
         $(".stream").show();
         $(".youtube").hide();
+        $(".youtubes").css('visibility','hidden');
     });
 };
 

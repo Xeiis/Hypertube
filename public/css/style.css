@@ -22,9 +22,81 @@ html{
 }
 
 .iframe {
-  height: 90%;
-  width: 77%;
-  position: absolute;
+    height: 80%;
+    width: 100%;
+    position: absolute;
+}
+
+@media (min-width: 1300px) {
+    .iframe {
+        height: 90%;
+        width: 90%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 1600px) {
+    .iframe {
+        height: 90%;
+        width: 73%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 1900px) {
+    .iframe {
+        height: 90%;
+        width: 60%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 2000px) {
+    .iframe {
+        height: 90%;
+        width: 98%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 2200px) {
+    .iframe {
+        height: 90%;
+        width: 89%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 2500px) {
+    .iframe {
+        height: 90%;
+        width: 77%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 3000px) {
+    .iframe {
+        height: 90%;
+        width: 65%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 3200px) {
+    .iframe {
+        height: 90%;
+        width: 61%;
+        position: absolute;
+    }
+}
+
+@media (min-width: 3300px) {
+    .iframe {
+        height: 90%;
+        width: 58%;
+        position: absolute;
+    }
 }
 
 #pause{

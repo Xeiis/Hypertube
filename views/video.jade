@@ -22,28 +22,28 @@ block content
                       td #{details.writers}
                       td #{details.stars}
               p #{info.summary}
+          div(class="stream")
+              iframe(src="/play?id=#{id}&quality=#{quality}&background=#{info.background_image_original}", class="iframe")
           if trailer
               div.jumbotron.youtube(style="padding:48px;text-align:center;")
                   h3 #{translation.Description_trailer}
                   div#voir_la_video(style="display:none;")
                       button Play
-              iframe.youtube(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
-          div(class="stream")
-            iframe(src="/play?id=#{id}&quality=#{quality}&background=#{info.background_image_original}", class="iframe")
-        div(class="comms")
-            div.comm-container
-             if comm
-                each val in comm
-                    div.comm
-                        div(class="profil-views" style="display:none;")
-                            img(class="p-pic" src='/img/profile.jpg' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
-                            div.infos
-                                div.p-fname
-                                div.p-lname
-                                div.p-email
-                        p.comm-name #{val.u_name}
-                        p.comm-time #{val.time}
-                        p.comm-content #{val.content}
+              iframe.youtubes(type="text/html" src='https://www.youtube.com/v/#{trailer}' width="100%" height="100%")
+          div(class="comms")
+              div.comm-container
+               if comm
+                  each val in comm
+                      div.comm
+                          div(class="profil-views" style="display:none;")
+                              img(class="p-pic" src='/img/profile.jpg' height="100" width="100" style="border-radius: 50%;border: 5px solid #eeeeee;float:left;")
+                              div.infos
+                                  div.p-fname
+                                  div.p-lname
+                                  div.p-email
+                          p.comm-name #{val.u_name}
+                          p.comm-time #{val.time}
+                          p.comm-content #{val.content}
             div.form-group(style="width: 26%;margin: auto;")
                 form
                     div(class="alert alert-danger" id="comm_erreur" style="display:none;margin-right:15px;margin-bottom:0px;width: 140%;text-align: center;")
