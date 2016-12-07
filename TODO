@@ -1,4 +1,4 @@
-                                                                                             TOTAL : --__ 17✓ | 3x  __--
+                                                                                              TOTAL : --__ 19✓ | x  __--
 
 Partie user :                                                                                              --__ 7✓  __--
 
@@ -63,9 +63,9 @@ Partie bibliotèque                                                             
     La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ ✓ __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
-Partie Video                                                                                           --__ 3✓ | 3x __--
+Partie Video                                                                                            --__ 4✓ | x __--
 
-    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                         --__ ✓|x __--
+    que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                           --__ ✓ __--
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
     couverture
 
@@ -78,5 +78,5 @@ Partie Video                                                                    
     Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés               --__ x __--
     et sélectionnables sur le player vidéo
 
-    Si la vidéo n’est pas nativement lisible pour le navigateur, vous devrez la convertir                    --__ x __--
+    Si la vidéo n’est pas nativement lisible pour le navigateur, vous devrez la convertir                    --__ ✓ __--
     à la volée dans un format acceptable. Le support du format mkv est un minimum.
