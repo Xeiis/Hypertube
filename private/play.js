@@ -133,75 +133,74 @@ exports.stream = function (req, res) {
     if (req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.mp4"
       && req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.webm"
       && req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.ogg") {
-        quality = req.query.quality;
-        id = req.query.id;
-        conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', id, function (err, rows) {
-          if (err) {
-            console.log(err);
-          }
-          console.log(rows);
-          console.log("this is the hash homie");
-          console.log(rows[0].hash);
-          OpenSubtitles.login()
-          .then(resu => {
-              //console.log("fuck this shit");
-              console.log(resu);
-              //console.log(resu.token);
-              //console.log(resu.userinfo);
-              OpenSubtitles.search({
-                  sublanguageid: 'eng',       // Can be an array.join, 'all', or be omitted.
-                  hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
-                  //path: rows[0].path,        // Complete path to the video file, it allows
-                  //   to automatically calculate 'hash'.
-                  //filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
-                  extensions: 'srt', // Accepted extensions, defaults to 'srt'.
-                  limit: '3',                 // Can be 'best', 'all' or an
-                  // arbitrary nb. Defaults to 'best'
-                  imdbid: rows[0].imdb_code,   // Text-based query, this is not recommended.
-                  query: rows[0].title
-              }).then(subtitles => {
-                  // parse le site imdb pour récupérer des infos :
-                  // http://www.imdb.com/title/imdb_code
-                  // voir au dessus
-                  console.log("are we getting here?");
-                  console.log(subtitles);
-                  console.log("subtitles are done");
-                  var sub_id_arr = []
-                  for (var i = 0; i < subtitles.en.length; i++) {
-                    sub_id_arr[i] = subtitles.en[i].url
+      quality = req.query.quality;
+      id = req.query.id;
+      conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', id, function (err, rows) {
+        if (err) {
+          console.log(err);
+        }
+        OpenSubtitles.login()
+        .then(resu => {
+            OpenSubtitles.search({
+                sublanguageid: 'eng,fre',       // Can be an array.join, 'all', or be omitted.
+                hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
+                //path: rows[0].path,        // Complete path to the video file, it allows
+                //   to automatically calculate 'hash'.
+                //filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
+                extensions: 'srt', // Accepted extensions, defaults to 'srt'.
+                limit: '3',                 // Can be 'best', 'all' or an
+                // arbitrary nb. Defaults to 'best'
+                imdbid: rows[0].imdb_code,   // Text-based query, this is not recommended.
+                query: rows[0].title
+            }).then(subtitles => {
+                var sub_en_arr = []
+                var sub_fr_arr = []
+                for (var i = 0; i < subtitles.en.length; i++) {
+                  sub_en_arr[i] = subtitles.en[i].url
+                }
+                for (var i = 0; i < subtitles.fr.length; i++) {
+                  sub_fr_arr[i] = subtitles.fr[i].url
+                }
+                var fileEn = fs.createWriteStream("./public/movie/" + rows[0].title + ".en.srt");
+                var requestEn = http.get(sub_en_arr[0], function(response) {
+                  var srt = response.pipe(fileEn);
+                  srt.on('finish', function () {
+                    console.log("En Finished");
+                    var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.en.srt');
+                    srt2vtt(srtData, function(err, vttData) {
+                      if (err) throw new Error(err);
+                      fs.writeFileSync('./public/movie/' + rows[0].title + '.en.vtt', vttData);
+                    });
+                  })
+                });
+                var fileFr = fs.createWriteStream("./public/movie/" + rows[0].title + ".fr.srt");
+                var requestFr = http.get(sub_fr_arr[0], function(response) {
+                  var srt = response.pipe(fileFr);
+                  srt.on('finish', function () {
+                    console.log("FR finished");
+                    var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.fr.srt');
+                    srt2vtt(srtData, function(err, vttData) {
+                      if (err) throw new Error(err);
+                      fs.writeFileSync('./public/movie/' + rows[0].title + '.fr.vtt', vttData);
+                    });
+                  })
+                });
+                var rpath = __dirname + '/../views/play.jade';
+                fs.readFile(rpath, 'utf8', function (err, str) {
+                  if (err) {
+                    throw err;
                   }
-                  console.log(sub_id_arr[0]);
-                  var file = fs.createWriteStream("./public/movie/" + rows[0].title + ".srt");
-                  var request = http.get(sub_id_arr[0], function(response) {
-                    var srt = response.pipe(file);
-                    srt.on('finish', function () {
-                      var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.srt');
-                      srt2vtt(srtData, function(err, vttData) {
-                        if (err) throw new Error(err);
-                        fs.writeFileSync('./public/movie/' + rows[0].title + '.vtt', vttData);
-                      });
-                    })
-                  });
-                  console.log("quality is " + quality);
-                  console.log("id is " + id);
-                  var rpath = __dirname + '/../views/play.jade';
-                  fs.readFile(rpath, 'utf8', function (err, str) {
-                    if (err) {
-                      throw err;
-                    }
-                    console.log(sub_id_arr[0]);
-                    var fn = jade.compile(str);
-                    //console.log(fn);
-                    res.writeHead(200, { "Content-Type": "text/html" });
-                    res.write(fn({subtitle: rows[0].title + ".vtt", language: "eng"}));
-                    res.end();
-                  });
-              });
-          })
-          .catch(err => {
-              console.log(err);
-          });
+                  var fn = jade.compile(str);
+                  res.writeHead(200, { "Content-Type": "text/html" });
+                  res.write(fn({engsub: rows[0].title + ".en.vtt", frsub: rows[0].title + ".fr.vtt", language: "eng"}));
+                  res.end();
+                });
+            });
+        })
+        .catch(err => {
+            console.log(err);
         });
+      });
     }
     else {
       downloadTorrent(quality, id).then(function (magnet) {
