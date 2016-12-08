@@ -204,7 +204,7 @@ exports.stream = function (req, res) {
     }
     else {
       downloadTorrent(quality, id).then(function (magnet) {
-        engineGo(magnet, id).delay(5000).then(function (result) {
+        engineGo(magnet, id).delay(8000).then(function (result) {
           //console.log('engineGo has happened');
           var filer = path.resolve(__dirname,"../public/movie/" + result.name);
           fs.stat(filer, function(err, stats) {
