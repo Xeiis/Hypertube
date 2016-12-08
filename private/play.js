@@ -10,12 +10,22 @@ var express = require('express'),
     url = require("url"),
     path = require("path"),
     jade = require('jade'),
+    http = require("http"),
     ffmpeg = require('fluent-ffmpeg'),
     pump = require('pump'),
     torrentStream = require('torrent-stream'),
     Promise = require("bluebird"),
+    srt2vtt = require('srt2vtt'),
     db = require('./dbconn.js'),
     conn = db.connexion();
+
+const OS = require('opensubtitles-api');
+const OpenSubtitles = new OS({
+useragent:'OSTestUserAgentTemp',
+username: 'Hypertube',
+password: 'dotef',
+ssl: true
+});
 
 var uri = 'magnet:?xt=urn:btih:11a2ac68a11634e980f265cb1433c599d017a759';
 
@@ -125,23 +135,76 @@ exports.stream = function (req, res) {
       && req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.ogg") {
       quality = req.query.quality;
       id = req.query.id;
-      background = req.query.background;
-      console.log(background);
-      var rpath = __dirname + '/../views/play.jade';
-      fs.readFile(rpath, 'utf8', function (err, str) {
+      conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', id, function (err, rows) {
         if (err) {
-          throw err;
+          console.log(err);
         }
-        var fn = jade.compile(str);
-        //console.log(fn);
-        res.writeHead(200, { "Content-Type": "text/html" });
-        res.write(fn({background: background}));
-        res.end();
+        OpenSubtitles.login()
+        .then(resu => {
+            OpenSubtitles.search({
+                sublanguageid: 'eng,fre',       // Can be an array.join, 'all', or be omitted.
+                hash: rows[0].hash,   // Size + 64bit checksum of the first and last 64k
+                //path: rows[0].path,        // Complete path to the video file, it allows
+                //   to automatically calculate 'hash'.
+                //filename: rows[0].path.substring(rows[0].path.lastIndexOf("/" + 1)),        // The video file name. Better if extension
+                extensions: 'srt', // Accepted extensions, defaults to 'srt'.
+                limit: '3',                 // Can be 'best', 'all' or an
+                // arbitrary nb. Defaults to 'best'
+                imdbid: rows[0].imdb_code,   // Text-based query, this is not recommended.
+                query: rows[0].title
+            }).then(subtitles => {
+                var sub_en_arr = []
+                var sub_fr_arr = []
+                for (var i = 0; i < subtitles.en.length; i++) {
+                  sub_en_arr[i] = subtitles.en[i].url
+                }
+                for (var i = 0; i < subtitles.fr.length; i++) {
+                  sub_fr_arr[i] = subtitles.fr[i].url
+                }
+                var fileEn = fs.createWriteStream("./public/movie/" + rows[0].title + ".en.srt");
+                var requestEn = http.get(sub_en_arr[0], function(response) {
+                  var srt = response.pipe(fileEn);
+                  srt.on('finish', function () {
+                    console.log("En Finished");
+                    var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.en.srt');
+                    srt2vtt(srtData, function(err, vttData) {
+                      if (err) throw new Error(err);
+                      fs.writeFileSync('./public/movie/' + rows[0].title + '.en.vtt', vttData);
+                    });
+                  })
+                });
+                var fileFr = fs.createWriteStream("./public/movie/" + rows[0].title + ".fr.srt");
+                var requestFr = http.get(sub_fr_arr[0], function(response) {
+                  var srt = response.pipe(fileFr);
+                  srt.on('finish', function () {
+                    console.log("FR finished");
+                    var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.fr.srt');
+                    srt2vtt(srtData, function(err, vttData) {
+                      if (err) throw new Error(err);
+                      fs.writeFileSync('./public/movie/' + rows[0].title + '.fr.vtt', vttData);
+                    });
+                  })
+                });
+                var rpath = __dirname + '/../views/play.jade';
+                fs.readFile(rpath, 'utf8', function (err, str) {
+                  if (err) {
+                    throw err;
+                  }
+                  var fn = jade.compile(str);
+                  res.writeHead(200, { "Content-Type": "text/html" });
+                  res.write(fn({engsub: rows[0].title + ".en.vtt", frsub: rows[0].title + ".fr.vtt", language: "eng"}));
+                  res.end();
+                });
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
       });
     }
     else {
       downloadTorrent(quality, id).then(function (magnet) {
-        engineGo(magnet, id).delay(5000).then(function (result) {
+        engineGo(magnet, id).delay(8000).then(function (result) {
           //console.log('engineGo has happened');
           var filer = path.resolve(__dirname,"../public/movie/" + result.name);
           fs.stat(filer, function(err, stats) {
