@@ -52,11 +52,11 @@ var mimeToConvert = {
     "wmv" : "webm",
     "avi" : "webm",
     "mkv" : "webm"
-}
+};
 
 var runningCommands = {};
 
-var runningEngines = {}
+var runningEngines = {};
 
 function randomIntInc (low, high) {
     return Math.floor(Math.random() * (high - low + 1) + low);
@@ -79,7 +79,7 @@ let engineGo = function (magnet, id) {
               pump(stream, writable);
               engine.on('download', function () {
                 //console.log(file.name);
-                console.log(engine.swarm.downloaded / file.length * 100 + "%");
+                //console.log(engine.swarm.downloaded / file.length * 100 + "%");
                 resolve(file);
               });
             }
@@ -135,6 +135,7 @@ exports.stream = function (req, res) {
       && req.url != "/play/Guardians.of.the.Galaxy.2014.1080p.BluRay.x264.YIFY.ogg") {
       quality = req.query.quality;
       id = req.query.id;
+      background = req.query.background;
       conn.query('select * from movies as m left join torrent as t on '+quality+' = t.id where m.id = ?', id, function (err, rows) {
         if (err) {
           console.log(err);
@@ -165,7 +166,7 @@ exports.stream = function (req, res) {
                 var requestEn = http.get(sub_en_arr[0], function(response) {
                   var srt = response.pipe(fileEn);
                   srt.on('finish', function () {
-                    console.log("En Finished");
+                    //console.log("En Finished");
                     var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.en.srt');
                     srt2vtt(srtData, function(err, vttData) {
                       if (err) throw new Error(err);
@@ -177,7 +178,7 @@ exports.stream = function (req, res) {
                 var requestFr = http.get(sub_fr_arr[0], function(response) {
                   var srt = response.pipe(fileFr);
                   srt.on('finish', function () {
-                    console.log("FR finished");
+                    //console.log("FR finished");
                     var srtData = fs.readFileSync('./public/movie/' + rows[0].title + '.fr.srt');
                     srt2vtt(srtData, function(err, vttData) {
                       if (err) throw new Error(err);
@@ -192,7 +193,7 @@ exports.stream = function (req, res) {
                   }
                   var fn = jade.compile(str);
                   res.writeHead(200, { "Content-Type": "text/html" });
-                  res.write(fn({engsub: rows[0].title + ".en.vtt", frsub: rows[0].title + ".fr.vtt", language: "eng"}));
+                  res.write(fn({engsub: rows[0].title + ".en.vtt", frsub: rows[0].title + ".fr.vtt", language: "eng", background: background}));
                   res.end();
                 });
             });
@@ -276,7 +277,7 @@ exports.stream = function (req, res) {
               }
 
             } else {
-              //console.log("about to write");
+              //fconsole.log("about to write");
               var stream = fs.createReadStream(filer, {start: start, end: end});
               pump(stream, res);
             }

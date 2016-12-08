@@ -1,4 +1,4 @@
-                                                                                              TOTAL : --__ 19✓ | x  __--
+                                                                                                   TOTAL : --__ 20✓ __--
 
 Partie user :                                                                                              --__ 7✓  __--
 
@@ -63,7 +63,7 @@ Partie bibliotèque                                                             
     La liste devra être triable et filtrable selon des critères tels que le nom, le genre, un                --__ ✓ __--
     intervalle de note IMDb, un intervalle d’année de production, etc...
 
-Partie Video                                                                                            --__ 4✓ | x __--
+Partie Video                                                                                                --__ 5✓ __--
 
     que - si disponible - le résumé, le casting (au moins producteur, réalisateur,                           --__ ✓ __--
     acteurs principaux, etc...), l’année de production, la durée, la note IMDb, une image de
@@ -75,7 +75,7 @@ Partie Video                                                                    
     Si un film n’est pas visionné pendant                                                                    --__ ✓ __--
     un mois, il devra être supprimé.
 
-    Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés               --__ x __--
+    Si des sous-titres anglais sont disponibles pour cette vidéo, ils devront être téléchargés               --__ ✓ __--
     et sélectionnables sur le player vidéo
 
     Si la vidéo n’est pas nativement lisible pour le navigateur, vous devrez la convertir                    --__ ✓ __--
